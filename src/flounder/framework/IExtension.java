@@ -4,6 +4,8 @@ package flounder.framework;
  * A simple interface that is used to define an extension to the framework. Extensions are used by modules, Example: to use FlounderCamera you must create an extension that implements ICamera.
  */
 public abstract class IExtension<T extends IModule> {
+	protected static boolean CHANGED_INIT_STATE = true;
+
 	private final Class<T>[] requires;
 	private boolean initialized;
 
@@ -17,6 +19,13 @@ public abstract class IExtension<T extends IModule> {
 		this.initialized = false;
 		FlounderModules.registerModules(FlounderModules.loadModules(requires));
 	}
+
+	/**
+	 * Gets if the extension is currently active, could be replaced if false.
+	 *
+	 * @return If the extension is currently active.
+	 */
+	public abstract boolean isActive();
 
 	/**
 	 * Gets the classes that the extension requires.
@@ -43,5 +52,6 @@ public abstract class IExtension<T extends IModule> {
 	 */
 	public void setInitialized(boolean initialized) {
 		this.initialized = initialized;
+		CHANGED_INIT_STATE = true;
 	}
 }

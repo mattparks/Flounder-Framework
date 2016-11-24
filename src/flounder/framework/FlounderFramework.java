@@ -17,6 +17,9 @@ import static flounder.framework.FlounderModules.*;
 public class FlounderFramework extends Thread {
 	private static FlounderFramework instance;
 
+	private static boolean runningFromJar;
+	private static MyFile roamingFolder;
+
 	private Version version;
 	private List<IExtension> extensions;
 
@@ -26,24 +29,25 @@ public class FlounderFramework extends Thread {
 	private Delta deltaUpdate;
 	private Delta deltaRender;
 	private Timer timerUpdate;
+	private Timer timerRender;
 	private Timer timerLog;
+	private int fpsLimit;
 
 	private boolean initialized;
-	private static boolean runningFromJar;
-	private static MyFile roamingFolder;
 
 	/**
 	 * Carries out the setup for basic framework components and the framework. Call {@link #run()} after creating a instance.
 	 *
 	 * @param unlocalizedName The name to be used when determining where the roaming save files are saved.
+	 * @param fpsLimit The limit to FPS, (-1 disables limits).
 	 * @param extensions The extensions to load for the framework.
 	 */
-	public FlounderFramework(String unlocalizedName, IExtension... extensions) {
+	public FlounderFramework(String unlocalizedName, int fpsLimit, IExtension... extensions) {
 		FlounderFramework.instance = this;
 		loadFlounderStatics(unlocalizedName);
 
 		// Increment revision every fix for the minor version release. Minor version represents the build month. Major incremented every two years OR after major core framework rewrites.
-		this.version = new Version("1.11.23");
+		this.version = new Version("1.11.24");
 		this.extensions = new ArrayList<>(Arrays.asList(extensions));
 
 		this.closedRequested = false;
@@ -51,8 +55,10 @@ public class FlounderFramework extends Thread {
 
 		this.deltaUpdate = new Delta();
 		this.deltaRender = new Delta();
-		this.timerUpdate = new Timer(1.0f / 60.0f);
+		this.timerUpdate = new Timer(1.0f / 60);
+		this.timerRender = new Timer(Math.abs(1.0f / fpsLimit));
 		this.timerLog = new Timer(1.0f);
+		this.fpsLimit = fpsLimit;
 
 		this.deltaUpdate.update();
 		this.deltaRender.update();
@@ -170,7 +176,7 @@ public class FlounderFramework extends Thread {
 		}
 
 		// Renders when needed.
-		if (true) { // TODO: Limit when rendering!
+		if (timerRender.isPassedTime() || fpsLimit < 0) {
 			// Updates the render delta, and render time extension.
 			deltaRender.update();
 
@@ -180,6 +186,9 @@ public class FlounderFramework extends Thread {
 					module.run();
 				}
 			});
+
+			// Resets the timer.
+			timerRender.resetStartTime();
 		}
 	}
 
@@ -189,7 +198,7 @@ public class FlounderFramework extends Thread {
 	private void profile() {
 		// Profile some values to the logger.
 		if (timerLog.isPassedTime()) {
-			FlounderLogger.log(Maths.roundToPlace(1.0f / getDelta(), 2) + "fps");
+			FlounderLogger.log(Maths.roundToPlace(1.0f / getDelta(), 2) + "ups, " + Maths.roundToPlace(1.0f / getDeltaRender(), 2) + "fps");
 			timerLog.resetStartTime();
 		}
 
@@ -221,6 +230,44 @@ public class FlounderFramework extends Thread {
 	 */
 	public static List<IExtension> getExtensions() {
 		return instance.extensions;
+	}
+
+	/**
+	 * Finds a new extension that implements an interface/class.
+	 *
+	 * @param type The type of interface/class to look for implementation for.
+	 * @param last The last object to compare to.
+	 * @param onlyRunOnChange When this and {#link #IExtension.CHANGED_INIT_STATE} is true, this will run a check, otherwise a object will not be checked for (returning null).
+	 * @param <T> The generic  interface/class type.
+	 *
+	 * @return The found extension to be active and matched the specs provided.
+	 */
+	public static <T> IExtension getExtensionMatch(Class<T> type, IExtension last, boolean onlyRunOnChange) {
+		if (IExtension.CHANGED_INIT_STATE || !onlyRunOnChange) {
+			List<IExtension> resultExtensions = null;
+
+			for (IExtension extension : FlounderFramework.getExtensions()) {
+				if (type.isInstance(extension)) { // extension instanceof type
+					if (resultExtensions == null) {
+						resultExtensions = new ArrayList<>();
+					}
+
+					resultExtensions.add(extension);
+				}
+			}
+
+			if (resultExtensions != null && !resultExtensions.isEmpty()) {
+				for (IExtension extension : resultExtensions) {
+					if (extension.isActive() && !extension.equals(last)) {
+						return extension;
+					}
+				}
+			}
+
+			IExtension.CHANGED_INIT_STATE = false;
+		}
+
+		return null;
 	}
 
 	/**
@@ -269,6 +316,34 @@ public class FlounderFramework extends Thread {
 	}
 
 	/**
+	 * Gets the current FPS limit.
+	 *
+	 * @return The current FPS limit.
+	 */
+	public static int getFpsLimit() {
+		return instance.fpsLimit;
+	}
+
+	/**
+	 * Sets a limit to the fps, (-1 disabled limits).
+	 *
+	 * @param fpsLimit The FPS limit.
+	 */
+	public static void setFpsLimit(int fpsLimit) {
+		instance.fpsLimit = fpsLimit;
+		instance.timerRender.setInterval(Math.abs(1.0f / fpsLimit));
+	}
+
+	/**
+	 * Gets the current time of the framework instance.
+	 *
+	 * @return The current framework time (milliseconds).
+	 */
+	public static float getTime() {
+		return System.currentTimeMillis() - instance.startTime;
+	}
+
+	/**
 	 * Gets if the framework still running?
 	 *
 	 * @return Is the framework still running?
@@ -282,15 +357,6 @@ public class FlounderFramework extends Thread {
 	 */
 	public static void requestClose() {
 		instance.closedRequested = true;
-	}
-
-	/**
-	 * Gets the current time of the framework instance.
-	 *
-	 * @return The current framework time (milliseconds).
-	 */
-	public static float getTime() {
-		return System.currentTimeMillis() - instance.startTime; // FlounderDisplay.getTime();
 	}
 
 	/**
