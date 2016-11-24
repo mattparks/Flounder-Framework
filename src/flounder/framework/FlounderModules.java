@@ -20,7 +20,7 @@ public class FlounderModules {
 	 *
 	 * @return If the framework contains a module.
 	 */
-	protected static boolean containsModule(Class object) {
+	public static boolean containsModule(Class object) {
 		for (IModule m : modulesActive) {
 			if (m.getClass().getName().equals(object.getName())) {
 				return true;
@@ -37,7 +37,7 @@ public class FlounderModules {
 	 *
 	 * @return If the framework contains all of the modules.
 	 */
-	protected static boolean containsModules(Class... objects) {
+	public static boolean containsModules(Class... objects) {
 		for (Class object : objects) {
 			if (!containsModule(object)) {
 				return false;

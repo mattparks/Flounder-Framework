@@ -18,6 +18,7 @@ public abstract class IExtension<T extends IModule> {
 		this.requires = requires;
 		this.initialized = false;
 		FlounderModules.registerModules(FlounderModules.loadModules(requires));
+		CHANGED_INIT_STATE = true;
 	}
 
 	/**

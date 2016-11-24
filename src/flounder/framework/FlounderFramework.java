@@ -51,7 +51,7 @@ public class FlounderFramework extends Thread {
 		this.extensions = new ArrayList<>(Arrays.asList(extensions));
 
 		this.closedRequested = false;
-		this.startTime = System.currentTimeMillis();
+		this.startTime = System.nanoTime();
 
 		this.deltaUpdate = new Delta();
 		this.deltaRender = new Delta();
@@ -190,6 +190,9 @@ public class FlounderFramework extends Thread {
 			// Resets the timer.
 			timerRender.resetStartTime();
 		}
+
+		// Any changed states should be resolved.
+		IExtension.CHANGED_INIT_STATE = false;
 	}
 
 	/**
@@ -263,8 +266,6 @@ public class FlounderFramework extends Thread {
 					}
 				}
 			}
-
-			IExtension.CHANGED_INIT_STATE = false;
 		}
 
 		return null;
@@ -289,30 +290,12 @@ public class FlounderFramework extends Thread {
 	}
 
 	/**
-	 * Gets the current framework time (all delta added up).
-	 *
-	 * @return The current framework time.
-	 */
-	public static float getDeltaTime() {
-		return instance.deltaUpdate.getTime();
-	}
-
-	/**
 	 * Gets the delta (seconds) between renders.
 	 *
 	 * @return The delta between renders.
 	 */
 	public static float getDeltaRender() {
 		return instance.deltaRender.getDelta();
-	}
-
-	/**
-	 * Gets the current framework time (all delta added up).
-	 *
-	 * @return The current framework time.
-	 */
-	public static float getDeltaRenderTime() {
-		return instance.deltaRender.getTime();
 	}
 
 	/**
@@ -337,10 +320,19 @@ public class FlounderFramework extends Thread {
 	/**
 	 * Gets the current time of the framework instance.
 	 *
-	 * @return The current framework time (milliseconds).
+	 * @return The current framework time in milliseconds.
 	 */
-	public static float getTime() {
-		return System.currentTimeMillis() - instance.startTime;
+	public static float getTimeMs() {
+		return (System.nanoTime() - instance.startTime) / 1000000.0f; // The dividend can be used as a time scalar.
+	}
+
+	/**
+	 * Gets the current time of the framework instance.
+	 *
+	 * @return The current framework time in seconds.
+	 */
+	public static float getTimeSec() {
+		return (System.nanoTime() - instance.startTime) / 1000000000.0f;
 	}
 
 	/**

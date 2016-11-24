@@ -27,7 +27,7 @@ public class Delta {
 	 * Updates delta and times.
 	 */
 	public void update() {
-		currentFrameTime = FlounderFramework.getTime() / 1000.0f;
+		currentFrameTime = FlounderFramework.getTimeMs() / 1000.0f;
 		delta = currentFrameTime - lastFrameTime;
 		lastFrameTime = currentFrameTime;
 		time += delta;
