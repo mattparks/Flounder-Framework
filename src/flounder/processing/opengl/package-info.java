@@ -1,4 +1,4 @@
 /**
  * Contains classes for processing OpenGL requests.
  */
-package flounder.processing.glProcessing;
+package flounder.processing.opengl;

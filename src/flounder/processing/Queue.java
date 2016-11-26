@@ -1,26 +1,26 @@
-package flounder.processing.glProcessing;
+package flounder.processing;
 
 import java.util.*;
 
 /**
- * Holds OpenGL requests that are in queue.
+ * Holds requests in a simple que.
  */
-public class GlRequestQueue {
-	private List<GlRequest> requestQueue;
+public class Queue<T> {
+	private List<T> requestQueue;
 
 	/**
-	 * Creates a new GL request queue.
+	 * Creates a new queue.
 	 */
-	public GlRequestQueue() {
+	public Queue() {
 		requestQueue = new ArrayList<>();
 	}
 
 	/**
-	 * Adds a new GL request to queue.
+	 * Adds a new object to queue.
 	 *
-	 * @param request The GL request to add.
+	 * @param request The object to add.
 	 */
-	public synchronized void addRequest(GlRequest request) {
+	public synchronized void addRequest(T request) {
 		requestQueue.add(request);
 	}
 
@@ -29,7 +29,7 @@ public class GlRequestQueue {
 	 *
 	 * @return The next item in queue and then removes it from this list.
 	 */
-	public synchronized GlRequest acceptNextRequest() {
+	public synchronized T acceptNextRequest() {
 		return requestQueue.remove(0);
 	}
 

@@ -135,6 +135,7 @@ public class FlounderFramework extends Thread {
 				modulesUnlogged.clear();
 			}
 
+			FlounderLogger.log("Framework Initialize & Load Time: " + FlounderLogger.ANSI_RED + ((System.nanoTime() - startTime) / 1000000000.0) + FlounderLogger.ANSI_RESET + " seconds!");
 			initialized = true;
 		}
 	}

@@ -15,7 +15,7 @@ public interface IStandard {
 	void update();
 
 	/**
-	 * Run when disporting the standard.
+	 * Run when disposing the standard.
 	 */
 	void dispose();
 }

@@ -1,11 +1,11 @@
-package flounder.processing;
+package flounder.processing.resource;
 
 /**
  * Interface for executable resource requests.
  */
-public interface ResourceRequest {
+public interface RequestResource {
 	/**
 	 * Used to send a request to the request processor so it can be queued.
 	 */
-	void doResourceRequest();
+	void executeRequestResource();
 }
