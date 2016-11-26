@@ -7,7 +7,7 @@ import java.io.*;
 import java.util.*;
 
 /**
- * Various utility functions for debugging.
+ * A module used for logging outputs, errors, and exceptions to files and the console.
  */
 public class FlounderLogger extends IModule {
 	private final static FlounderLogger instance = new FlounderLogger();

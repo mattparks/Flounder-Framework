@@ -3,7 +3,7 @@ package flounder.helpers;
 import java.util.*;
 
 /**
- * Various generic sorting algorithms for java arrays. Value types passed must be {@code comparable}!
+ * A helper for various generic sorting algorithms for java arrays. Value types passed must be {@code comparable}!
  * <p>
  * Watch some of these algorithms at work here: @see <a href="https://www.youtube.com/watch?v=ZZuD6iUe3Pc">'Visualization and Comparison of Sorting Algorithms'</a>
  * </p>

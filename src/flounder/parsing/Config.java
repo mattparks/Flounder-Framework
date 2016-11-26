@@ -9,7 +9,7 @@ import java.util.*;
 import java.util.Map.*;
 
 /**
- * Loads and parses a configuration file.
+ * A class used for loading and parsing a configuration file.
  */
 public class Config {
 	private MyFile file;

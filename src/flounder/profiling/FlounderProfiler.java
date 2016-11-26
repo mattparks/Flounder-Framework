@@ -6,7 +6,7 @@ import flounder.logger.*;
 import javax.swing.*;
 
 /**
- * A JFrame that holds profiling tabs and values.
+ * A module used for profiling many parts of the framework.
  */
 public class FlounderProfiler extends IModule {
 	private static final FlounderProfiler instance = new FlounderProfiler();
@@ -16,7 +16,7 @@ public class FlounderProfiler extends IModule {
 	private boolean profilerOpen;
 
 	/**
-	 * Creates the frameworks profiler.
+	 * Creates a new new profiler.
 	 */
 	public FlounderProfiler() {
 		super(ModuleUpdate.ALWAYS, FlounderLogger.class);

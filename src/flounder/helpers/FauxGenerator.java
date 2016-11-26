@@ -2,10 +2,22 @@ package flounder.helpers;
 
 import flounder.maths.*;
 
+/**
+ * A helper for creating randomly generated words, using the Faux method.
+ */
 public class FauxGenerator {
 	public static final char[] CONSONANTS = new char[]{'b', 'c', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'p', 'r', 's', 't', 'v', 'w', 'x', 'y', 'z'};
 	public static final char[] VOWELS = new char[]{'a', 'e', 'i', 'o', 'u'};
 
+	/**
+	 * Creates a new sentance generated using the Faux method.
+	 *
+	 * @param maxWordCount The most words to have in the sentence.
+	 * @param minWordLength The shortest generated word.
+	 * @param maxWordLength The longest generated word.
+	 *
+	 * @return The generated sentence.
+	 */
 	public static String getFauxSentance(int maxWordCount, int minWordLength, int maxWordLength) {
 		String fauxLine = "";
 
@@ -29,6 +41,13 @@ public class FauxGenerator {
 		return fauxLine.trim();
 	}
 
+	/**
+	 * Capitalizes the first letter in the line.
+	 *
+	 * @param line The line to capitalize.
+	 *
+	 * @return The capitalized line.
+	 */
 	public static String capitalize(String line) {
 		return Character.toUpperCase(line.charAt(0)) + line.substring(1);
 	}

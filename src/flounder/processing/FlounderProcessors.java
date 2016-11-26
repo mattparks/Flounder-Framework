@@ -6,7 +6,7 @@ import flounder.processing.glProcessing.*;
 import flounder.profiling.*;
 
 /**
- * Manages the all framework request processors.
+ * A module used for processing types of requests.
  */
 public class FlounderProcessors extends IModule {
 	private static final FlounderProcessors instance = new FlounderProcessors();
@@ -15,7 +15,7 @@ public class FlounderProcessors extends IModule {
 	private GlRequestProcessor glRequestProcessor;
 
 	/**
-	 * Creates all framework request processors.
+	 * Creates a new request processor.
 	 */
 	public FlounderProcessors() {
 		super(ModuleUpdate.UPDATE_PRE, FlounderLogger.class, FlounderProfiler.class);

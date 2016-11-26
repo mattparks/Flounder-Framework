@@ -5,7 +5,7 @@ import flounder.maths.vectors.*;
 import java.nio.*;
 
 /**
- * A class for working with java types.
+ * A helper for working with Java types.
  */
 public class ByteWork {
 	public static final int FLOAT_LENGTH = 4;

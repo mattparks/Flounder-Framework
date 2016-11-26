@@ -4,7 +4,7 @@ import java.io.*;
 import java.util.zip.*;
 
 /**
- * A utility class capable of compressing and decompressing strings with gzip.
+ * A helper for compressing and decompressing strings with gzip.
  */
 public class CompressionUtils {
 	/**

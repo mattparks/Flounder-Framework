@@ -1,7 +1,7 @@
 package flounder.helpers;
 
 /**
- * A simple pair type.
+ * A helper for creating a simple pair type.
  *
  * @param <FIRST> The first object in the pair.
  * @param <SECOND> The second object in the pair.

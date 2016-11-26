@@ -4,10 +4,13 @@ import flounder.framework.*;
 
 import java.util.*;
 
+/**
+ * A module used for managing events on framework updates.
+ */
 public class FlounderEvents extends IModule {
 	private static final FlounderEvents instance = new FlounderEvents();
 
-	private ArrayList<IEvent> events;
+	private List<IEvent> events;
 
 	/**
 	 * Creates a new event manager.

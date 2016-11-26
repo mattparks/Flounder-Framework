@@ -12,7 +12,9 @@ import java.util.*;
 import static flounder.framework.FlounderModules.*;
 
 /**
- * Deals with much of the initializing, updating, and cleaning up of the framework.
+ * A framework used for simplifying the creation of complicated Java applications. By using flexible Module loading and Extension injecting, it allows the engine to be used for Networking, Imaging, AIs, Games, and many more applications.
+ * Start off by creating a new FlounderFramework object in your main thread, using Extensions in the constructor. By using Extensions: Modules can be required and therefor loaded into the framework.
+ * Implementing interfaces like {@link flounder.standard.IStandard} with your extension can allow you do task specific things with your Extensions. After creating your Framework object call {@link #run()} to start.
  */
 public class FlounderFramework extends Thread {
 	private static FlounderFramework instance;
@@ -47,7 +49,7 @@ public class FlounderFramework extends Thread {
 		loadFlounderStatics(unlocalizedName);
 
 		// Increment revision every fix for the minor version release. Minor version represents the build month. Major incremented every two years OR after major core framework rewrites.
-		this.version = new Version("1.11.24");
+		this.version = new Version("1.11.26");
 		this.extensions = new ArrayList<>(Arrays.asList(extensions));
 
 		this.closedRequested = false;
@@ -240,17 +242,42 @@ public class FlounderFramework extends Thread {
 	 *
 	 * @param type The type of interface/class to look for implementation for.
 	 * @param last The last object to compare to.
-	 * @param onlyRunOnChange When this and {#link #IExtension.CHANGED_INIT_STATE} is true, this will run a check, otherwise a object will not be checked for (returning null).
+	 * @param onlyRunOnChange When this and {@link flounder.framework.IExtension#CHANGED_INIT_STATE} is true, this will run a check, otherwise a object will not be checked for (returning null).
 	 * @param <T> The generic  interface/class type.
 	 *
 	 * @return The found extension to be active and matched the specs provided.
 	 */
 	public static <T> IExtension getExtensionMatch(Class<T> type, IExtension last, boolean onlyRunOnChange) {
 		if (IExtension.CHANGED_INIT_STATE || !onlyRunOnChange) {
+			List<IExtension> resultExtensions = getExtensionMatches(type, onlyRunOnChange);
+
+			if (resultExtensions != null && !resultExtensions.isEmpty()) {
+				for (IExtension extension : resultExtensions) {
+					if (!extension.equals(last)) {
+						return extension;
+					}
+				}
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * Finds new extensions that implements an interface/class.
+	 *
+	 * @param type The type of interface/class to look for implementation for.
+	 * @param onlyRunOnChange When this and {@link flounder.framework.IExtension#CHANGED_INIT_STATE} is true, this will run a check, otherwise a object will not be checked for (returning null).
+	 * @param <T> The generic  interface/class type.
+	 *
+	 * @return The newly found extensions to be active and matched the specs provided.
+	 */
+	public static <T> List<IExtension> getExtensionMatches(Class<T> type, boolean onlyRunOnChange) {
+		if (IExtension.CHANGED_INIT_STATE || !onlyRunOnChange) {
 			List<IExtension> resultExtensions = null;
 
 			for (IExtension extension : FlounderFramework.getExtensions()) {
-				if (type.isInstance(extension)) { // extension instanceof type
+				if (type.isInstance(extension) && extension.isActive()) {
 					if (resultExtensions == null) {
 						resultExtensions = new ArrayList<>();
 					}
@@ -259,13 +286,7 @@ public class FlounderFramework extends Thread {
 				}
 			}
 
-			if (resultExtensions != null && !resultExtensions.isEmpty()) {
-				for (IExtension extension : resultExtensions) {
-					if (extension.isActive() && !extension.equals(last)) {
-						return extension;
-					}
-				}
-			}
+			return resultExtensions;
 		}
 
 		return null;

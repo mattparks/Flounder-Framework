@@ -3,7 +3,7 @@ package flounder.helpers;
 import java.util.*;
 
 /**
- * Utility's built for helping arrays.
+ * A helper for helping java arrays.
  */
 public class ArrayUtils {
 	/**

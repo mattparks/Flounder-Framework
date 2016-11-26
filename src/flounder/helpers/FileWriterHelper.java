@@ -2,6 +2,9 @@ package flounder.helpers;
 
 import java.io.*;
 
+/**
+ * A helper for helping when writing to a file.
+ */
 public class FileWriterHelper {
 	public static final int MAX_LINE_LENGTH = 5000;
 
@@ -9,6 +12,11 @@ public class FileWriterHelper {
 	private int fileNestation;
 	private int lineLength;
 
+	/**
+	 * Creates a new file writer helper.
+	 *
+	 * @param fileWriter The FileWriter to help with.
+	 */
 	public FileWriterHelper(FileWriter fileWriter) {
 		this.fileWriter = fileWriter;
 		this.fileNestation = 0;
