@@ -26,17 +26,27 @@ public class FlounderEvents extends IModule {
 
 	@Override
 	public void run() {
-		for (IEvent event : events) {
+		events.forEach(event -> {
 			if (event.eventTriggered()) {
 				event.onEvent();
 			}
-		}
+		});
 	}
 
+	/**
+	 * Adds an event to the listening que.
+	 *
+	 * @param event The event to add.
+	 */
 	public static void addEvent(IEvent event) {
 		instance.events.add(event);
 	}
 
+	/**
+	 * Removes a event to the listening que.
+	 *
+	 * @param event The event to remove.
+	 */
 	public static void removeEvent(IEvent event) {
 		instance.events.remove(event);
 	}

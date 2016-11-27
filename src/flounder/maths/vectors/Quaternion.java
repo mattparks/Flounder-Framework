@@ -509,6 +509,6 @@ public class Quaternion {
 
 	@Override
 	public String toString() {
-		return "Quaternion{" + "x=" + x + ", y=" + y + ", z=" + z + ", w=" + w + "}";
+		return "Quaternion{" + x + ", " + y + ", " + z + ", " + w + "}";
 	}
 }

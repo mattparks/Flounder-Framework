@@ -361,6 +361,6 @@ public class Vector4f {
 
 	@Override
 	public String toString() {
-		return "Vector3f{" + "x=" + x + ", y=" + y + ", z=" + z + ", w=" + w + "}";
+		return "Vector3f{" + x + ", " + y + ", " + z + ", " + w + "}";
 	}
 }

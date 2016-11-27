@@ -4,6 +4,8 @@ import flounder.maths.vectors.*;
 
 import java.nio.*;
 
+// TODO: Javadocs!
+
 /**
  * A helper for working with Java types.
  */
@@ -51,8 +53,6 @@ public class ByteWork {
 
 		return true;
 	}
-
-	// TODO: Javadocs!
 
 	public static int encodeShortIntoArray(short naughtyShort, byte[] array, int pointer) {
 		byte[] shortInBytes = shortToBytes(naughtyShort);
