@@ -1,4 +1,4 @@
 /**
- * Contains classes for processing types of requests.
+ * Contains classes for managing a list of processors processors that are used for processing requests.
  */
 package flounder.processing;
