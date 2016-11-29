@@ -1,8 +1,6 @@
 package flounder.standard;
 
 import flounder.framework.*;
-import flounder.logger.*;
-import flounder.profiling.*;
 
 import java.util.*;
 
@@ -18,7 +16,7 @@ public class FlounderStandard extends IModule {
 	 * Creates a new standard manager.
 	 */
 	public FlounderStandard() {
-		super(ModuleUpdate.UPDATE_PRE, FlounderLogger.class, FlounderProfiler.class);
+		super(ModuleUpdate.UPDATE_PRE);
 	}
 
 	@Override
@@ -65,7 +63,6 @@ public class FlounderStandard extends IModule {
 
 	@Override
 	public void profile() {
-		FlounderProfiler.add("Standards", "Count", standards == null ? "NULL" : standards.size());
 	}
 
 	@Override
