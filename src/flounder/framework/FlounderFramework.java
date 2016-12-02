@@ -51,7 +51,7 @@ public class FlounderFramework extends Thread {
 		loadFlounderStatics(unlocalizedName);
 
 		// Increment revision every fix for the minor version release. Minor version represents the build month. Major incremented every two years OR after major core framework rewrites.
-		this.version = new Version("1.11.26");
+		this.version = new Version("1.11.29");
 		this.extensions = new ArrayList<>(Arrays.asList(extensions));
 
 		this.closedRequested = false;
@@ -66,6 +66,8 @@ public class FlounderFramework extends Thread {
 
 		this.deltaUpdate.update();
 		this.deltaRender.update();
+
+		FlounderModules.registerModules(FlounderModules.loadModules(FlounderLogger.class));
 
 		this.initialized = false;
 	}
