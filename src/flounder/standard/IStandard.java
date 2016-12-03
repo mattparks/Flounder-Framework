@@ -10,7 +10,7 @@ public interface IStandard {
 	void init();
 
 	/**
-	 * Run when updating the standard (run in the pre-update loop).
+	 * Run when updating the standard (update in the pre-update loop).
 	 */
 	void update();
 

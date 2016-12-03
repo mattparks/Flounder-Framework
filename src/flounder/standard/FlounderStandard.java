@@ -25,7 +25,7 @@ public class FlounderStandard extends IModule {
 	}
 
 	@Override
-	public void run() {
+	public void update() {
 		List<IExtension> newStandards = FlounderFramework.getExtensionMatches(IStandard.class, true);
 
 		if (newStandards != null) {

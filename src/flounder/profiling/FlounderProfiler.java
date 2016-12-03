@@ -58,7 +58,7 @@ public class FlounderProfiler extends IModule {
 	}
 
 	@Override
-	public void run() {
+	public void update() {
 		if (profilerJFrame.isVisible() != profilerOpen) {
 			profilerJFrame.setVisible(profilerOpen);
 		}

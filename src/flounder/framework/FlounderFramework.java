@@ -156,7 +156,7 @@ public class FlounderFramework extends Thread {
 		// Updates the module when needed always.
 		modulesActive.forEach((module) -> {
 			if (module.getModuleUpdate().equals(IModule.ModuleUpdate.ALWAYS)) {
-				module.run();
+				module.update();
 			}
 		});
 
@@ -168,14 +168,14 @@ public class FlounderFramework extends Thread {
 			// Updates the modules when needed before the entrance.
 			modulesActive.forEach((module) -> {
 				if (module.getModuleUpdate().equals(IModule.ModuleUpdate.UPDATE_PRE)) {
-					module.run();
+					module.update();
 				}
 			});
 
 			// Updates the modules when needed after the entrance.
 			modulesActive.forEach((module) -> {
 				if (module.getModuleUpdate().equals(IModule.ModuleUpdate.UPDATE_POST)) {
-					module.run();
+					module.update();
 				}
 			});
 
@@ -191,7 +191,7 @@ public class FlounderFramework extends Thread {
 			// Updates the module when needed after the rendering.
 			modulesActive.forEach((module) -> {
 				if (module.getModuleUpdate().equals(IModule.ModuleUpdate.RENDER)) {
-					module.run();
+					module.update();
 				}
 			});
 
@@ -248,7 +248,7 @@ public class FlounderFramework extends Thread {
 	 *
 	 * @param type The type of interface/class to look for implementation for.
 	 * @param last The last object to compare to.
-	 * @param onlyRunOnChange When this and {@link flounder.framework.IExtension#CHANGED_INIT_STATE} is true, this will run a check, otherwise a object will not be checked for (returning null).
+	 * @param onlyRunOnChange When this and {@link flounder.framework.IExtension#CHANGED_INIT_STATE} is true, this will update a check, otherwise a object will not be checked for (returning null).
 	 * @param <T> The generic  interface/class type.
 	 *
 	 * @return The found extension to be active and matched the specs provided.
@@ -273,7 +273,7 @@ public class FlounderFramework extends Thread {
 	 * Finds new extensions that implements an interface/class.
 	 *
 	 * @param type The type of interface/class to look for implementation for.
-	 * @param onlyRunOnChange When this and {@link flounder.framework.IExtension#CHANGED_INIT_STATE} is true, this will run a check, otherwise a object will not be checked for (returning null).
+	 * @param onlyRunOnChange When this and {@link flounder.framework.IExtension#CHANGED_INIT_STATE} is true, this will update a check, otherwise a object will not be checked for (returning null).
 	 * @param <T> The generic  interface/class type.
 	 *
 	 * @return The newly found extensions to be active and matched the specs provided.

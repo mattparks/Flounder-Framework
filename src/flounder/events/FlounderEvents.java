@@ -25,7 +25,7 @@ public class FlounderEvents extends IModule {
 	}
 
 	@Override
-	public void run() {
+	public void update() {
 		events.forEach(event -> {
 			if (event.eventTriggered()) {
 				event.onEvent();

@@ -3,7 +3,7 @@ package flounder.framework;
 /**
  * A simple interface that can be used to create framework modules.
  */
-public abstract class IModule<T extends IModule> implements Runnable {
+public abstract class IModule<T extends IModule> {
 	private final Class<T>[] requires;
 	private ModuleUpdate moduleUpdate;
 	private boolean initialized;
@@ -28,8 +28,7 @@ public abstract class IModule<T extends IModule> implements Runnable {
 	/**
 	 * Runs a update of the module.
 	 */
-	@Override
-	public abstract void run();
+	public abstract void update();
 
 	/**
 	 * Profiles the module.

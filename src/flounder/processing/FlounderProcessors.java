@@ -37,7 +37,7 @@ public class FlounderProcessors extends IModule {
 	}
 
 	@Override
-	public void run() {
+	public void update() {
 		List<IExtension> newProcessors = FlounderFramework.getExtensionMatches(IProcessor.class, true);
 
 		if (newProcessors != null) {
