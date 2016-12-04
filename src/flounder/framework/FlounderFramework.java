@@ -59,9 +59,9 @@ public class FlounderFramework extends Thread {
 
 		this.deltaUpdate = new Delta();
 		this.deltaRender = new Delta();
-		this.timerUpdate = new Timer(1.0f / 60);
-		this.timerRender = new Timer(Math.abs(1.0f / fpsLimit));
-		this.timerLog = new Timer(1.0f);
+		this.timerUpdate = new Timer(1.0 / 60.0);
+		this.timerRender = new Timer(Math.abs(1.0 / (double) fpsLimit));
+		this.timerLog = new Timer(1L);
 		this.fpsLimit = fpsLimit;
 
 		this.deltaUpdate.update();
@@ -209,7 +209,7 @@ public class FlounderFramework extends Thread {
 	private void profile() {
 		// Profile some values to the logger.
 		if (timerLog.isPassedTime()) {
-			//	FlounderLogger.log(Maths.roundToPlace(1.0f / getDelta(), 2) + "ups, " + Maths.roundToPlace(1.0f / getDeltaRender(), 2) + "fps");
+			FlounderLogger.log(Maths.roundToPlace(1.0f / getDelta(), 2) + "ups, " + Maths.roundToPlace(1.0f / getDeltaRender(), 2) + "fps");
 			timerLog.resetStartTime();
 		}
 
@@ -313,7 +313,7 @@ public class FlounderFramework extends Thread {
 	 * @return The deltaRender between updates.
 	 */
 	public static float getDelta() {
-		return instance.deltaUpdate.getDelta();
+		return (float) instance.deltaUpdate.getDelta();
 	}
 
 	/**
@@ -322,7 +322,7 @@ public class FlounderFramework extends Thread {
 	 * @return The delta between renders.
 	 */
 	public static float getDeltaRender() {
-		return instance.deltaRender.getDelta();
+		return (float) instance.deltaRender.getDelta();
 	}
 
 	/**

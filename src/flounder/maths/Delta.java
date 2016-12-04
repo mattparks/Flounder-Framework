@@ -6,28 +6,28 @@ import flounder.framework.*;
  * A class for handing and calculation deltas.
  */
 public class Delta {
-	private float currentFrameTime;
-	private float lastFrameTime;
+	private double currentFrameTime;
+	private double lastFrameTime;
 
-	private float delta;
-	private float time;
+	private double delta;
+	private double time;
 
 	/**
 	 * Creates a new delta handler.
 	 */
 	public Delta() {
-		currentFrameTime = 0.0f;
-		lastFrameTime = 0.0f;
+		currentFrameTime = 0.0;
+		lastFrameTime = 0.0;
 
-		delta = 0.0f;
-		time = 0.0f;
+		delta = 0.0;
+		time = 0.0;
 	}
 
 	/**
 	 * Updates delta and times.
 	 */
 	public void update() {
-		currentFrameTime = FlounderFramework.getTimeMs() / 1000.0f;
+		currentFrameTime = FlounderFramework.getTimeMs() / 1000.0;
 		delta = currentFrameTime - lastFrameTime;
 		lastFrameTime = currentFrameTime;
 		time += delta;
@@ -38,7 +38,7 @@ public class Delta {
 	 *
 	 * @return The delta.
 	 */
-	public float getDelta() {
+	public double getDelta() {
 		return delta;
 	}
 
@@ -47,7 +47,7 @@ public class Delta {
 	 *
 	 * @return The time.
 	 */
-	public float getTime() {
+	public double getTime() {
 		return time;
 	}
 }
