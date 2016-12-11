@@ -212,8 +212,31 @@ public class Maths {
 	 *
 	 * @return The maximum vector.
 	 */
+	public static Vector2f max(Vector2f a, Vector2f b) {
+		return new Vector2f(Math.max(a.getX(), b.getX()), Math.max(a.getY(), b.getY()));
+	}
+
+	/**
+	 * Gets the maximum vector size.
+	 *
+	 * @param a The first vector to get values from.
+	 * @param b The second vector to get values from.
+	 *
+	 * @return The maximum vector.
+	 */
 	public static Vector3f max(Vector3f a, Vector3f b) {
 		return new Vector3f(Math.max(a.getX(), b.getX()), Math.max(a.getY(), b.getY()), Math.max(a.getZ(), b.getZ()));
+	}
+
+	/**
+	 * Gets the maximum value in a vector.
+	 *
+	 * @param vector The value to get the maximum value from.
+	 *
+	 * @return The maximum value.
+	 */
+	public static float max(Vector2f vector) {
+		return Math.max(vector.getX(), vector.getY());
 	}
 
 	/**

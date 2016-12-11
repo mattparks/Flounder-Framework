@@ -11,6 +11,10 @@ import java.nio.*;
 public class Vector3f {
 	public float x, y, z;
 
+	public Vector2f toVector2f() {
+		return new Vector2f(x, y);
+	}
+
 	/**
 	 * Constructor for Vector3f.
 	 */

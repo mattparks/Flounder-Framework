@@ -11,6 +11,10 @@ public class Vector2f {
 	public float x;
 	public float y;
 
+	public Vector3f toVector3f() {
+		return new Vector3f(x, y, 0.0f);
+	}
+
 	/**
 	 * Constructor for Vector2f.
 	 */
