@@ -138,9 +138,9 @@ public class FlounderFramework extends Thread {
 				}
 
 				modulesUnlogged.clear();
+				FlounderLogger.log("Framework Initialize & Load Time: " + FlounderLogger.ANSI_RED + ((System.nanoTime() - startTime) / 1000000000.0) + FlounderLogger.ANSI_RESET + " seconds!");
 			}
 
-			FlounderLogger.log("Framework Initialize & Load Time: " + FlounderLogger.ANSI_RED + ((System.nanoTime() - startTime) / 1000000000.0) + FlounderLogger.ANSI_RESET + " seconds!");
 			initialized = true;
 		}
 	}
@@ -155,7 +155,7 @@ public class FlounderFramework extends Thread {
 
 		// Updates the module when needed always.
 		modulesActive.forEach((module) -> {
-			if (module.getModuleUpdate().equals(IModule.ModuleUpdate.ALWAYS)) {
+			if (module.getModuleUpdate().equals(IModule.ModuleUpdate.UPDATE_ALWAYS)) {
 				module.update();
 			}
 		});
@@ -190,7 +190,7 @@ public class FlounderFramework extends Thread {
 
 			// Updates the module when needed after the rendering.
 			modulesActive.forEach((module) -> {
-				if (module.getModuleUpdate().equals(IModule.ModuleUpdate.RENDER)) {
+				if (module.getModuleUpdate().equals(IModule.ModuleUpdate.UPDATE_RENDER)) {
 					module.update();
 				}
 			});

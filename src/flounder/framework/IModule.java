@@ -87,6 +87,6 @@ public abstract class IModule<T extends IModule> {
 	 * A enum that defines where a module will update.
 	 */
 	public enum ModuleUpdate {
-		ALWAYS, UPDATE_PRE, UPDATE_POST, RENDER
+		UPDATE_ALWAYS, UPDATE_PRE, UPDATE_POST, UPDATE_RENDER
 	}
 }

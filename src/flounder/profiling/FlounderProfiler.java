@@ -19,7 +19,7 @@ public class FlounderProfiler extends IModule {
 	 * Creates a new new profiler.
 	 */
 	public FlounderProfiler() {
-		super(ModuleUpdate.ALWAYS, FlounderLogger.class);
+		super(ModuleUpdate.UPDATE_ALWAYS, FlounderLogger.class);
 	}
 
 	@Override
