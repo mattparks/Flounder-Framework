@@ -45,6 +45,15 @@ public class Quaternion {
 	}
 
 	/**
+	 * Constructor for Quaternion.
+	 *
+	 * @param source Creates this quaternion out of a matrix one.
+	 */
+	public Quaternion(Matrix4f source) {
+		set(source);
+	}
+
+	/**
 	 * Loads from another Quaternion.
 	 *
 	 * @param source The source quaternion.
@@ -55,6 +64,46 @@ public class Quaternion {
 		this.x = source.x;
 		this.y = source.y;
 		this.z = source.z;
+		return this;
+	}
+
+	/**
+	 * Loads from a Matrix4f.
+	 *
+	 * @param source The source matrix.
+	 *
+	 * @return This.
+	 */
+	public Quaternion set(Matrix4f source) {
+		float diagonal = source.m00 + source.m11 + source.m22;
+
+		if (diagonal > 0.0f) {
+			float w4 = (float) (Math.sqrt(diagonal + 1.0f) * 2.0f);
+			this.w = w4 / 4.0f;
+			this.x = (source.m21 - source.m12) / w4;
+			this.y = (source.m02 - source.m20) / w4;
+			this.z = (source.m10 - source.m01) / w4;
+		} else if ((source.m00 > source.m11) && (source.m00 > source.m22)) {
+			float x4 = (float) (Math.sqrt(1.0f + source.m00 - source.m11 - source.m22) * 2.0f);
+			this.w = (source.m21 - source.m12) / x4;
+			this.x = x4 / 4.0f;
+			this.y = (source.m01 + source.m10) / x4;
+			this.z = (source.m02 + source.m20) / x4;
+		} else if (source.m11 > source.m22) {
+			float y4 = (float) (Math.sqrt(1.0f + source.m11 - source.m00 - source.m22) * 2.0f);
+			this.w = (source.m02 - source.m20) / y4;
+			this.x = (source.m01 + source.m10) / y4;
+			this.y = y4 / 4.0f;
+			this.z = (source.m12 + source.m21) / y4;
+		} else {
+			float z4 = (float) (Math.sqrt(1f + source.m22 - source.m00 - source.m11) * 2.0f);
+			this.w = (source.m10 - source.m01) / z4;
+			this.x = (source.m02 + source.m20) / z4;
+			this.y = (source.m12 + source.m21) / z4;
+			this.z = z4 / 4.0f;
+		}
+
+		this.normalize();
 		return this;
 	}
 
@@ -179,24 +228,30 @@ public class Quaternion {
 		return new Quaternion((float) newW, (float) newX, (float) newY, (float) newZ);
 	}
 
-	public static Quaternion slerp(Quaternion qA, Quaternion qB, double time) {
-		double cosHalfTheta = dotProductOfQuaternions(qA, qB);
-		if (Math.abs(cosHalfTheta) >= 1.0D) {
-			return new Quaternion(qA.getW(), qA.getX(), qA.getY(), qA.getZ());
+	public static Quaternion slerp(Quaternion start, Quaternion end, float progression) {
+		start.normalize();
+		end.normalize();
+		final float d = start.x * end.x + start.y * end.y + start.z * end.z + start.w * end.w;
+		float absDot = d < 0f ? -d : d;
+		float scale0 = 1f - progression;
+		float scale1 = progression;
+
+		if ((1 - absDot) > 0.1f) {
+
+			final float angle = (float) Math.acos(absDot);
+			final float invSinTheta = 1f / (float) Math.sin(angle);
+			scale0 = ((float) Math.sin((1f - progression) * angle) * invSinTheta);
+			scale1 = ((float) Math.sin((progression * angle)) * invSinTheta);
 		}
-		double halfTheta = Math.acos(cosHalfTheta);
-		double sinHalfTheta = Math.sqrt(1.0D - cosHalfTheta * cosHalfTheta);
-		double ratioA = 0.5D;
-		double ratioB = 0.5D;
-		if (Math.abs((float) sinHalfTheta) >= 0.001D) {
-			ratioA = Math.sin((1.0D - time) * halfTheta) / sinHalfTheta;
-			ratioB = Math.sin(time * halfTheta) / sinHalfTheta;
+
+		if (d < 0f) {
+			scale1 = -scale1;
 		}
-		double newW = qA.getW() * ratioA + qB.getW() * ratioB;
-		double newX = qA.getX() * ratioA + qB.getX() * ratioB;
-		double newY = qA.getY() * ratioA + qB.getY() * ratioB;
-		double newZ = qA.getZ() * ratioA + qB.getZ() * ratioB;
-		return new Quaternion((float) newW, (float) newX, (float) newY, (float) newZ);
+		float newX = (scale0 * start.x) + (scale1 * end.x);
+		float newY = (scale0 * start.y) + (scale1 * end.y);
+		float newZ = (scale0 * start.z) + (scale1 * end.z);
+		float newW = (scale0 * start.w) + (scale1 * end.w);
+		return new Quaternion(newX, newY, newZ, newW);
 	}
 
 	public static double dotProductOfQuaternions(Quaternion qA, Quaternion qB) {
@@ -360,6 +415,45 @@ public class Quaternion {
 		}
 
 		return this;
+	}
+
+	/**
+	 * Converts the quaternion to a 4x4 matrix representing the exact same
+	 * rotation as this quaternion. (The rotation is only contained in the
+	 * top-left 3x3 part, but a 4x4 matrix is returned here for convenience
+	 * seeing as it will be multiplied with other 4x4 matrices).
+	 *
+	 * @return The rotation matrix which reresents the exact same rotation as
+	 *         this quaternion.
+	 */
+	public Matrix4f toRotationMatrix() {
+		Matrix4f matrix = new Matrix4f();
+		final float xy = x * y;
+		final float xz = x * z;
+		final float xw = x * w;
+		final float yz = y * z;
+		final float yw = y * w;
+		final float zw = z * w;
+		final float xSquared = x * x;
+		final float ySquared = y * y;
+		final float zSquared = z * z;
+		matrix.m00 = 1 - 2 * (ySquared + zSquared);
+		matrix.m01 = 2 * (xy - zw);
+		matrix.m02 = 2 * (xz + yw);
+		matrix.m03 = 0;
+		matrix.m10 = 2 * (xy + zw);
+		matrix.m11 = 1 - 2 * (xSquared + zSquared);
+		matrix.m12 = 2 * (yz - xw);
+		matrix.m13 = 0;
+		matrix.m20 = 2 * (xz - yw);
+		matrix.m21 = 2 * (yz + xw);
+		matrix.m22 = 1 - 2 * (xSquared + ySquared);
+		matrix.m23 = 0;
+		matrix.m30 = 0;
+		matrix.m31 = 0;
+		matrix.m32 = 0;
+		matrix.m33 = 1;
+		return matrix;
 	}
 
 	/**
