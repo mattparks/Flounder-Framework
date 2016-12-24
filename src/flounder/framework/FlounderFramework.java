@@ -209,7 +209,7 @@ public class FlounderFramework extends Thread {
 	private void profile() {
 		// Profile some values to the logger.
 		if (timerLog.isPassedTime()) {
-			FlounderLogger.log(Maths.roundToPlace(1.0f / getDelta(), 2) + "ups, " + Maths.roundToPlace(1.0f / getDeltaRender(), 2) + "fps");
+		//	FlounderLogger.log(Maths.roundToPlace(1.0f / getDelta(), 2) + "ups, " + Maths.roundToPlace(1.0f / getDeltaRender(), 2) + "fps");
 			timerLog.resetStartTime();
 		}
 

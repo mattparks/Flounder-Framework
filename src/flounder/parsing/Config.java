@@ -74,9 +74,7 @@ public class Config {
 
 				map.put(tokens[0].trim(), new Pair<>(tokens[1].trim(), null));
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ParseException e) {
+		} catch (IOException | ParseException e) {
 			e.printStackTrace();
 		}
 	}

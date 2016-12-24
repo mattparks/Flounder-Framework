@@ -4,6 +4,7 @@ import flounder.framework.*;
 import flounder.logger.*;
 
 import javax.swing.*;
+import java.awt.event.*;
 
 /**
  * A module used for profiling many parts of the framework.
@@ -36,9 +37,9 @@ public class FlounderProfiler extends IModule {
 		}
 
 		profilerJFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		profilerJFrame.addWindowListener(new java.awt.event.WindowAdapter() {
+		profilerJFrame.addWindowListener(new WindowAdapter() {
 			@Override
-			public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+			public void windowClosing(WindowEvent windowEvent) {
 				if (JOptionPane.showConfirmDialog(profilerJFrame,
 						"Are you sure to close this profiler?", "Really Closing?",
 						JOptionPane.YES_NO_OPTION,
