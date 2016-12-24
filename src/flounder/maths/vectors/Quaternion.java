@@ -424,7 +424,7 @@ public class Quaternion {
 	 * seeing as it will be multiplied with other 4x4 matrices).
 	 *
 	 * @return The rotation matrix which reresents the exact same rotation as
-	 *         this quaternion.
+	 * this quaternion.
 	 */
 	public Matrix4f toRotationMatrix() {
 		Matrix4f matrix = new Matrix4f();
