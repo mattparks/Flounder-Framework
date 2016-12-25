@@ -7,8 +7,7 @@ import java.io.*;
 import java.util.regex.*;
 
 /**
- * Reads an XML file and stores all the data in {@link XmlNode} objects,
- * allowing for easy access to the data contained in the XML file.
+ * Reads an XML file and stores all the data in {@link XmlNode} objects, allowing for easy access to the data contained in the XML file.
  */
 public class XmlParser {
 	private static final Pattern DATA = Pattern.compile(">(.+?)<");
@@ -18,8 +17,7 @@ public class XmlParser {
 	private static final Pattern CLOSED = Pattern.compile("(</|/>)");
 
 	/**
-	 * Reads an XML file and stores all the data in {@link XmlNode} objects,
-	 * allowing for easy access to the data contained in the XML file.
+	 * Reads an XML file and stores all the data in {@link XmlNode} objects, allowing for easy access to the data contained in the XML file.
 	 *
 	 * @param file The XML file
 	 *
@@ -66,7 +64,7 @@ public class XmlParser {
 			return node;
 		}
 
-		XmlNode child = null;
+		XmlNode child;
 
 		while ((child = loadNode(reader)) != null) {
 			node.addChild(child);

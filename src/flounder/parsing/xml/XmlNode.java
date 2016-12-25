@@ -3,8 +3,7 @@ package flounder.parsing.xml;
 import java.util.*;
 
 /**
- * Represents a node in an XML file. This contains the name of the node, a map of the attributes and their values,
- * any text data between the start and end tag, and a list of all its children nodes.
+ * Represents a node in an XML file. This contains the name of the node, a map of the attributes and their values, any text data between the start and end tag, and a list of all its children nodes.
  */
 public class XmlNode {
 	private String name;
@@ -35,16 +34,15 @@ public class XmlNode {
 	}
 
 	/**
-	 * Gets the value of a certain attribute of the node.
-	 * Returns {@code null} if the attribute doesn't exist.
+	 * Gets the value of a certain attribute of the node. Returns {@code null} if the attribute doesn't exist.
 	 *
-	 * @param attr The name of the attribute.
+	 * @param attribute The name of the attribute.
 	 *
 	 * @return The value of the attribute.
 	 */
-	public String getAttribute(String attr) {
+	public String getAttribute(String attribute) {
 		if (attributes != null) {
-			return attributes.get(attr);
+			return attributes.get(attribute);
 		} else {
 			return null;
 		}
@@ -74,12 +72,12 @@ public class XmlNode {
 	 * Used to get a specific child when there are multiple child nodes with the same node name.
 	 *
 	 * @param childName The name of the child node.
-	 * @param attr The attribute whose value is to be checked.
+	 * @param attribute The attribute whose value is to be checked.
 	 * @param value The value that the attribute must have.
 	 *
 	 * @return The child node which has the correct name and the correct value for the chosen attribute.
 	 */
-	public XmlNode getChildWithAttribute(String childName, String attr, String value) {
+	public XmlNode getChildWithAttribute(String childName, String attribute, String value) {
 		List<XmlNode> children = getChildren(childName);
 
 		if (children == null || children.isEmpty()) {
@@ -87,7 +85,7 @@ public class XmlNode {
 		}
 
 		for (XmlNode child : children) {
-			String val = child.getAttribute(attr);
+			String val = child.getAttribute(attribute);
 
 			if (value.equals(val)) {
 				return child;
@@ -109,11 +107,12 @@ public class XmlNode {
 		return new ArrayList<>();
 	}
 
-	protected void addAttribute(String attr, String value) {
+	protected void addAttribute(String attribute, String value) {
 		if (attributes == null) {
 			attributes = new HashMap<>();
 		}
-		attributes.put(attr, value);
+
+		attributes.put(attribute, value);
 	}
 
 	protected void addChild(XmlNode child) {
