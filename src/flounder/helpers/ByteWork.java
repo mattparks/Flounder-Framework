@@ -14,6 +14,7 @@ public class ByteWork {
 	public static final int INT_LENGTH = 4;
 	public static final int SHORT_LENGTH = 2;
 	public static final int LONG_LENGTH = 8;
+	public static final int BYTES_PER_FLOAT = 4;
 
 	public static int getCharCount(String string, char value) {
 		char[] charArray = string.toCharArray();
