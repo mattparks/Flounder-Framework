@@ -64,6 +64,7 @@ public class Quaternion {
 		this.x = source.x;
 		this.y = source.y;
 		this.z = source.z;
+		this.w = source.w;
 		return this;
 	}
 
