@@ -189,7 +189,7 @@ public class FlounderLogger extends IModule {
 	 * @return Returns the string of the current date as [hour:minute:second | day/month/year].
 	 */
 	private static String getDateString() {
-		int hour = Calendar.getInstance().get(Calendar.HOUR);
+		int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
 		int minute = Calendar.getInstance().get(Calendar.MINUTE);
 		int second = Calendar.getInstance().get(Calendar.SECOND) + 1;
 		return hour + "." + minute + "." + second;

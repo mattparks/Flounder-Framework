@@ -3,6 +3,7 @@ package flounder.resources;
 import flounder.logger.*;
 
 import java.io.*;
+import java.nio.charset.*;
 
 /**
  * A framework file that can be read from within the jar file.
@@ -78,10 +79,9 @@ public class MyFile {
 	 */
 	public BufferedReader getReader() {
 		try {
-			InputStreamReader isr = new InputStreamReader(getInputStream());
-			return new BufferedReader(isr);
+			return new BufferedReader(new InputStreamReader(getInputStream(), Charset.forName("UTF-8")));
 		} catch (Exception e) {
-			FlounderLogger.error("Couldn't get reader for " + path);
+			FlounderLogger.error("Couldn't get reader for: " + path);
 			FlounderLogger.exception(e);
 			return null;
 		}
@@ -93,7 +93,19 @@ public class MyFile {
 	 * @return Returns a input steam to the file path.
 	 */
 	public InputStream getInputStream() {
-		return Class.class.getResourceAsStream(path);
+		try {
+			InputStream is = Class.class.getResourceAsStream(path);
+
+			if (is != null) {
+				return is;
+			}
+
+			return new FileInputStream(new File(path));
+		} catch (Exception e) {
+			FlounderLogger.error("Couldn't get input stream to: " + path);
+			FlounderLogger.exception(e);
+			return null;
+		}
 	}
 
 	/**
