@@ -1,14 +1,15 @@
 package flounder.framework;
 
+import flounder.helpers.*;
+
 import java.util.*;
 
 /**
  * A simple interface that is used to define an extension to the framework. Extensions are used by modules, Example: to use FlounderCamera you must create an extension that implements ICamera.
  */
 public abstract class IExtension<T extends IModule> {
-	protected static boolean CHANGED_INIT_STATE = true;
-
-	private final List<Class<T>> requires;
+	private final IModule extendedModule;
+	private Class<T>[] requires;
 	private boolean initialized;
 
 	/**
@@ -16,11 +17,11 @@ public abstract class IExtension<T extends IModule> {
 	 *
 	 * @param requires Modules the extension depends on.
 	 */
-	public IExtension(Class<T>... requires) {
-		this.requires = new ArrayList<>(Arrays.asList(requires));
+	public IExtension(Class<T> extendedModule, Class<T>... requires) {
+		this.extendedModule = FlounderModules.loadModule(extendedModule);
+		this.requires = ArrayUtils.addElement(requires, extendedModule);
 		this.initialized = false;
-		FlounderModules.registerModules(FlounderModules.loadModules(requires));
-		CHANGED_INIT_STATE = true;
+		FlounderModules.registerExtension(this);
 	}
 
 	/**
@@ -31,39 +32,59 @@ public abstract class IExtension<T extends IModule> {
 	public abstract boolean isActive();
 
 	/**
+	 * Forces {@link flounder.framework.FlounderModules} to reevaluate extension usage within modules. This should be called if {@link #isActive()}'s state is changed.
+	 */
+	public void forceChange() {
+		FlounderModules.extensionsChanged = true;
+	}
+
+	/**
+	 * Gets the module that the extension extends.
+	 *
+	 * @return The module that the extension extends.
+	 */
+	public IModule getExtendedModule() {
+		return extendedModule;
+	}
+
+	/**
 	 * Gets the classes that the extension requires.
 	 *
 	 * @return The classes that the extension requires.
 	 */
-	protected List<Class<T>> getRequires() {
+	protected Class<T>[] getRequires() {
 		return requires;
 	}
 
 	/**
-	 * Adds a new requirement to the extension.
+	 * Adds new requirements to the extension.
 	 *
-	 * @param require The requirement extension to add.
+	 * @param toAdd The requirements for the extension to add.
 	 */
-	protected void addRequirement(Class<T> require) {
-		if (!requires.contains(require)) {
-			requires.add(require);
-		} else {
-			return;
+	protected void addRequirements(Class<T>... toAdd) {
+		for (Class<T> require : toAdd) {
+			if (!Arrays.asList(requires).contains(require)) {
+				this.requires = ArrayUtils.addElement(requires, require);
+			} else {
+				return;
+			}
 		}
 
 		// TODO: Rebuild FlounderModules requirements tree.
 	}
 
 	/**
-	 * Removes requirement from the extension.
+	 * Removes requirements from the extension.
 	 *
-	 * @param require The requirement extension to remove.
+	 * @param toRemove The requirements for the extension to remove.
 	 */
-	protected void removeRequirement(Class<T> require) {
-		if (requires.contains(require)) {
-			requires.remove(require);
-		} else {
-			return;
+	protected void removeRequirements(Class<T>... toRemove) {
+		for (Class<T> require : toRemove) {
+			if (Arrays.asList(requires).contains(require)) {
+				this.requires = ArrayUtils.removeElement(requires, require);
+			} else {
+				return;
+			}
 		}
 
 		// TODO: Rebuild FlounderModules requirements tree.
@@ -85,6 +106,5 @@ public abstract class IExtension<T extends IModule> {
 	 */
 	public void setInitialized(boolean initialized) {
 		this.initialized = initialized;
-		CHANGED_INIT_STATE = true;
 	}
 }

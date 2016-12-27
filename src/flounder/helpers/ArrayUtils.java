@@ -40,4 +40,40 @@ public class ArrayUtils {
 
 		return count;
 	}
+
+	/**
+	 * Adds a object to an existing array in Java.
+	 *
+	 * @param array The array to add into.
+	 * @param newObject The object to add.
+	 * @param <T> The generic array type.
+	 *
+	 * @return The array with the added value.
+	 */
+	public static <T> T[] addElement(T[] array, T newObject) {
+		array = Arrays.copyOf(array, array.length + 1);
+		array[array.length - 1] = newObject;
+		return array;
+	}
+
+	/**
+	 * Removes a object to an existing array in Java.
+	 *
+	 * @param array The array to remove from.
+	 * @param removeObject The object to remove.
+	 * @param <T> The generic array type.
+	 *
+	 * @return The array with the removed value.
+	 */
+	public static <T> T[] removeElement(T[] array, T removeObject) {
+		List<T> result = new LinkedList<>();
+
+		for (T item : array) {
+			if (!removeObject.equals(item)) {
+				result.add(item);
+			}
+		}
+
+		return result.toArray(array);
+	}
 }

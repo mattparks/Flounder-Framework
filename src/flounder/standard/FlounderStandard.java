@@ -26,7 +26,7 @@ public class FlounderStandard extends IModule {
 
 	@Override
 	public void update() {
-		List<IExtension> newStandards = FlounderFramework.getExtensionMatches(IStandard.class, true);
+		List<IExtension> newStandards = FlounderModules.getExtensions(getInstance());
 
 		if (newStandards != null) {
 			List<IStandard> newCasted = new ArrayList<>();
@@ -39,7 +39,7 @@ public class FlounderStandard extends IModule {
 
 				removedStandards.forEach(removed -> {
 					removed.dispose();
-					((IExtension) removed).setInitialized(false);
+					removed.setInitialized(false);
 				});
 			} else {
 				standards = new ArrayList<>();
@@ -49,9 +49,9 @@ public class FlounderStandard extends IModule {
 			standards.addAll(newCasted);
 
 			standards.forEach(standard -> {
-				if (!((IExtension) standard).isInitialized()) {
+				if (!standard.isInitialized()) {
 					standard.init();
-					((IExtension) standard).setInitialized(true);
+					standard.setInitialized(true);
 				}
 			});
 		}
@@ -63,6 +63,10 @@ public class FlounderStandard extends IModule {
 
 	@Override
 	public void profile() {
+		if (standards != null && !standards.isEmpty()) {
+			standards.forEach(IStandard::update);
+			standards.forEach(IStandard::profile);
+		}
 	}
 
 	@Override
@@ -75,7 +79,7 @@ public class FlounderStandard extends IModule {
 		if (standards != null && !standards.isEmpty()) {
 			standards.forEach(standard -> {
 				standard.dispose();
-				((IExtension) standard).setInitialized(false);
+				standard.setInitialized(false);
 			});
 			standards.clear();
 		}

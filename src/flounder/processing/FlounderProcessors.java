@@ -32,13 +32,13 @@ public class FlounderProcessors extends IModule {
 
 		processors.forEach(processor -> {
 			processor.init();
-			((IExtension) processor).setInitialized(true);
+			processor.setInitialized(true);
 		});
 	}
 
 	@Override
 	public void update() {
-		List<IExtension> newProcessors = FlounderFramework.getExtensionMatches(IProcessor.class, true);
+		List<IExtension> newProcessors = FlounderModules.getExtensions(getInstance());
 
 		if (newProcessors != null) {
 			List<IProcessor> newCasted = new ArrayList<>();
@@ -51,7 +51,7 @@ public class FlounderProcessors extends IModule {
 
 				removedStandards.forEach(removed -> {
 					removed.dispose();
-					((IExtension) removed).setInitialized(false);
+					removed.setInitialized(false);
 				});
 			} else {
 				processors = new ArrayList<>();
@@ -61,21 +61,21 @@ public class FlounderProcessors extends IModule {
 			processors.addAll(newCasted);
 
 			processors.forEach(standard -> {
-				if (!((IExtension) standard).isInitialized()) {
+				if (!standard.isInitialized()) {
 					standard.init();
-					((IExtension) standard).setInitialized(true);
+					standard.setInitialized(true);
 				}
 			});
 		}
 
-		if (!processors.isEmpty()) {
+		if (processors != null && !processors.isEmpty()) {
 			processors.forEach(IProcessor::update);
 		}
 	}
 
 	@Override
 	public void profile() {
-		if (!processors.isEmpty()) {
+		if (processors != null && !processors.isEmpty()) {
 			processors.forEach(IProcessor::profile);
 		}
 	}
@@ -103,7 +103,7 @@ public class FlounderProcessors extends IModule {
 		if (processors != null && !processors.isEmpty()) {
 			processors.forEach(processor -> {
 				processor.dispose();
-				((IExtension) processor).setInitialized(false);
+				processor.setInitialized(false);
 			});
 		}
 	}

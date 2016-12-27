@@ -27,7 +27,7 @@ public class Version {
 			minor = v.length < 2 ? 0 : Integer.valueOf(v[1]);
 			revision = v.length < 3 ? 0 : Integer.valueOf(v[2]);
 		} catch (Throwable t) {
-			throw new RuntimeException("Invalid Flounder Version " + version);
+			throw new RuntimeException("Invalid Flounder Version: " + version);
 		}
 
 		try {

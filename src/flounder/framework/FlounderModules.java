@@ -13,6 +13,9 @@ public class FlounderModules {
 	protected static final List<IModule> modulesActive = new ArrayList<>();
 	protected static final List<String> modulesUnlogged = new ArrayList<>();
 
+	protected static final Map<IModule, List<IExtension>> extensionsMap = new HashMap<>();
+	protected static boolean extensionsChanged = true;
+
 	/**
 	 * Gets if the framework contains a module.
 	 *
@@ -141,5 +144,89 @@ public class FlounderModules {
 		for (IModule module : modules) {
 			registerModule(module);
 		}
+	}
+
+	/**
+	 * Registers an extension with a module.
+	 *
+	 * @param extension The extension to register.
+	 */
+	protected static void registerExtension(IExtension extension) {
+		List<IExtension> extensions = extensionsMap.get(extension.getExtendedModule());
+
+		if (extensions == null) {
+			extensions = new ArrayList<>();
+			extensions.add(extension);
+			extensionsMap.put(extension.getExtendedModule(), extensions);
+		} else {
+			extensions.add(extension);
+		}
+
+		registerModules(loadModules(extension.getRequires()));
+		extensionsChanged = true;
+	}
+
+	/**
+	 * Gets all extensions for a module.
+	 *
+	 * @param module The module to get extensions for.
+	 *
+	 * @return Found extensions.
+	 */
+	public static List<IExtension> getExtensions(IModule module) {
+		return extensionsMap.get(module);
+	}
+
+	/**
+	 * Finds a new extension that implements an interface/class.
+	 *
+	 * @param module The module to find the extension for.
+	 * @param last The last object to compare to.
+	 * @param onlyRunOnChange When this and {@link flounder.framework.FlounderModules#extensionsChanged} is true, this will update a check, otherwise a object will not be checked for (returning null).
+	 *
+	 * @return The found extension to be active and matched the specs provided.
+	 */
+	public static IExtension getExtensionMatch(IModule module, IExtension last, boolean onlyRunOnChange) {
+		if (extensionsChanged || !onlyRunOnChange) {
+			List<IExtension> resultExtensions = getExtensionMatches(module, onlyRunOnChange);
+
+			if (resultExtensions != null && !resultExtensions.isEmpty()) {
+				for (IExtension extension : resultExtensions) {
+					if (!extension.equals(last)) {
+						return extension;
+					}
+				}
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * Finds new extensions that implements an interface/class.
+	 *
+	 * @param module The module to find the extensions for.
+	 * @param onlyRunOnChange When this and {@link flounder.framework.FlounderModules#extensionsChanged} is true, this will update a check, otherwise a object will not be checked for (returning null).
+	 *
+	 * @return The newly found extensions to be active and matched the specs provided.
+	 */
+	public static List<IExtension> getExtensionMatches(IModule module, boolean onlyRunOnChange) {
+		if (extensionsChanged || !onlyRunOnChange) {
+			List<IExtension> resultExtensions = null;
+
+			for (IExtension extension : getExtensions(module)) {
+				if (extension.isActive()) {
+					if (resultExtensions == null) {
+						resultExtensions = new ArrayList<>();
+					}
+
+					resultExtensions.add(extension);
+				}
+			}
+
+			return resultExtensions;
+		}
+
+		return null;
 	}
 }

@@ -1,21 +1,40 @@
 package flounder.standard;
 
+import flounder.framework.*;
+
 /**
- * A interface used with {@link flounder.framework.IExtension} to define a standard.
+ * A extension used with {@link flounder.standard.FlounderStandard} to define a standard.
  */
-public interface IStandard {
+public abstract class IStandard extends IExtension {
+	/**
+	 * Creates a new standard.
+	 *
+	 * @param requires The classes that are extra requirements for this implementation.
+	 */
+	public IStandard(Class... requires) {
+		super(FlounderStandard.class, requires);
+	}
+
 	/**
 	 * Run when initializing the standard.
 	 */
-	void init();
+	public abstract void init();
 
 	/**
-	 * Run when updating the standard (update in the pre-update loop).
+	 * Run when updating the standard.
 	 */
-	void update();
+	public abstract void update();
+
+	/**
+	 * Run when profiling the standard.
+	 */
+	public abstract void profile();
 
 	/**
 	 * Run when disposing the standard.
 	 */
-	void dispose();
+	public abstract void dispose();
+
+	@Override
+	public abstract boolean isActive();
 }

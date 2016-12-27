@@ -1,13 +1,12 @@
 package flounder.processing.opengl;
 
-import flounder.framework.*;
 import flounder.processing.*;
 import flounder.profiling.*;
 
 /**
  * A extension that is responsible for processing OpenGL requests.
  */
-public class ProcessorOpenGL extends IExtension implements IProcessor {
+public class ProcessorOpenGL extends IProcessor {
 	private static final float MAX_TIME_MILLIS = 8.0f;
 
 	private Queue<RequestOpenGL> requestQueue;
@@ -17,6 +16,7 @@ public class ProcessorOpenGL extends IExtension implements IProcessor {
 	 * Creates a new OpenGL processor.
 	 */
 	public ProcessorOpenGL() {
+		super();
 	}
 
 	@Override
@@ -64,11 +64,6 @@ public class ProcessorOpenGL extends IExtension implements IProcessor {
 		return RequestOpenGL.class;
 	}
 
-	@Override
-	public boolean isActive() {
-		return true;
-	}
-
 	/**
 	 * Completes all requests left in queue.
 	 */
@@ -83,5 +78,10 @@ public class ProcessorOpenGL extends IExtension implements IProcessor {
 		completeAllRequests();
 		requestQueue.clear();
 		history = 0;
+	}
+
+	@Override
+	public boolean isActive() {
+		return true;
 	}
 }

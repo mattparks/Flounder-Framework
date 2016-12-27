@@ -1,6 +1,5 @@
 package flounder.processing.resource;
 
-import flounder.framework.*;
 import flounder.logger.*;
 import flounder.processing.*;
 import flounder.profiling.*;
@@ -8,7 +7,7 @@ import flounder.profiling.*;
 /**
  * A extension that is responsible for processing resource requests in a separate thread.
  */
-public class ProcessorResource extends IExtension implements IProcessor {
+public class ProcessorResource extends IProcessor {
 	private Queue<RequestResource> requestQueue;
 	private int history;
 
@@ -19,6 +18,7 @@ public class ProcessorResource extends IExtension implements IProcessor {
 	 * Creates a new resource processor.
 	 */
 	public ProcessorResource() {
+		super();
 	}
 
 	@Override
@@ -63,11 +63,6 @@ public class ProcessorResource extends IExtension implements IProcessor {
 		return RequestResource.class;
 	}
 
-	@Override
-	public boolean isActive() {
-		return true;
-	}
-
 	private synchronized void run() {
 		while (running || requestQueue.hasRequests()) {
 			if (requestQueue.hasRequests()) {
@@ -93,5 +88,10 @@ public class ProcessorResource extends IExtension implements IProcessor {
 		indicateNewRequests();
 		requestQueue.clear();
 		history = 0;
+	}
+
+	@Override
+	public boolean isActive() {
+		return true;
 	}
 }

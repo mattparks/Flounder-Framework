@@ -25,7 +25,6 @@ public class FlounderFramework extends Thread {
 	private static MyFile roamingFolder;
 
 	private Version version;
-	private List<IExtension> extensions;
 
 	private boolean closedRequested;
 	private long startTime;
@@ -51,8 +50,11 @@ public class FlounderFramework extends Thread {
 		loadFlounderStatics(unlocalizedName);
 
 		// Increment revision every fix for the minor version release. Minor version represents the build month. Major incremented every two years OR after major core framework rewrites.
-		this.version = new Version("1.12.9");
-		this.extensions = new ArrayList<>(Arrays.asList(extensions));
+		this.version = new Version("27.12.10");
+
+		for (IExtension extension : extensions) {
+			// Should already be registered...
+		}
 
 		this.closedRequested = false;
 		this.startTime = System.nanoTime();
@@ -199,8 +201,7 @@ public class FlounderFramework extends Thread {
 			timerRender.resetStartTime();
 		}
 
-		// Any changed states should be resolved.
-		IExtension.CHANGED_INIT_STATE = false;
+		FlounderModules.extensionsChanged = false;
 	}
 
 	/**
@@ -232,70 +233,6 @@ public class FlounderFramework extends Thread {
 		} catch (InterruptedException ex) {
 			Thread.currentThread().interrupt();
 		}
-	}
-
-	/**
-	 * Gets a list of all currently active extensions.
-	 *
-	 * @return All active extensions.
-	 */
-	public static List<IExtension> getExtensions() {
-		return instance.extensions;
-	}
-
-	/**
-	 * Finds a new extension that implements an interface/class.
-	 *
-	 * @param type The type of interface/class to look for implementation for.
-	 * @param last The last object to compare to.
-	 * @param onlyRunOnChange When this and {@link flounder.framework.IExtension#CHANGED_INIT_STATE} is true, this will update a check, otherwise a object will not be checked for (returning null).
-	 * @param <T> The generic  interface/class type.
-	 *
-	 * @return The found extension to be active and matched the specs provided.
-	 */
-	public static <T> IExtension getExtensionMatch(Class<T> type, IExtension last, boolean onlyRunOnChange) {
-		if (IExtension.CHANGED_INIT_STATE || !onlyRunOnChange) {
-			List<IExtension> resultExtensions = getExtensionMatches(type, onlyRunOnChange);
-
-			if (resultExtensions != null && !resultExtensions.isEmpty()) {
-				for (IExtension extension : resultExtensions) {
-					if (!extension.equals(last)) {
-						return extension;
-					}
-				}
-			}
-		}
-
-		return null;
-	}
-
-	/**
-	 * Finds new extensions that implements an interface/class.
-	 *
-	 * @param type The type of interface/class to look for implementation for.
-	 * @param onlyRunOnChange When this and {@link flounder.framework.IExtension#CHANGED_INIT_STATE} is true, this will update a check, otherwise a object will not be checked for (returning null).
-	 * @param <T> The generic  interface/class type.
-	 *
-	 * @return The newly found extensions to be active and matched the specs provided.
-	 */
-	public static <T> List<IExtension> getExtensionMatches(Class<T> type, boolean onlyRunOnChange) {
-		if (IExtension.CHANGED_INIT_STATE || !onlyRunOnChange) {
-			List<IExtension> resultExtensions = null;
-
-			for (IExtension extension : FlounderFramework.getExtensions()) {
-				if (type.isInstance(extension) && extension.isActive()) {
-					if (resultExtensions == null) {
-						resultExtensions = new ArrayList<>();
-					}
-
-					resultExtensions.add(extension);
-				}
-			}
-
-			return resultExtensions;
-		}
-
-		return null;
 	}
 
 	/**
@@ -417,7 +354,6 @@ public class FlounderFramework extends Thread {
 				}
 			});
 
-			extensions.clear();
 			modulesActive.clear();
 			modulesUnlogged.clear();
 			closedRequested = false;

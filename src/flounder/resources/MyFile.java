@@ -3,7 +3,6 @@ package flounder.resources;
 import flounder.logger.*;
 
 import java.io.*;
-import java.nio.charset.*;
 
 /**
  * A framework file that can be read from within the jar file.
