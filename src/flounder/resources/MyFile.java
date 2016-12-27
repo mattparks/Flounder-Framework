@@ -79,7 +79,7 @@ public class MyFile {
 	 */
 	public BufferedReader getReader() {
 		try {
-			return new BufferedReader(new InputStreamReader(getInputStream(), Charset.forName("UTF-8")));
+			return new BufferedReader(new InputStreamReader(getInputStream()));
 		} catch (Exception e) {
 			FlounderLogger.error("Couldn't get reader for: " + path);
 			FlounderLogger.exception(e);
@@ -101,7 +101,7 @@ public class MyFile {
 			}
 
 			return new FileInputStream(new File(path));
-		} catch (Exception e) {
+		} catch (IOException e) {
 			FlounderLogger.error("Couldn't get input stream to: " + path);
 			FlounderLogger.exception(e);
 			return null;
