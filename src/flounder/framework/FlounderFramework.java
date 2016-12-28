@@ -342,6 +342,9 @@ public class FlounderFramework extends Thread {
 		return roamingFolder;
 	}
 
+	/**
+	 * Disposed the framework if initialised.
+	 */
 	private void dispose() {
 		if (initialized) {
 			FlounderLogger.warning("Disposing framework! A new FlounderFramework object must be recreated if resetting the framework!");

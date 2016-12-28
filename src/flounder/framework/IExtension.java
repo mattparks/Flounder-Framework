@@ -70,6 +70,7 @@ public abstract class IExtension<T extends IModule> {
 			}
 		}
 
+		FlounderModules.registerModules(FlounderModules.loadModules(requires));
 		// TODO: Rebuild FlounderModules requirements tree.
 	}
 
@@ -87,6 +88,7 @@ public abstract class IExtension<T extends IModule> {
 			}
 		}
 
+		FlounderModules.registerModules(FlounderModules.loadModules(requires));
 		// TODO: Rebuild FlounderModules requirements tree.
 	}
 

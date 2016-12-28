@@ -27,9 +27,12 @@ public class FlounderProcessors extends IModule {
 	public void init() {
 		this.processors = new ArrayList<>();
 
+		// Manually adds the two base processors, these will be added into the modules loop, but are needed now.
+		// If these are not added in the init loop, nothing will be able to be initially processed!
 		processors.add(new ProcessorResource());
 		processors.add(new ProcessorOpenGL());
 
+		// Initializes the processors now.
 		processors.forEach(processor -> {
 			processor.init();
 			processor.setInitialized(true);
@@ -38,17 +41,20 @@ public class FlounderProcessors extends IModule {
 
 	@Override
 	public void update() {
+		// Gets new processors, if available.
 		List<IExtension> newProcessors = FlounderModules.getExtensions(getInstance());
 
 		if (newProcessors != null) {
 			List<IProcessor> newCasted = new ArrayList<>();
 			newProcessors.forEach(extension -> newCasted.add(((IProcessor) extension)));
 
+			// Adds the new processors to the loop.
 			if (processors != null) {
 				List<IProcessor> removedStandards = new ArrayList<>();
 				removedStandards.addAll(processors);
 				removedStandards.removeAll(newCasted);
 
+				// Disposes of any not used processors.
 				removedStandards.forEach(removed -> {
 					removed.dispose();
 					removed.setInitialized(false);
@@ -60,6 +66,7 @@ public class FlounderProcessors extends IModule {
 			processors.clear();
 			processors.addAll(newCasted);
 
+			// Initializes any not initialized processors.
 			processors.forEach(standard -> {
 				if (!standard.isInitialized()) {
 					standard.init();
@@ -68,6 +75,7 @@ public class FlounderProcessors extends IModule {
 			});
 		}
 
+		// Runs updates for the processors.
 		if (processors != null && !processors.isEmpty()) {
 			processors.forEach(IProcessor::update);
 		}
@@ -100,6 +108,7 @@ public class FlounderProcessors extends IModule {
 
 	@Override
 	public void dispose() {
+		// Disposes the processorss with the module.
 		if (processors != null && !processors.isEmpty()) {
 			processors.forEach(processor -> {
 				processor.dispose();

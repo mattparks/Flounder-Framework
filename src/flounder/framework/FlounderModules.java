@@ -186,45 +186,17 @@ public class FlounderModules {
 	 *
 	 * @return The found extension to be active and matched the specs provided.
 	 */
-	public static IExtension getExtensionMatch(IModule module, IExtension last, boolean onlyRunOnChange) {
+	public static <T> IExtension getExtensionMatch(IModule module, IExtension last, Class<T> type, boolean onlyRunOnChange) {
 		if (extensionsChanged || !onlyRunOnChange) {
-			List<IExtension> resultExtensions = getExtensionMatches(module, onlyRunOnChange);
+			List<IExtension> resultExtensions = getExtensions(module);
 
 			if (resultExtensions != null && !resultExtensions.isEmpty()) {
 				for (IExtension extension : resultExtensions) {
-					if (!extension.equals(last)) {
+					if (extension.isActive() && type.isInstance(extension) && !extension.equals(last)) {
 						return extension;
 					}
 				}
 			}
-		}
-
-		return null;
-	}
-
-	/**
-	 * Finds new extensions that implements an interface/class.
-	 *
-	 * @param module The module to find the extensions for.
-	 * @param onlyRunOnChange When this and {@link flounder.framework.FlounderModules#extensionsChanged} is true, this will update a check, otherwise a object will not be checked for (returning null).
-	 *
-	 * @return The newly found extensions to be active and matched the specs provided.
-	 */
-	public static List<IExtension> getExtensionMatches(IModule module, boolean onlyRunOnChange) {
-		if (extensionsChanged || !onlyRunOnChange) {
-			List<IExtension> resultExtensions = null;
-
-			for (IExtension extension : getExtensions(module)) {
-				if (extension.isActive()) {
-					if (resultExtensions == null) {
-						resultExtensions = new ArrayList<>();
-					}
-
-					resultExtensions.add(extension);
-				}
-			}
-
-			return resultExtensions;
 		}
 
 		return null;
