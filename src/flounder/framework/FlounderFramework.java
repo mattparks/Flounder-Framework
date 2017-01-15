@@ -18,7 +18,7 @@ import static flounder.framework.FlounderModules.*;
  * Start off by creating a new FlounderFramework object in your main thread, using Extensions in the constructor. By using Extensions: Modules can be required and therefor loaded into the framework.
  * Implementing interfaces like {@link flounder.standard.IStandard} with your extension can allow you do task specific things with your Extensions. After creating your Framework object call {@link #run()} to start.
  */
-public class FlounderFramework extends Thread {
+public class FlounderFramework {
 	private static FlounderFramework instance;
 
 	private static boolean runningFromJar;
@@ -103,7 +103,6 @@ public class FlounderFramework extends Thread {
 		}
 	}
 
-	@Override
 	public void run() {
 		try {
 			initialize();

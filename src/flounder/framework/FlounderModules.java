@@ -182,7 +182,9 @@ public class FlounderModules {
 	 *
 	 * @param module The module to find the extension for.
 	 * @param last The last object to compare to.
+	 * @param type The class type of object to find a extension that matches for.
 	 * @param onlyRunOnChange When this and {@link flounder.framework.FlounderModules#extensionsChanged} is true, this will update a check, otherwise a object will not be checked for (returning null).
+	 * @param <T> The type of extension class to be found.
 	 *
 	 * @return The found extension to be active and matched the specs provided.
 	 */

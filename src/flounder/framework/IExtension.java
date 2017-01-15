@@ -15,6 +15,7 @@ public abstract class IExtension<T extends IModule> {
 	/**
 	 * Creates a new abstract extension.
 	 *
+	 * @param extendedModule The {@link flounder.framework.IModule} the extension extends.
 	 * @param requires Modules the extension depends on.
 	 */
 	public IExtension(Class<T> extendedModule, Class<T>... requires) {
