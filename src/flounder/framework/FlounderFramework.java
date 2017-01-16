@@ -50,7 +50,7 @@ public class FlounderFramework extends Thread {
 		loadFlounderStatics(unlocalizedName);
 
 		// Increment revision every fix for the minor version release. Minor version represents the build month. Major incremented every two years OR after major core framework rewrites.
-		this.version = new Version("27.12.10");
+		this.version = new Version("15.01.10");
 
 		for (IExtension extension : extensions) {
 			// Should already be registered...
