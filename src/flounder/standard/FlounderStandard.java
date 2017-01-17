@@ -26,7 +26,7 @@ public class FlounderStandard extends IModule {
 
 	@Override
 	public void update() {
-		List<IExtension> newStandards = FlounderModules.getExtensions(getInstance());
+		List<IExtension> newStandards = getExtensions();
 
 		if (newStandards != null) {
 			List<IStandard> newCasted = new ArrayList<>();

@@ -42,7 +42,7 @@ public class FlounderProcessors extends IModule {
 	@Override
 	public void update() {
 		// Gets new processors, if available.
-		List<IExtension> newProcessors = FlounderModules.getExtensions(getInstance());
+		List<IExtension> newProcessors = getExtensions();
 
 		if (newProcessors != null) {
 			List<IProcessor> newCasted = new ArrayList<>();

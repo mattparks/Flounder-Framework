@@ -19,10 +19,13 @@ public abstract class IExtension<T extends IModule> {
 	 * @param requires Modules the extension depends on.
 	 */
 	public IExtension(Class<T> extendedModule, Class<T>... requires) {
-		this.extendedModule = FlounderModules.loadModule(extendedModule);
+		this.extendedModule = FlounderFramework.loadModule(extendedModule);
 		this.requires = ArrayUtils.addElement(requires, extendedModule);
 		this.initialized = false;
-		FlounderModules.registerExtension(this);
+
+		if (FlounderFramework.getInstance() != null) {
+			this.extendedModule.registerExtension(this);
+		}
 	}
 
 	/**
@@ -31,13 +34,6 @@ public abstract class IExtension<T extends IModule> {
 	 * @return If the extension is currently active.
 	 */
 	public abstract boolean isActive();
-
-	/**
-	 * Forces {@link flounder.framework.FlounderModules} to reevaluate extension usage within modules. This should be called if {@link #isActive()}'s state is changed.
-	 */
-	public void forceChange() {
-		FlounderModules.extensionsChanged = true;
-	}
 
 	/**
 	 * Gets the module that the extension extends.
@@ -71,7 +67,7 @@ public abstract class IExtension<T extends IModule> {
 			}
 		}
 
-		FlounderModules.registerModules(FlounderModules.loadModules(requires));
+		FlounderFramework.registerModules(FlounderFramework.loadModules(requires));
 		// TODO: Rebuild FlounderModules requirements tree.
 	}
 
@@ -89,7 +85,7 @@ public abstract class IExtension<T extends IModule> {
 			}
 		}
 
-		FlounderModules.registerModules(FlounderModules.loadModules(requires));
+		FlounderFramework.registerModules(FlounderFramework.loadModules(requires));
 		// TODO: Rebuild FlounderModules requirements tree.
 	}
 
