@@ -45,8 +45,8 @@ public class ProcessorOpenGL extends IProcessor {
 
 	@Override
 	public void profile() {
-		FlounderProfiler.add("GLProcessor", "Requests", requestQueue.count());
-		FlounderProfiler.add("GLProcessor", "History", history);
+		FlounderProfiler.add(FlounderProcessors.PROFILE_TAB_NAME, "OpenGL Requests", requestQueue.count());
+		FlounderProfiler.add(FlounderProcessors.PROFILE_TAB_NAME, "OpenGL History", history);
 	}
 
 	@Override

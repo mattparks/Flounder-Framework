@@ -10,7 +10,8 @@ import java.util.*;
  * A module used for logging outputs, errors, and exceptions to files and the console.
  */
 public class FlounderLogger extends IModule {
-	private final static FlounderLogger instance = new FlounderLogger();
+	private final static FlounderLogger INSTANCE = new FlounderLogger();
+	public static final String PROFILE_TAB_NAME = "Logger";
 
 	public static final boolean LOG_TO_CONSOLE = true;
 	public static final boolean LOG_TO_FILE = true;
@@ -32,7 +33,7 @@ public class FlounderLogger extends IModule {
 	 * Creates a new logger manager.
 	 */
 	public FlounderLogger() {
-		super(ModuleUpdate.UPDATE_ALWAYS, FlounderProfiler.class);
+		super(ModuleUpdate.UPDATE_ALWAYS, PROFILE_TAB_NAME, FlounderProfiler.class);
 	}
 
 	@Override
@@ -47,9 +48,9 @@ public class FlounderLogger extends IModule {
 
 	@Override
 	public void profile() {
-		FlounderProfiler.add("Logger", "Log To Console", LOG_TO_CONSOLE);
-		FlounderProfiler.add("Logger", "Log To Files", LOG_TO_FILE);
-		FlounderProfiler.add("Logger", "Lines Recorded", linesPrinted);
+		FlounderProfiler.add(PROFILE_TAB_NAME, "Record To Console", LOG_TO_CONSOLE);
+		FlounderProfiler.add(PROFILE_TAB_NAME, "Record To Files", LOG_TO_FILE);
+		FlounderProfiler.add(PROFILE_TAB_NAME, "Lines Recorded", linesPrinted);
 	}
 
 	/**
@@ -69,13 +70,13 @@ public class FlounderLogger extends IModule {
 
 		if (LOG_TO_FILE) {
 			if (getString(value).isEmpty()) {
-				instance.saveData.append("\n");
+				INSTANCE.saveData.append("\n");
 			} else {
-				instance.saveData.append("REGISTER [" + getDateString() + "]: " + getString(value).replaceAll("\u001B\\[[\\d;]*[^\\d;]", "") + "\n");
+				INSTANCE.saveData.append("REGISTER [" + getDateString() + "]: " + getString(value).replaceAll("\u001B\\[[\\d;]*[^\\d;]", "") + "\n");
 			}
 		}
 
-		instance.linesPrinted += getString(value).split("\n").length;
+		INSTANCE.linesPrinted += getString(value).split("\n").length;
 	}
 
 	/**
@@ -95,13 +96,13 @@ public class FlounderLogger extends IModule {
 
 		if (LOG_TO_FILE) {
 			if (getString(value).isEmpty()) {
-				instance.saveData.append("\n");
+				INSTANCE.saveData.append("\n");
 			} else {
-				instance.saveData.append("LOG [" + getDateString() + "]: " + getString(value).replaceAll("\u001B\\[[\\d;]*[^\\d;]", "") + "\n");
+				INSTANCE.saveData.append("LOG [" + getDateString() + "]: " + getString(value).replaceAll("\u001B\\[[\\d;]*[^\\d;]", "") + "\n");
 			}
 		}
 
-		instance.linesPrinted += getString(value).split("\n").length;
+		INSTANCE.linesPrinted += getString(value).split("\n").length;
 	}
 
 	/**
@@ -120,10 +121,10 @@ public class FlounderLogger extends IModule {
 		}
 
 		if (LOG_TO_FILE) {
-			instance.saveData.append("WARNING [" + getDateString() + "]: " + getString(value).replaceAll("\u001B\\[[\\d;]*[^\\d;]", "") + "\n");
+			INSTANCE.saveData.append("WARNING [" + getDateString() + "]: " + getString(value).replaceAll("\u001B\\[[\\d;]*[^\\d;]", "") + "\n");
 		}
 
-		instance.linesPrinted += getString(value).split("\n").length;
+		INSTANCE.linesPrinted += getString(value).split("\n").length;
 	}
 
 	/**
@@ -143,10 +144,10 @@ public class FlounderLogger extends IModule {
 
 
 		if (LOG_TO_FILE) {
-			instance.saveData.append("ERROR [" + getDateString() + "]: " + getString(value).replaceAll("\u001B\\[[\\d;]*[^\\d;]", "") + "\n");
+			INSTANCE.saveData.append("ERROR [" + getDateString() + "]: " + getString(value).replaceAll("\u001B\\[[\\d;]*[^\\d;]", "") + "\n");
 		}
 
-		instance.linesPrinted += getString(value).split("\n").length;
+		INSTANCE.linesPrinted += getString(value).split("\n").length;
 	}
 
 	/**
@@ -161,10 +162,10 @@ public class FlounderLogger extends IModule {
 		}
 
 		if (LOG_TO_FILE) {
-			instance.saveData.append("EXCEPTION [" + getDateString() + "]: " + getString(exception) + "\n");
+			INSTANCE.saveData.append("EXCEPTION [" + getDateString() + "]: " + getString(exception) + "\n");
 		}
 
-		instance.linesPrinted += getString(exception).split("\n").length;
+		INSTANCE.linesPrinted += getString(exception).split("\n").length;
 	}
 
 	/**
@@ -231,7 +232,7 @@ public class FlounderLogger extends IModule {
 
 	@Override
 	public IModule getInstance() {
-		return instance;
+		return INSTANCE;
 	}
 
 	@Override

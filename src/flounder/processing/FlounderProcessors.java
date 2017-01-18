@@ -12,7 +12,8 @@ import java.util.*;
  * A module used for processing types of requests.
  */
 public class FlounderProcessors extends IModule {
-	private static final FlounderProcessors instance = new FlounderProcessors();
+	private static final FlounderProcessors INSTANCE = new FlounderProcessors();
+	public static final String PROFILE_TAB_NAME = "Processors";
 
 	private List<IProcessor> processors;
 
@@ -20,7 +21,7 @@ public class FlounderProcessors extends IModule {
 	 * Creates a new request processor.
 	 */
 	public FlounderProcessors() {
-		super(ModuleUpdate.UPDATE_PRE, FlounderLogger.class, FlounderProfiler.class);
+		super(ModuleUpdate.UPDATE_PRE, PROFILE_TAB_NAME, FlounderLogger.class, FlounderProfiler.class);
 	}
 
 	@Override
@@ -86,6 +87,8 @@ public class FlounderProcessors extends IModule {
 		if (processors != null && !processors.isEmpty()) {
 			processors.forEach(IProcessor::profile);
 		}
+
+		FlounderProfiler.add(PROFILE_TAB_NAME, "Processors", processors.size());
 	}
 
 	/**
@@ -94,7 +97,7 @@ public class FlounderProcessors extends IModule {
 	 * @param request The resource request to add.
 	 */
 	public static void sendRequest(Object request) {
-		instance.processors.forEach(processor -> {
+		INSTANCE.processors.forEach(processor -> {
 			if (processor.getRequestClass().isInstance(request)) {
 				processor.addRequestToQueue(request);
 			}
@@ -103,7 +106,7 @@ public class FlounderProcessors extends IModule {
 
 	@Override
 	public IModule getInstance() {
-		return instance;
+		return INSTANCE;
 	}
 
 	@Override

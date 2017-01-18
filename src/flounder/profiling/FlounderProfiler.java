@@ -10,7 +10,8 @@ import java.awt.event.*;
  * A module used for profiling many parts of the framework.
  */
 public class FlounderProfiler extends IModule {
-	private static final FlounderProfiler instance = new FlounderProfiler();
+	private static final FlounderProfiler INSTANCE = new FlounderProfiler();
+	public static final String PROFILE_TAB_NAME = "Profiler";
 
 	private JFrame profilerJFrame;
 	private FlounderTabMenu primaryTabMenu;
@@ -20,7 +21,7 @@ public class FlounderProfiler extends IModule {
 	 * Creates a new new profiler.
 	 */
 	public FlounderProfiler() {
-		super(ModuleUpdate.UPDATE_ALWAYS, FlounderLogger.class);
+		super(ModuleUpdate.UPDATE_ALWAYS, PROFILE_TAB_NAME, FlounderLogger.class);
 	}
 
 	@Override
@@ -67,7 +68,7 @@ public class FlounderProfiler extends IModule {
 
 	@Override
 	public void profile() {
-		FlounderProfiler.add("Profiler", "Is Open", profilerOpen);
+		FlounderProfiler.add(PROFILE_TAB_NAME, "Is Open", profilerOpen);
 	}
 
 	/**
@@ -76,7 +77,7 @@ public class FlounderProfiler extends IModule {
 	 * @param open If the JFrame should be open.
 	 */
 	public static void toggle(boolean open) {
-		instance.profilerOpen = open;
+		INSTANCE.profilerOpen = open;
 	}
 
 	/**
@@ -88,12 +89,12 @@ public class FlounderProfiler extends IModule {
 	 * @param <T> The type of value to add.
 	 */
 	public static <T> void add(String tabName, String title, T value) {
-		if (instance.primaryTabMenu == null) {
+		if (INSTANCE.primaryTabMenu == null) {
 			return;
 		}
 
 		addTab(tabName); // Forces the tab to be there.
-		FlounderProfilerTab tab = instance.primaryTabMenu.getCategoryComponent(tabName).get();
+		FlounderProfilerTab tab = INSTANCE.primaryTabMenu.getCategoryComponent(tabName).get();
 		tab.addLabel(title, value); // Adds the label to the tab.
 	}
 
@@ -103,8 +104,8 @@ public class FlounderProfiler extends IModule {
 	 * @param tabName The tab name to add.
 	 */
 	public static void addTab(String tabName) {
-		if (!instance.primaryTabMenu.doesCategoryExist(tabName)) {
-			instance.primaryTabMenu.createCategory(tabName);
+		if (!INSTANCE.primaryTabMenu.doesCategoryExist(tabName)) {
+			INSTANCE.primaryTabMenu.createCategory(tabName);
 		}
 	}
 
@@ -114,12 +115,12 @@ public class FlounderProfiler extends IModule {
 	 * @return If the profiler is open.
 	 */
 	public static boolean isOpen() {
-		return instance.profilerOpen;
+		return INSTANCE.profilerOpen;
 	}
 
 	@Override
 	public IModule getInstance() {
-		return instance;
+		return INSTANCE;
 	}
 
 	@Override

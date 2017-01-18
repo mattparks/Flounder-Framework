@@ -1,6 +1,7 @@
 package flounder.standard;
 
 import flounder.framework.*;
+import flounder.profiling.*;
 
 import java.util.*;
 
@@ -8,7 +9,8 @@ import java.util.*;
  * A module used for managing simple update injection standards.
  */
 public class FlounderStandard extends IModule {
-	private static final FlounderStandard instance = new FlounderStandard();
+	private static final FlounderStandard INSTANCE = new FlounderStandard();
+	public static final String PROFILE_TAB_NAME = "Standard";
 
 	private List<IStandard> standards;
 
@@ -16,7 +18,7 @@ public class FlounderStandard extends IModule {
 	 * Creates a new standard manager.
 	 */
 	public FlounderStandard() {
-		super(ModuleUpdate.UPDATE_PRE);
+		super(ModuleUpdate.UPDATE_PRE, PROFILE_TAB_NAME);
 	}
 
 	@Override
@@ -67,11 +69,13 @@ public class FlounderStandard extends IModule {
 			standards.forEach(IStandard::update);
 			standards.forEach(IStandard::profile);
 		}
+
+		FlounderProfiler.add(PROFILE_TAB_NAME, "Standards", standards.size());
 	}
 
 	@Override
 	public IModule getInstance() {
-		return instance;
+		return INSTANCE;
 	}
 
 	@Override

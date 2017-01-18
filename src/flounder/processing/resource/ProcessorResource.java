@@ -38,8 +38,8 @@ public class ProcessorResource extends IProcessor {
 
 	@Override
 	public void profile() {
-		FlounderProfiler.add("Processor", "Requests", requestQueue.count());
-		FlounderProfiler.add("Processor", "History", history);
+		FlounderProfiler.add(FlounderProcessors.PROFILE_TAB_NAME, "Resource Requests", requestQueue.count());
+		FlounderProfiler.add(FlounderProcessors.PROFILE_TAB_NAME, "Resource History", history);
 	}
 
 	@Override

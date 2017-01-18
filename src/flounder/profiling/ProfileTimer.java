@@ -3,20 +3,21 @@ package flounder.profiling;
 import flounder.logger.*;
 
 /**
- * Can be used to record various timings within the framework.
+ * Can be used to record various timings within the framework, timings can be found calling {@link ProfileTimer#getFinalTime()}.
  */
 public class ProfileTimer {
 	private int invocations;
-	private float totalTime;
-	private float startTime;
+	private double totalTime;
+	private double startTime;
+	private double finalTime;
 
 	/**
 	 * Creates a new profiling timer.
 	 */
 	public ProfileTimer() {
 		invocations = 0;
-		totalTime = 0.0f;
-		startTime = 0.0f;
+		totalTime = 0.0;
+		startTime = 0.0;
 	}
 
 	/**
@@ -41,15 +42,21 @@ public class ProfileTimer {
 	}
 
 	/**
-	 * Gets the total time taken in ms, and resets the timer.
+	 * Gets the total time taken in seconds.
 	 *
-	 * @return Returns the total time taken in ms, and resets the timer.
+	 * @return Returns the total time taken in seconds.
 	 */
-	public float reset() {
-		float timeMs = (float) ((totalTime / 1000000.0) / ((float) invocations));
+	public double getFinalTime() {
+		return finalTime;
+	}
+
+	/**
+	 * Calculates the total time taken in seconds, and resets the timer.
+	 */
+	public void reset() {
+		finalTime = (float) ((totalTime * 1e-9) / ((float) invocations));
 		invocations = 0;
 		totalTime = 0;
 		startTime = 0;
-		return timeMs;
 	}
 }

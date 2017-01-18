@@ -1,6 +1,7 @@
 package flounder.events;
 
 import flounder.framework.*;
+import flounder.profiling.*;
 
 import java.util.*;
 
@@ -8,7 +9,8 @@ import java.util.*;
  * A module used for managing events on framework updates.
  */
 public class FlounderEvents extends IModule {
-	private static final FlounderEvents instance = new FlounderEvents();
+	private static final FlounderEvents INSTANCE = new FlounderEvents();
+	public static final String PROFILE_TAB_NAME = "Events";
 
 	private List<IEvent> events;
 
@@ -16,7 +18,7 @@ public class FlounderEvents extends IModule {
 	 * Creates a new event manager.
 	 */
 	public FlounderEvents() {
-		super(ModuleUpdate.UPDATE_PRE);
+		super(ModuleUpdate.UPDATE_PRE, PROFILE_TAB_NAME);
 	}
 
 	@Override
@@ -39,7 +41,7 @@ public class FlounderEvents extends IModule {
 	 * @param event The event to add.
 	 */
 	public static void addEvent(IEvent event) {
-		instance.events.add(event);
+		INSTANCE.events.add(event);
 	}
 
 	/**
@@ -48,16 +50,17 @@ public class FlounderEvents extends IModule {
 	 * @param event The event to remove.
 	 */
 	public static void removeEvent(IEvent event) {
-		instance.events.remove(event);
+		INSTANCE.events.remove(event);
 	}
 
 	@Override
 	public void profile() {
+		FlounderProfiler.add(PROFILE_TAB_NAME, "Events Active", events.size());
 	}
 
 	@Override
 	public IModule getInstance() {
-		return instance;
+		return INSTANCE;
 	}
 
 	@Override

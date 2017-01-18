@@ -1,14 +1,18 @@
 package flounder.framework;
 
+import flounder.profiling.*;
+
 import java.util.*;
 
 /**
  * A simple interface that can be used to create framework modules.
  */
 public abstract class IModule<T extends IModule> {
-	private final Class<T>[] requires;
 	private ModuleUpdate moduleUpdate;
+	private String profileTab;
+	private final Class<T>[] requires;
 	private List<IExtension> extensions;
+	private ProfileTimer profileTimer;
 	private boolean initialized;
 
 	/**
@@ -17,10 +21,12 @@ public abstract class IModule<T extends IModule> {
 	 * @param moduleUpdate How/when the module will update.
 	 * @param requires Classes the module depends on.
 	 */
-	public IModule(ModuleUpdate moduleUpdate, Class<T>... requires) {
-		this.requires = requires;
+	public IModule(ModuleUpdate moduleUpdate, String profileTab, Class<T>... requires) {
 		this.moduleUpdate = moduleUpdate;
+		this.profileTab = profileTab;
+		this.requires = requires;
 		this.extensions = new ArrayList<>();
+		this.profileTimer = new ProfileTimer();
 		this.initialized = false;
 	}
 
@@ -40,21 +46,30 @@ public abstract class IModule<T extends IModule> {
 	public abstract void profile();
 
 	/**
-	 * Gets the classes that the module requires.
-	 *
-	 * @return The classes that the module requires.
-	 */
-	protected Class<T>[] getRequires() {
-		return requires;
-	}
-
-	/**
 	 * Gets how/when the module will update.
 	 *
 	 * @return How/when the module will update.
 	 */
 	public ModuleUpdate getModuleUpdate() {
 		return moduleUpdate;
+	}
+
+	/**
+	 * Gets the name of the profile tab for this module.
+	 *
+	 * @return The modules profile tab name.
+	 */
+	public String getProfileTab() {
+		return profileTab;
+	}
+
+	/**
+	 * Gets the classes that the module requires.
+	 *
+	 * @return The classes that the module requires.
+	 */
+	protected Class<T>[] getRequires() {
+		return requires;
 	}
 
 	/**
@@ -112,6 +127,10 @@ public abstract class IModule<T extends IModule> {
 	 */
 	public List<IExtension> getExtensions() {
 		return extensions;
+	}
+
+	public ProfileTimer getProfileTimer() {
+		return profileTimer;
 	}
 
 	/**
