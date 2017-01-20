@@ -95,6 +95,13 @@ public class XmlNode {
 		return null;
 	}
 
+	/**
+	 * Get the child nodes of this node that have a given name.
+	 *
+	 * @param name The name of the child nodes.
+	 *
+	 * @return A list of the child nodes with the given name. If none exist then an empty list is returned.
+	 */
 	public List<XmlNode> getChildren(String name) {
 		if (childNodes != null) {
 			List<XmlNode> children = childNodes.get(name);
@@ -107,6 +114,13 @@ public class XmlNode {
 		return new ArrayList<>();
 	}
 
+	/**
+	 * Adds a new attribute to this node. An attribute has a name and a value.
+	 * Attributes are stored in a HashMap which is initialized in here if it was previously null.
+	 *
+	 * @param attribute The name of the attribute.
+	 * @param value The value of the attribute.
+	 */
 	protected void addAttribute(String attribute, String value) {
 		if (attributes == null) {
 			attributes = new HashMap<>();
@@ -115,6 +129,11 @@ public class XmlNode {
 		attributes.put(attribute, value);
 	}
 
+	/**
+	 * Adds a child node to this node.
+	 *
+	 * @param child The child node to add.
+	 */
 	protected void addChild(XmlNode child) {
 		if (childNodes == null) {
 			childNodes = new HashMap<>();
@@ -130,6 +149,11 @@ public class XmlNode {
 		list.add(child);
 	}
 
+	/**
+	 * Sets some data for this node.
+	 *
+	 * @param data The data for this node (text that is found between the start and end tags of this node).
+	 */
 	protected void setData(String data) {
 		this.data = data;
 	}

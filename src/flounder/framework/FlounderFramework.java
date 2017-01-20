@@ -39,7 +39,7 @@ public class FlounderFramework extends Thread {
 	private boolean initialized;
 
 	/**
-	 * Carries out the setup for basic framework components and the framework. Call {@link #run()} after creating a INSTANCE.
+	 * Carries out the setup for basic framework components and the framework. Call {@link #run()} after creating a instance.
 	 *
 	 * @param unlocalizedName The name to be used when determining where the roaming save files are saved.
 	 * @param fpsLimit The limit to FPS, (-1 disables limits).
@@ -147,7 +147,7 @@ public class FlounderFramework extends Thread {
 	}
 
 	/**
-	 * Loads a module into a IModule class and gets the INSTANCE.
+	 * Loads a module into a IModule class and gets the instance.
 	 *
 	 * @param object The module class.
 	 *
@@ -169,7 +169,7 @@ public class FlounderFramework extends Thread {
 	 *
 	 * @param objects The module classes.
 	 *
-	 * @return The modules INSTANCE classes.
+	 * @return The modules instance classes.
 	 */
 	protected static IModule[] loadModules(Class... objects) {
 		IModule[] result = new IModule[objects.length];
@@ -447,7 +447,7 @@ public class FlounderFramework extends Thread {
 	}
 
 	/**
-	 * Gets the current time of the framework INSTANCE.
+	 * Gets the current time of the framework instance.
 	 *
 	 * @return The current framework time in milliseconds.
 	 */
@@ -456,7 +456,7 @@ public class FlounderFramework extends Thread {
 	}
 
 	/**
-	 * Gets the current time of the framework INSTANCE.
+	 * Gets the current time of the framework instance.
 	 *
 	 * @return The current framework time in seconds.
 	 */
@@ -465,7 +465,7 @@ public class FlounderFramework extends Thread {
 	}
 
 	/**
-	 * Gets if the framework still running?
+	 * Gets if the framework still running.
 	 *
 	 * @return Is the framework still running?
 	 */
@@ -490,9 +490,9 @@ public class FlounderFramework extends Thread {
 	}
 
 	/**
-	 * Gets if the framework is currently running from a jae.
+	 * Gets if the framework is currently running from a jar.
 	 *
-	 * @return Is the framework is currently running from a jae?
+	 * @return Is the framework is currently running from a jar?
 	 */
 	public static boolean isRunningFromJar() {
 		return INSTANCE.runningFromJar;
@@ -508,9 +508,9 @@ public class FlounderFramework extends Thread {
 	}
 
 	/**
-	 * Gets the current framework INSTANCE.
+	 * Gets the current framework instance.
 	 *
-	 * @return The current INSTANCE.
+	 * @return The current instance.
 	 */
 	public static FlounderFramework getInstance() {
 		return INSTANCE;
