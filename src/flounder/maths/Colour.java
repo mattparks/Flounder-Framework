@@ -218,16 +218,16 @@ public class Colour {
 	 *
 	 * @return The destination colour.
 	 */
-	public static Colour interpolate(Colour left, Colour right, float blend, Colour destination) {
+	public static Colour interpolate(Colour left, Colour right, double blend, Colour destination) {
 		if (destination == null) {
 			destination = new Colour();
 		}
 
-		float leftWeight = 1 - blend;
-		float r = leftWeight * left.r + blend * right.r;
-		float g = leftWeight * left.g + blend * right.g;
-		float b = leftWeight * left.b + blend * right.b;
-		return destination.set(r, g, b, 1.0f, false);
+		double leftWeight = 1.0 - blend;
+		double r = leftWeight * left.r + blend * right.r;
+		double g = leftWeight * left.g + blend * right.g;
+		double b = leftWeight * left.b + blend * right.b;
+		return destination.set((float) r, (float) g, (float) b, 1.0f, false);
 	}
 
 	/**
