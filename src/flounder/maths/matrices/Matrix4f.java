@@ -524,6 +524,21 @@ public class Matrix4f {
 		return destination;
 	}
 
+	public static Matrix4f isometricMatrix(float fov, float aspectRatio, float zNear, float zFar, Matrix4f destination) {
+		if (destination == null) {
+			destination = new Matrix4f();
+		}
+
+		destination.setIdentity();
+		float f = (float) (1.0f / Math.tan(Math.tan(Math.toRadians(fov / 2.0f))));
+		destination.m00 = f / aspectRatio;
+		destination.m11 = f;
+		destination.m22 = (zFar + zNear) / (zNear - zFar);
+		destination.m23 = (2.0f * zFar * zNear) / (zNear - zFar);
+		destination.m33 = -1.0f;
+		return destination;
+	}
+
 	/**
 	 * Creates a new orthographic matrix, or updates a existing one.
 	 *
