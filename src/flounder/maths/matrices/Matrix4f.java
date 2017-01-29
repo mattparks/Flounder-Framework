@@ -511,31 +511,16 @@ public class Matrix4f {
 		}
 
 		destination.setIdentity();
-		float yScale = (float) (1.0f / Math.tan(Math.toRadians(fov / 2.0f)) * aspectRatio);
+		float yScale = 1.0f / (float) Math.tan(Math.toRadians(fov / 2.0f));
 		float xScale = yScale / aspectRatio;
-		float depth = zFar - zNear;
+		float length = zFar - zNear;
 
 		destination.m00 = xScale;
 		destination.m11 = yScale;
-		destination.m22 = -((zFar + zNear) / depth);
+		destination.m22 = -((zFar + zNear) / length);
 		destination.m23 = -1.0f;
-		destination.m32 = -(2.0f * zNear * zFar / depth);
+		destination.m32 = -((2.0f * zNear * zFar) / length);
 		destination.m33 = 0.0f;
-		return destination;
-	}
-
-	public static Matrix4f isometricMatrix(float fov, float aspectRatio, float zNear, float zFar, Matrix4f destination) {
-		if (destination == null) {
-			destination = new Matrix4f();
-		}
-
-		destination.setIdentity();
-		float f = (float) (1.0f / Math.tan(Math.tan(Math.toRadians(fov / 2.0f))));
-		destination.m00 = f / aspectRatio;
-		destination.m11 = f;
-		destination.m22 = (zFar + zNear) / (zNear - zFar);
-		destination.m23 = (2.0f * zFar * zNear) / (zNear - zFar);
-		destination.m33 = -1.0f;
 		return destination;
 	}
 
