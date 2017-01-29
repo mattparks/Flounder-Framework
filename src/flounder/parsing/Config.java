@@ -194,6 +194,19 @@ public class Config {
 	}
 
 	/**
+	 * Get a float from the configuration file, with a default if that float cannot be found.
+	 *
+	 * @param entry The name of the configuration entry.
+	 * @param defaultEntry The the default configuration entry.
+	 * @param reference The reference to the value, used when saving.
+	 *
+	 * @return The float assigned to the entry if found, otherwise the float assigned to the default entry.
+	 */
+	public float getFloatWithDefault(String entry, float defaultEntry, ConfigReference reference) {
+		return Float.parseFloat(getStringWithDefault(entry, "" + defaultEntry, reference));
+	}
+
+	/**
 	 * Get a boolean from the configuration file, with a default if that boolean cannot be found.
 	 *
 	 * @param entry The name of the configuration entry.

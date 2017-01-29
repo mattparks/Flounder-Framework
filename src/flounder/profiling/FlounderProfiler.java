@@ -53,8 +53,6 @@ public class FlounderProfiler extends IModule {
 		this.primaryTabMenu = new FlounderTabMenu();
 		this.profilerJFrame.add(primaryTabMenu);
 
-		this.profilerOpen = false;
-
 		// Opens the profiler if not running from jar.
 		// toggle(!FlounderFramework.isRunningFromJar());
 	}
@@ -125,6 +123,7 @@ public class FlounderProfiler extends IModule {
 
 	@Override
 	public void dispose() {
+		this.profilerOpen = false;
 		primaryTabMenu.dispose();
 		profilerJFrame.dispose();
 	}
