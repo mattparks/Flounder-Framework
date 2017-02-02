@@ -411,7 +411,12 @@ public class Matrix4f {
 		Matrix4f.rotate(destination, reusableVector.set(1.0f, 0.0f, 0.0f), (float) Math.toRadians(rotation.x), destination); // Rotate the X component.
 		Matrix4f.rotate(destination, reusableVector.set(0.0f, 1.0f, 0.0f), (float) Math.toRadians(rotation.y), destination); // Rotate the Y component.
 		Matrix4f.rotate(destination, reusableVector.set(0.0f, 0.0f, 1.0f), (float) Math.toRadians(rotation.z), destination); // Rotate the Z component.
-		Matrix4f.scale(destination, scale, destination);
+
+		// Only scales if there is a scale.
+		if (scale.x != 1.0f && scale.y != 1.0f && scale.z != 1.0f) {
+			Matrix4f.scale(destination, scale, destination);
+		}
+
 		return destination;
 	}
 
