@@ -246,7 +246,7 @@ public class FlounderFramework extends Thread {
 			while (isRunning()) {
 				update();
 				profile();
-				sleep();
+				//	sleep();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
