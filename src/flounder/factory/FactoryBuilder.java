@@ -10,7 +10,6 @@ import java.lang.ref.*;
  */
 public abstract class FactoryBuilder {
 	private Factory factory;
-	private String name;
 
 	/**
 	 * Creates a new builder.
@@ -19,19 +18,6 @@ public abstract class FactoryBuilder {
 	 */
 	protected FactoryBuilder(Factory factory) {
 		this.factory = factory;
-		this.name = "";
-	}
-
-	/**
-	 * Sets the name to be referenced by.
-	 *
-	 * @param name The name to be referenced by.
-	 *
-	 * @return This.
-	 */
-	public FactoryBuilder setName(String name) {
-		this.name = name;
-		return this;
 	}
 
 	/**
@@ -39,7 +25,16 @@ public abstract class FactoryBuilder {
 	 *
 	 * @return The factory object that has been created.
 	 */
-	public FactoryObject create() {
+	public abstract FactoryObject create();
+
+	/**
+	 * Only call from {@link #create()}! Creates the model object.
+	 *
+	 * @param name The name to be referenced by. This may need to be loaded though the builder.
+	 *
+	 * @return The factory object that has been created.
+	 */
+	public FactoryObject builderCreate(String name) {
 		SoftReference<FactoryObject> ref = factory.getLoaded().get(name);
 		FactoryObject object = ref == null ? null : ref.get();
 
@@ -47,7 +42,7 @@ public abstract class FactoryBuilder {
 			FlounderLogger.log(name + " is being loaded into the " + factory.getFactoryName() + " factory right now!");
 			factory.getLoaded().remove(name);
 			object = factory.newObject();
-			FlounderProcessors.sendRequest(new FactoryRequestLoad(factory, object, this));
+			FlounderProcessors.sendRequest(new FactoryRequestLoad(name, factory, object, this));
 			factory.getLoaded().put(name, new SoftReference<>(object));
 		}
 

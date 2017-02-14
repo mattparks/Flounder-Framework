@@ -19,13 +19,6 @@ public abstract class Factory {
 	}
 
 	/**
-	 * Gets a new builder to be used to create information for build a object from.
-	 *
-	 * @return A new factory builder.
-	 */
-	public abstract FactoryBuilder newBuilder(); // TODO: Should be a static method.
-
-	/**
 	 * Creates a new empty object of the factories type.
 	 *
 	 * @return The new object.
@@ -37,15 +30,17 @@ public abstract class Factory {
 	 *
 	 * @param object The object to load data into.
 	 * @param builder The builder to use parameters from.
+	 * @param name The name of the object being loaded.
 	 */
-	protected abstract void loadData(FactoryObject object, FactoryBuilder builder);
+	protected abstract void loadData(FactoryObject object, FactoryBuilder builder, String name);
 
 	/**
 	 * Used to take resource data and turn it into the object. Can be used to load into OpenGL.
 	 *
 	 * @param object The object to create for.
+	 * @param builder The builder to use parameters from.
 	 */
-	protected abstract void create(FactoryObject object);
+	protected abstract void create(FactoryObject object, FactoryBuilder builder);
 
 	/**
 	 * Gets a static list of all loaded factory objects. This is used to hold a list of already loaded objects to reduce load requests.
