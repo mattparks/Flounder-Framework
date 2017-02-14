@@ -8,7 +8,7 @@ import java.io.*;
  * The version info for Flounder.
  */
 public class Version {
-	public final String version;
+	private final String version;
 	private final int major;
 	private final int minor;
 	private final int revision;
@@ -125,12 +125,12 @@ public class Version {
 	}
 
 	/**
-	 * Gets the current revision version of The Flounder Framework.
+	 * Gets the current version of The Flounder Framework.
 	 *
-	 * @return The current revision version.
+	 * @return The current version.
 	 */
-	public int getRevision() {
-		return revision;
+	public String getVersion() {
+		return version;
 	}
 
 	/**
@@ -149,5 +149,14 @@ public class Version {
 	 */
 	public int getMinor() {
 		return minor;
+	}
+
+	/**
+	 * Gets the current revision version of The Flounder Framework.
+	 *
+	 * @return The current revision version.
+	 */
+	public int getRevision() {
+		return revision;
 	}
 }
