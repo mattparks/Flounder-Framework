@@ -19,7 +19,7 @@ The interface will require module, and can be used to load configs, initialize d
     import flounder.framework.*;
     import flounder.logger.*;
     import flounder.maths.*;
-    import flounder.standard.*;
+    import flounder.standards.*;
 
     /**
      * The class that contains the main method.

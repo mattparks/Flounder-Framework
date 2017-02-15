@@ -7,11 +7,11 @@ import java.util.*;
 /**
  * A simple interface that can be used to create framework modules.
  */
-public abstract class IModule<T extends IModule> {
+public abstract class Module<T extends Module> {
 	private ModuleUpdate moduleUpdate;
 	private String profileTab;
 	private final Class<T>[] requires;
-	private List<IExtension> extensions;
+	private List<Extension> extensions;
 	private ProfileTimer profileTimer;
 	private boolean initialized;
 
@@ -21,7 +21,7 @@ public abstract class IModule<T extends IModule> {
 	 * @param moduleUpdate How/when the module will update.
 	 * @param requires Classes the module depends on.
 	 */
-	public IModule(ModuleUpdate moduleUpdate, String profileTab, Class<T>... requires) {
+	public Module(ModuleUpdate moduleUpdate, String profileTab, Class<T>... requires) {
 		this.moduleUpdate = moduleUpdate;
 		this.profileTab = profileTab;
 		this.requires = requires;
@@ -77,10 +77,10 @@ public abstract class IModule<T extends IModule> {
 	 *
 	 * @param extension The extension to register.
 	 */
-	protected void registerExtension(IExtension extension) {
+	protected void registerExtension(Extension extension) {
 		if (!extensions.contains(extension)) {
-			FlounderFramework.registerModules(FlounderFramework.loadModules(extension.getRequires()));
-			FlounderFramework.forceChange();
+			Framework.registerModules(Framework.loadModules(extension.getRequires()));
+			Framework.forceChange();
 			extensions.add(extension);
 		}
 	}
@@ -90,8 +90,8 @@ public abstract class IModule<T extends IModule> {
 	 *
 	 * @param extensions The extensions to register.
 	 */
-	protected void registerExtensions(IExtension... extensions) {
-		for (IExtension extension : extensions) {
+	protected void registerExtensions(Extension... extensions) {
+		for (Extension extension : extensions) {
 			registerExtension(extension);
 		}
 	}
@@ -101,15 +101,15 @@ public abstract class IModule<T extends IModule> {
 	 *
 	 * @param last The last object to compare to.
 	 * @param type The class type of object to find a extension that matches for.
-	 * @param onlyRunOnChange When this and {@link flounder.framework.FlounderFramework#extensionsChanged} is true, this will update a check, otherwise a object will not be checked for (returning null).
+	 * @param onlyRunOnChange When this and {@link Framework#extensionsChanged} is true, this will update a check, otherwise a object will not be checked for (returning null).
 	 * @param <Y> The type of extension class to be found.
 	 *
 	 * @return The found extension to be active and matched the specs provided.
 	 */
-	public <Y> IExtension getExtensionMatch(IExtension last, Class<Y> type, boolean onlyRunOnChange) {
-		if (FlounderFramework.isChanged() || !onlyRunOnChange) {
+	public <Y> Extension getExtensionMatch(Extension last, Class<Y> type, boolean onlyRunOnChange) {
+		if (Framework.isChanged() || !onlyRunOnChange) {
 			if (!extensions.isEmpty()) {
-				for (IExtension extension : extensions) {
+				for (Extension extension : extensions) {
 					if (extension.isActive() && type.isInstance(extension) && !extension.equals(last)) {
 						return extension;
 					}
@@ -125,7 +125,7 @@ public abstract class IModule<T extends IModule> {
 	 *
 	 * @return This modules extensions.
 	 */
-	public List<IExtension> getExtensions() {
+	public List<Extension> getExtensions() {
 		return extensions;
 	}
 
@@ -156,7 +156,7 @@ public abstract class IModule<T extends IModule> {
 	 *
 	 * @return The current module instance.
 	 */
-	public abstract IModule getInstance();
+	public abstract Module getInstance();
 
 	/**
 	 * Disposes the module.

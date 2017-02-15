@@ -6,7 +6,7 @@ import flounder.profiling.*;
 /**
  * A extension that is responsible for processing OpenGL requests.
  */
-public class ProcessorOpenGL extends IProcessor {
+public class ProcessorOpenGL extends Processor {
 	private static final float MAX_TIME_MILLIS = 8.0f;
 
 	private Queue<RequestOpenGL> requestQueue;

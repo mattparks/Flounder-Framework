@@ -11,11 +11,11 @@ import java.util.*;
 /**
  * A module used for processing types of requests.
  */
-public class FlounderProcessors extends IModule {
+public class FlounderProcessors extends Module {
 	private static final FlounderProcessors INSTANCE = new FlounderProcessors();
 	public static final String PROFILE_TAB_NAME = "Processors";
 
-	private List<IProcessor> processors;
+	private List<Processor> processors;
 
 	/**
 	 * Creates a new request processor.
@@ -43,15 +43,15 @@ public class FlounderProcessors extends IModule {
 	@Override
 	public void update() {
 		// Gets new processors, if available.
-		List<IExtension> newProcessors = getExtensions();
+		List<Extension> newProcessors = getExtensions();
 
 		if (newProcessors != null) {
-			List<IProcessor> newCasted = new ArrayList<>();
-			newProcessors.forEach(extension -> newCasted.add(((IProcessor) extension)));
+			List<Processor> newCasted = new ArrayList<>();
+			newProcessors.forEach(extension -> newCasted.add(((Processor) extension)));
 
 			// Adds the new processors to the loop.
 			if (processors != null) {
-				List<IProcessor> removedStandards = new ArrayList<>();
+				List<Processor> removedStandards = new ArrayList<>();
 				removedStandards.addAll(processors);
 				removedStandards.removeAll(newCasted);
 
@@ -78,14 +78,14 @@ public class FlounderProcessors extends IModule {
 
 		// Runs updates for the processors.
 		if (processors != null && !processors.isEmpty()) {
-			processors.forEach(IProcessor::update);
+			processors.forEach(Processor::update);
 		}
 	}
 
 	@Override
 	public void profile() {
 		if (processors != null && !processors.isEmpty()) {
-			processors.forEach(IProcessor::profile);
+			processors.forEach(Processor::profile);
 		}
 
 		FlounderProfiler.add(PROFILE_TAB_NAME, "Processors", processors.size());
@@ -105,7 +105,7 @@ public class FlounderProcessors extends IModule {
 	}
 
 	@Override
-	public IModule getInstance() {
+	public Module getInstance() {
 		return INSTANCE;
 	}
 

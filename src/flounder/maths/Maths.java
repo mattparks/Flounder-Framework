@@ -525,7 +525,7 @@ public class Maths {
 	 * Generates a single value from a normal distribution, using Box-Muller.
 	 * https://en.wikipedia.org/wiki/Box%E2%80%93Muller_transform
 	 *
-	 * @param standardDeviation The standard deviation of the distribution.
+	 * @param standardDeviation The standards deviation of the distribution.
 	 * @param mean The mean of the distribution.
 	 *
 	 * @return A normally distributed value.

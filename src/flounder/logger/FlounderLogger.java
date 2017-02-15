@@ -9,7 +9,7 @@ import java.util.*;
 /**
  * A module used for logging outputs, errors, and exceptions to files and the console.
  */
-public class FlounderLogger extends IModule {
+public class FlounderLogger extends Module {
 	private final static FlounderLogger INSTANCE = new FlounderLogger();
 	public static final String PROFILE_TAB_NAME = "Logger";
 
@@ -204,7 +204,7 @@ public class FlounderLogger extends IModule {
 	 * @throws IOException Failed to create / find folder.
 	 */
 	private String getLogsSave() throws IOException {
-		File saveDirectory = new File(FlounderFramework.getRoamingFolder().getPath(), "logs");
+		File saveDirectory = new File(Framework.getRoamingFolder().getPath(), "logs");
 
 		if (!saveDirectory.exists()) {
 			System.out.println("Creating directory: " + saveDirectory);
@@ -231,7 +231,7 @@ public class FlounderLogger extends IModule {
 	}
 
 	@Override
-	public IModule getInstance() {
+	public Module getInstance() {
 		return INSTANCE;
 	}
 

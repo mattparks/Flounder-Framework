@@ -8,7 +8,7 @@ import java.util.*;
 /**
  * A module used for managing events on framework updates.
  */
-public class FlounderEvents extends IModule {
+public class FlounderEvents extends Module {
 	private static final FlounderEvents INSTANCE = new FlounderEvents();
 	public static final String PROFILE_TAB_NAME = "Events";
 
@@ -59,7 +59,7 @@ public class FlounderEvents extends IModule {
 	}
 
 	@Override
-	public IModule getInstance() {
+	public Module getInstance() {
 		return INSTANCE;
 	}
 

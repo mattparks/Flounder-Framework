@@ -1,4 +1,4 @@
 /**
  * Contains classes for managing simple update injection standards.
  */
-package flounder.standard;
+package flounder.standards;

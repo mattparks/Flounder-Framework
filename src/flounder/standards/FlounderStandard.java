@@ -1,4 +1,4 @@
-package flounder.standard;
+package flounder.standards;
 
 import flounder.framework.*;
 import flounder.profiling.*;
@@ -8,14 +8,14 @@ import java.util.*;
 /**
  * A module used for managing simple update injection standards.
  */
-public class FlounderStandard extends IModule {
+public class FlounderStandard extends Module {
 	private static final FlounderStandard INSTANCE = new FlounderStandard();
-	public static final String PROFILE_TAB_NAME = "Standard";
+	public static final String PROFILE_TAB_NAME = "Standards";
 
-	private List<IStandard> standards;
+	private List<Standard> standards;
 
 	/**
-	 * Creates a new standard manager.
+	 * Creates a new standards manager.
 	 */
 	public FlounderStandard() {
 		super(ModuleUpdate.UPDATE_PRE, PROFILE_TAB_NAME);
@@ -28,14 +28,14 @@ public class FlounderStandard extends IModule {
 
 	@Override
 	public void update() {
-		List<IExtension> newStandards = getExtensions();
+		List<Extension> newStandards = getExtensions();
 
 		if (newStandards != null) {
-			List<IStandard> newCasted = new ArrayList<>();
-			newStandards.forEach(extension -> newCasted.add(((IStandard) extension)));
+			List<Standard> newCasted = new ArrayList<>();
+			newStandards.forEach(extension -> newCasted.add(((Standard) extension)));
 
 			if (standards != null) {
-				List<IStandard> removedStandards = new ArrayList<>();
+				List<Standard> removedStandards = new ArrayList<>();
 				removedStandards.addAll(standards);
 				removedStandards.removeAll(newCasted);
 
@@ -59,22 +59,22 @@ public class FlounderStandard extends IModule {
 		}
 
 		if (standards != null && !standards.isEmpty()) {
-			standards.forEach(IStandard::update);
+			standards.forEach(Standard::update);
 		}
 	}
 
 	@Override
 	public void profile() {
 		if (standards != null && !standards.isEmpty()) {
-			standards.forEach(IStandard::update);
-			standards.forEach(IStandard::profile);
+			standards.forEach(Standard::update);
+			standards.forEach(Standard::profile);
 		}
 
 		FlounderProfiler.add(PROFILE_TAB_NAME, "Standards", standards.size());
 	}
 
 	@Override
-	public IModule getInstance() {
+	public Module getInstance() {
 		return INSTANCE;
 	}
 

@@ -5,13 +5,13 @@ import flounder.framework.*;
 /**
  * A extension used with {@link flounder.processing.FlounderProcessors} to define a processor.
  */
-public abstract class IProcessor extends IExtension {
+public abstract class Processor extends Extension {
 	/**
 	 * Creates a new processor.
 	 *
 	 * @param requires The classes that are extra requirements for this implementation.
 	 */
-	public IProcessor(Class... requires) {
+	public Processor(Class... requires) {
 		super(FlounderProcessors.class, requires);
 	}
 

@@ -5,17 +5,18 @@ import flounder.maths.*;
 import flounder.maths.Timer;
 import flounder.profiling.*;
 import flounder.resources.*;
+import flounder.standards.*;
 
 import java.io.*;
 import java.util.*;
 
 /**
  * A framework used for simplifying the creation of complicated Java applications. By using flexible Module loading and Extension injecting, it allows the engine to be used for Networking, Imaging, AIs, Games, and many more applications.
- * Start off by creating a new FlounderFramework object in your main thread, using Extensions in the constructor. By using Extensions: Modules can be required and therefor loaded into the framework.
- * Implementing interfaces like {@link flounder.standard.IStandard} with your extension can allow you do task specific things with your Extensions. After creating your Framework object call {@link #run()} to start.
+ * Start off by creating a new Framework object in your main thread, using Extensions in the constructor. By using Extensions: Modules can be required and therefor loaded into the framework.
+ * Implementing interfaces like {@link Standard} with your extension can allow you do task specific things with your Extensions. After creating your Framework object call {@link #run()} to start.
  */
-public class FlounderFramework extends Thread {
-	private static FlounderFramework INSTANCE;
+public class Framework extends Thread {
+	private static Framework INSTANCE;
 	public static final String PROFILE_TAB_NAME = "Framework";
 
 	private boolean runningFromJar;
@@ -26,7 +27,7 @@ public class FlounderFramework extends Thread {
 	private boolean closedRequested;
 	private long startTime;
 
-	private List<IModule> modulesActive;
+	private List<Module> modulesActive;
 	private boolean extensionsChanged;
 
 	private Delta deltaUpdate;
@@ -45,14 +46,14 @@ public class FlounderFramework extends Thread {
 	 * @param fpsLimit The limit to FPS, (-1 disables limits).
 	 * @param extensions The extensions to load for the framework.
 	 */
-	public FlounderFramework(String unlocalizedName, int fpsLimit, IExtension... extensions) {
-		FlounderFramework.INSTANCE = this;
+	public Framework(String unlocalizedName, int fpsLimit, Extension... extensions) {
+		Framework.INSTANCE = this;
 
 		// Loads some simple framework runtime info.
 		loadFlounderStatics(unlocalizedName);
 
 		// Increment revision every fix for the minor version release. Minor version represents the build month. Major incremented every two years OR after major core framework rewrites.
-		this.version = new Version("14.02.10");
+		this.version = new Version("15.02.11");
 
 		// Sets basic framework info.
 		this.closedRequested = false;
@@ -67,7 +68,7 @@ public class FlounderFramework extends Thread {
 		registerModules(loadModule(FlounderProfiler.class));
 
 		// Force registers the extensions, as the framework was null when they were constructed.
-		for (IExtension extension : extensions) {
+		for (Extension extension : extensions) {
 			extension.getExtendedModule().registerExtension(extension);
 		}
 
@@ -89,7 +90,7 @@ public class FlounderFramework extends Thread {
 	 * @param unlocalizedName The implementations name, used to set the roaming save folder.
 	 */
 	private void loadFlounderStatics(String unlocalizedName) {
-		runningFromJar = FlounderFramework.class.getResource("/" + FlounderFramework.class.getName().replace('.', '/') + ".class").toString().startsWith("jar:");
+		runningFromJar = Framework.class.getResource("/" + Framework.class.getName().replace('.', '/') + ".class").toString().startsWith("jar:");
 		String saveDir;
 
 		if (System.getProperty("os.name").contains("Windows")) {
@@ -120,7 +121,7 @@ public class FlounderFramework extends Thread {
 	 * @return If the framework contains a module.
 	 */
 	protected static boolean containsModule(Class object) {
-		for (IModule m : INSTANCE.modulesActive) {
+		for (Module m : INSTANCE.modulesActive) {
 			if (m.getClass().getName().equals(object.getName())) {
 				return true;
 			}
@@ -147,17 +148,17 @@ public class FlounderFramework extends Thread {
 	}
 
 	/**
-	 * Loads a module into a IModule class and gets the instance.
+	 * Loads a module into a Module class and gets the instance.
 	 *
 	 * @param object The module class.
 	 *
 	 * @return The module INSTANCE class.
 	 */
-	protected static IModule loadModule(Class object) {
+	protected static Module loadModule(Class object) {
 		try {
-			return ((IModule) object.newInstance()).getInstance();
+			return ((Module) object.newInstance()).getInstance();
 		} catch (IllegalAccessException | InstantiationException e) {
-			System.err.println("IModule class path " + object.getName() + " constructor could not be found!");
+			System.err.println("Module class path " + object.getName() + " constructor could not be found!");
 			e.printStackTrace();
 		}
 
@@ -165,14 +166,14 @@ public class FlounderFramework extends Thread {
 	}
 
 	/**
-	 * Loads a list of modules into IModule classes and gets all of the instances.
+	 * Loads a list of modules into Module classes and gets all of the instances.
 	 *
 	 * @param objects The module classes.
 	 *
 	 * @return The modules instance classes.
 	 */
-	protected static IModule[] loadModules(Class... objects) {
-		IModule[] result = new IModule[objects.length];
+	protected static Module[] loadModules(Class... objects) {
+		Module[] result = new Module[objects.length];
 
 		for (int i = 0; i < objects.length; i++) {
 			result[i] = loadModule(objects[i]);
@@ -186,7 +187,7 @@ public class FlounderFramework extends Thread {
 	 *
 	 * @param module The module to register.
 	 */
-	protected static void registerModule(IModule module) {
+	protected static void registerModule(Module module) {
 		if (module == null || containsModule(module.getClass())) {
 			return;
 		}
@@ -205,7 +206,7 @@ public class FlounderFramework extends Thread {
 		}
 
 		// Initialize modules if needed,
-		if (FlounderFramework.isInitialized() && !module.isInitialized()) {
+		if (Framework.isInitialized() && !module.isInitialized()) {
 			module.init();
 			module.setInitialized(true);
 		}
@@ -216,8 +217,8 @@ public class FlounderFramework extends Thread {
 	 *
 	 * @param modules The list of modules to register.
 	 */
-	protected static void registerModules(IModule... modules) {
-		for (IModule module : modules) {
+	protected static void registerModules(Module... modules) {
+		for (Module module : modules) {
 			registerModule(module);
 		}
 	}
@@ -271,7 +272,7 @@ public class FlounderFramework extends Thread {
 			});
 
 			// Logs all registered modules.
-			for (IModule module : INSTANCE.modulesActive) {
+			for (Module module : INSTANCE.modulesActive) {
 				// Log module data.
 				String requires = "";
 
@@ -279,7 +280,7 @@ public class FlounderFramework extends Thread {
 					requires += module.getRequires()[i].getSimpleName() + ((i == module.getRequires().length - 1) ? "" : ", ");
 				}
 
-				FlounderLogger.register("Registering " + module.getClass().getSimpleName() + ":" + FlounderLogger.ANSI_PURPLE + " (" + (FlounderFramework.isInitialized() ? "POST_INIT, " : "") + module.getModuleUpdate().name() + ")" + FlounderLogger.ANSI_RESET + ":" + FlounderLogger.ANSI_RED + " Requires(" + requires + ")" + FlounderLogger.ANSI_RESET);
+				FlounderLogger.register("Registering " + module.getClass().getSimpleName() + ":" + FlounderLogger.ANSI_PURPLE + " (" + (Framework.isInitialized() ? "POST_INIT, " : "") + module.getModuleUpdate().name() + ")" + FlounderLogger.ANSI_RESET + ":" + FlounderLogger.ANSI_RED + " Requires(" + requires + ")" + FlounderLogger.ANSI_RESET);
 			}
 
 			// Logs initialize times.
@@ -300,7 +301,7 @@ public class FlounderFramework extends Thread {
 
 		// Updates the module when needed always.
 		modulesActive.forEach((module) -> {
-			if (module.getModuleUpdate().equals(IModule.ModuleUpdate.UPDATE_ALWAYS)) {
+			if (module.getModuleUpdate().equals(Module.ModuleUpdate.UPDATE_ALWAYS)) {
 				module.getProfileTimer().startInvocation();
 				module.update();
 				module.getProfileTimer().stopInvocation();
@@ -315,7 +316,7 @@ public class FlounderFramework extends Thread {
 
 			// Updates the modules when needed before the entrance.
 			modulesActive.forEach((module) -> {
-				if (module.getModuleUpdate().equals(IModule.ModuleUpdate.UPDATE_PRE)) {
+				if (module.getModuleUpdate().equals(Module.ModuleUpdate.UPDATE_PRE)) {
 					module.getProfileTimer().startInvocation();
 					module.update();
 					module.getProfileTimer().stopInvocation();
@@ -325,7 +326,7 @@ public class FlounderFramework extends Thread {
 
 			// Updates the modules when needed after the entrance.
 			modulesActive.forEach((module) -> {
-				if (module.getModuleUpdate().equals(IModule.ModuleUpdate.UPDATE_POST)) {
+				if (module.getModuleUpdate().equals(Module.ModuleUpdate.UPDATE_POST)) {
 					module.getProfileTimer().startInvocation();
 					module.update();
 					module.getProfileTimer().stopInvocation();
@@ -344,7 +345,7 @@ public class FlounderFramework extends Thread {
 
 			// Updates the module when needed after the rendering.
 			modulesActive.forEach((module) -> {
-				if (module.getModuleUpdate().equals(IModule.ModuleUpdate.UPDATE_RENDER)) {
+				if (module.getModuleUpdate().equals(Module.ModuleUpdate.UPDATE_RENDER)) {
 					module.getProfileTimer().startInvocation();
 					module.update();
 					module.getProfileTimer().stopInvocation();
@@ -512,7 +513,7 @@ public class FlounderFramework extends Thread {
 	 *
 	 * @return The current instance.
 	 */
-	public static FlounderFramework getInstance() {
+	public static Framework getInstance() {
 		return INSTANCE;
 	}
 
@@ -521,7 +522,7 @@ public class FlounderFramework extends Thread {
 	 */
 	private void dispose() {
 		if (initialized) {
-			FlounderLogger.warning("Disposing framework! A new FlounderFramework object must be recreated if resetting the framework!");
+			FlounderLogger.warning("Disposing framework! A new Framework object must be recreated if resetting the framework!");
 
 			Collections.reverse(modulesActive);
 			modulesActive.forEach((module) -> {

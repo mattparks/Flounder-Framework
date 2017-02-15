@@ -7,7 +7,7 @@ import flounder.profiling.*;
 /**
  * A extension that is responsible for processing resource requests in a separate thread.
  */
-public class ProcessorResource extends IProcessor {
+public class ProcessorResource extends Processor {
 	private Queue<RequestResource> requestQueue;
 	private int history;
 

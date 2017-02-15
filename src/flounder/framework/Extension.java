@@ -7,23 +7,23 @@ import java.util.*;
 /**
  * A simple interface that is used to define an extension to the framework. Extensions are used by modules, Example: to use FlounderCamera you must create an extension that implements ICamera.
  */
-public abstract class IExtension<T extends IModule> {
-	private final IModule extendedModule;
+public abstract class Extension<T extends Module> {
+	private final Module extendedModule;
 	private Class<T>[] requires;
 	private boolean initialized;
 
 	/**
 	 * Creates a new abstract extension.
 	 *
-	 * @param extendedModule The {@link flounder.framework.IModule} the extension extends.
+	 * @param extendedModule The {@link Module} the extension extends.
 	 * @param requires Modules the extension depends on.
 	 */
-	public IExtension(Class<T> extendedModule, Class<T>... requires) {
-		this.extendedModule = FlounderFramework.loadModule(extendedModule);
+	public Extension(Class<T> extendedModule, Class<T>... requires) {
+		this.extendedModule = Framework.loadModule(extendedModule);
 		this.requires = ArrayUtils.addElement(requires, extendedModule);
 		this.initialized = false;
 
-		if (FlounderFramework.getInstance() != null) {
+		if (Framework.getInstance() != null) {
 			this.extendedModule.registerExtension(this);
 		}
 	}
@@ -40,7 +40,7 @@ public abstract class IExtension<T extends IModule> {
 	 *
 	 * @return The module that the extension extends.
 	 */
-	public IModule getExtendedModule() {
+	public Module getExtendedModule() {
 		return extendedModule;
 	}
 
@@ -67,7 +67,7 @@ public abstract class IExtension<T extends IModule> {
 			}
 		}
 
-		FlounderFramework.registerModules(FlounderFramework.loadModules(requires));
+		Framework.registerModules(Framework.loadModules(requires));
 		// TODO: Rebuild FlounderModules requirements tree.
 	}
 
@@ -85,7 +85,7 @@ public abstract class IExtension<T extends IModule> {
 			}
 		}
 
-		FlounderFramework.registerModules(FlounderFramework.loadModules(requires));
+		Framework.registerModules(Framework.loadModules(requires));
 		// TODO: Rebuild FlounderModules requirements tree.
 	}
 

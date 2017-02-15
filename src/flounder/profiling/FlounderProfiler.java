@@ -9,7 +9,7 @@ import java.awt.event.*;
 /**
  * A module used for profiling many parts of the framework.
  */
-public class FlounderProfiler extends IModule {
+public class FlounderProfiler extends Module {
 	private static final FlounderProfiler INSTANCE = new FlounderProfiler();
 	public static final String PROFILE_TAB_NAME = "Profiler";
 
@@ -54,7 +54,7 @@ public class FlounderProfiler extends IModule {
 		this.profilerJFrame.add(primaryTabMenu);
 
 		// Opens the profiler if not running from jar.
-		// toggle(!FlounderFramework.isRunningFromJar());
+		// toggle(!Framework.isRunningFromJar());
 	}
 
 	@Override
@@ -117,7 +117,7 @@ public class FlounderProfiler extends IModule {
 	}
 
 	@Override
-	public IModule getInstance() {
+	public Module getInstance() {
 		return INSTANCE;
 	}
 
