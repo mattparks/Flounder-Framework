@@ -4,13 +4,31 @@ package flounder.factory;
  * The object the factory will be loading into.
  */
 public abstract class FactoryObject {
-	private boolean loaded = false;
+	private boolean dataLoaded;
+	private boolean fullyLoaded;
 
 	/**
 	 * Creates a new empty factory object.
 	 */
 	public FactoryObject() {
-		loaded = true;
+		dataLoaded = false;
+		fullyLoaded = false;
+	}
+
+	/**
+	 * Gets if the data has been loaded into the object.
+	 *
+	 * @return If the object is loaded.
+	 */
+	protected boolean isDataLoaded() {
+		return dataLoaded;
+	}
+
+	/**
+	 * Sets that the factory has data loaded.
+	 */
+	protected void setDataLoaded(boolean dataLoaded) {
+		this.dataLoaded = dataLoaded;
 	}
 
 	/**
@@ -19,13 +37,13 @@ public abstract class FactoryObject {
 	 * @return If the object is loaded.
 	 */
 	public boolean isLoaded() {
-		return loaded;
+		return fullyLoaded;
 	}
 
 	/**
 	 * Sets that the factory has been loaded.
 	 */
-	protected void setLoaded() {
-		loaded = true;
+	protected void setFullyLoaded(boolean fullyLoaded) {
+		this.fullyLoaded = fullyLoaded;
 	}
 }
