@@ -488,6 +488,32 @@ public class Maths {
 	}
 
 	/**
+	 * Checks if two values are almost equal.
+	 *
+	 * @param a The first value.
+	 * @param b The second value.
+	 * @param eps EPS is the measure of equality.
+	 *
+	 * @return If both are almost equal.
+	 */
+	public static boolean almostEqual(double a, double b, double eps){
+		return Math.abs(a - b) < eps;
+	}
+
+	/**
+	 * Checks if two values are almost equal.
+	 *
+	 * @param a The first value.
+	 * @param b The second value.
+	 * @param eps EPS is the measure of equality.
+	 *
+	 * @return If both are almost equal.
+	 */
+	public static boolean almostEqual(float a, float b, float eps){
+		return Math.abs(a - b) < eps;
+	}
+
+	/**
 	 * Gets the height on a point off of a 3d triangle.
 	 *
 	 * @param p1 Point 1 on the triangle.
