@@ -51,9 +51,10 @@ public class Framework extends Thread {
 
 		// Loads some simple framework runtime info.
 		loadFlounderStatics(unlocalizedName);
+		super.setName("framework");
 
 		// Increment revision every fix for the minor version release. Minor version represents the build month. Major incremented every two years OR after major core framework rewrites.
-		this.version = new Version("19.02.11");
+		this.version = new Version("20.02.11");
 
 		// Sets basic framework info.
 		this.closedRequested = false;

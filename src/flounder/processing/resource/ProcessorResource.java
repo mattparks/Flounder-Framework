@@ -29,6 +29,7 @@ public class ProcessorResource extends Processor {
 		this.running = true;
 
 		this.thread = new Thread(this::run);
+		thread.setName("resources");
 		thread.start();
 	}
 
