@@ -26,7 +26,7 @@ public class FlounderLogger extends Module {
 	public static final String ANSI_CYAN = "\u001B[36m";
 	public static final String ANSI_WHITE = "\u001B[37m";
 
-	private StringBuilder saveData;
+	private List<String> saveData;
 	private int linesPrinted;
 
 	/**
@@ -38,7 +38,7 @@ public class FlounderLogger extends Module {
 
 	@Override
 	public void init() {
-		this.saveData = new StringBuilder();
+		this.saveData = new ArrayList<>();
 		this.linesPrinted = 0;
 	}
 
@@ -70,9 +70,9 @@ public class FlounderLogger extends Module {
 
 		if (LOG_TO_FILE) {
 			if (getString(value).isEmpty()) {
-				INSTANCE.saveData.append("\n");
+				INSTANCE.saveData.add("");
 			} else {
-				INSTANCE.saveData.append("REGISTER [" + getDateString() + "]: " + getString(value).replaceAll("\u001B\\[[\\d;]*[^\\d;]", "") + "\n");
+				INSTANCE.saveData.add("REGISTER [" + getDateString() + "]: " + getString(value).replaceAll("\u001B\\[[\\d;]*[^\\d;]", ""));
 			}
 		}
 
@@ -96,9 +96,9 @@ public class FlounderLogger extends Module {
 
 		if (LOG_TO_FILE) {
 			if (getString(value).isEmpty()) {
-				INSTANCE.saveData.append("\n");
+				INSTANCE.saveData.add("");
 			} else {
-				INSTANCE.saveData.append("LOG [" + getDateString() + "]: " + getString(value).replaceAll("\u001B\\[[\\d;]*[^\\d;]", "") + "\n");
+				INSTANCE.saveData.add("LOG [" + getDateString() + "]: " + getString(value).replaceAll("\u001B\\[[\\d;]*[^\\d;]", ""));
 			}
 		}
 
@@ -121,7 +121,11 @@ public class FlounderLogger extends Module {
 		}
 
 		if (LOG_TO_FILE) {
-			INSTANCE.saveData.append("WARNING [" + getDateString() + "]: " + getString(value).replaceAll("\u001B\\[[\\d;]*[^\\d;]", "") + "\n");
+			if (getString(value).isEmpty()) {
+				INSTANCE.saveData.add("");
+			} else {
+				INSTANCE.saveData.add("WARNING [" + getDateString() + "]: " + getString(value).replaceAll("\u001B\\[[\\d;]*[^\\d;]", ""));
+			}
 		}
 
 		INSTANCE.linesPrinted += getString(value).split("\n").length;
@@ -144,7 +148,11 @@ public class FlounderLogger extends Module {
 
 
 		if (LOG_TO_FILE) {
-			INSTANCE.saveData.append("ERROR [" + getDateString() + "]: " + getString(value).replaceAll("\u001B\\[[\\d;]*[^\\d;]", "") + "\n");
+			if (getString(value).isEmpty()) {
+				INSTANCE.saveData.add("");
+			} else {
+				INSTANCE.saveData.add("ERROR [" + getDateString() + "]: " + getString(value).replaceAll("\u001B\\[[\\d;]*[^\\d;]", ""));
+			}
 		}
 
 		INSTANCE.linesPrinted += getString(value).split("\n").length;
@@ -162,7 +170,11 @@ public class FlounderLogger extends Module {
 		}
 
 		if (LOG_TO_FILE) {
-			INSTANCE.saveData.append("EXCEPTION [" + getDateString() + "]: " + getString(exception) + "\n");
+			if (getString(exception).isEmpty()) {
+				INSTANCE.saveData.add("");
+			} else {
+				INSTANCE.saveData.add("EXCEPTION [" + getDateString() + "]: " + getString(exception));
+			}
 		}
 
 		INSTANCE.linesPrinted += getString(exception).split("\n").length;
@@ -239,7 +251,7 @@ public class FlounderLogger extends Module {
 	public void dispose() {
 		if (LOG_TO_FILE) {
 			try (PrintWriter out = new PrintWriter(getLogsSave())) {
-				for (String line : saveData.toString().split("\n")) {
+				for (String line : saveData) {
 					out.println(line);
 				}
 			} catch (IOException e) {

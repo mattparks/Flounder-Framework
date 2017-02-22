@@ -10,6 +10,9 @@ import java.nio.*;
  * http://www.cs.cornell.edu/courses/cs4620/2011fa/lectures/10transformsWeb.pdf
  */
 public class Matrix4f {
+	private static final Vector3f REUSABLE_VECTOR = new Vector3f();
+	private static final Vector3f REUSABLE_SCALE_VECTOR = new Vector3f();
+
 	public float m00, m01, m02, m03;
 	public float m10, m11, m12, m13;
 	public float m20, m21, m22, m23;
@@ -294,7 +297,7 @@ public class Matrix4f {
 	 * @return Returns the transformation matrix.
 	 */
 	public static Matrix4f transformationMatrix(Vector2f translation, float scale, Matrix4f destination) {
-		return transformationMatrix(translation, new Vector3f(scale, scale, scale), destination);
+		return transformationMatrix(translation, REUSABLE_SCALE_VECTOR.set(scale, scale, scale), destination);
 	}
 
 	/**
@@ -387,7 +390,7 @@ public class Matrix4f {
 	 * @return Returns the transformation matrix.
 	 */
 	public static Matrix4f transformationMatrix(Vector3f translation, Vector3f rotation, float scale, Matrix4f destination) {
-		return transformationMatrix(translation, rotation, new Vector3f(scale, scale, scale), destination);
+		return transformationMatrix(translation, rotation, REUSABLE_SCALE_VECTOR.set(scale, scale, scale), destination);
 	}
 
 	/**
@@ -406,14 +409,19 @@ public class Matrix4f {
 		}
 
 		destination.setIdentity();
-		Matrix4f.translate(destination, translation, destination);
-		Vector3f reusableVector = new Vector3f();
-		Matrix4f.rotate(destination, reusableVector.set(1.0f, 0.0f, 0.0f), (float) Math.toRadians(rotation.x), destination); // Rotate the X component.
-		Matrix4f.rotate(destination, reusableVector.set(0.0f, 1.0f, 0.0f), (float) Math.toRadians(rotation.y), destination); // Rotate the Y component.
-		Matrix4f.rotate(destination, reusableVector.set(0.0f, 0.0f, 1.0f), (float) Math.toRadians(rotation.z), destination); // Rotate the Z component.
+
+		if (translation != null && translation.lengthSquared() != 0.0f) {
+			Matrix4f.translate(destination, translation, destination);
+		}
+
+		if (rotation != null && rotation.lengthSquared() != 0.0f) {
+			Matrix4f.rotate(destination, REUSABLE_VECTOR.set(1.0f, 0.0f, 0.0f), (float) Math.toRadians(rotation.x), destination); // Rotate the X component.
+			Matrix4f.rotate(destination, REUSABLE_VECTOR.set(0.0f, 1.0f, 0.0f), (float) Math.toRadians(rotation.y), destination); // Rotate the Y component.
+			Matrix4f.rotate(destination, REUSABLE_VECTOR.set(0.0f, 0.0f, 1.0f), (float) Math.toRadians(rotation.z), destination); // Rotate the Z component.
+		}
 
 		// Only scales if there is a scale.
-		if (scale.x != 1.0f && scale.y != 1.0f && scale.z != 1.0f) {
+		if (scale != null && scale.x != 1.0f && scale.y != 1.0f && scale.z != 1.0f) {
 			Matrix4f.scale(destination, scale, destination);
 		}
 

@@ -16,18 +16,18 @@ You must in some way create a new FlounderFramework object, and also create a ba
 The interface will require module, and can be used to load configs, initialize display settings, create worlds, etc...
 
 <pre>
-    import flounder.framework.*;
-    import flounder.logger.*;
-    import flounder.maths.*;
-    import flounder.standards.*;
+     import flounder.framework.*;
+     import flounder.logger.*;
+     import flounder.maths.*;
+     import flounder.standards.*;
 
-    /**
-     * The class that contains the main method.
-     */
-    public class TestProject {
+     /**
+      * The class that contains the main method.
+      */
+     public class TestProject {
         public static void main(String[] args) {
             // Creates a new framework object.
-            FlounderFramework framework = new FlounderFramework("test", -1, new TestInterface());
+            Framework framework = new Framework("test", -1, new TestInterface());
 
             // Runs the frameworks thread.
             framework.run();
@@ -39,7 +39,7 @@ The interface will require module, and can be used to load configs, initialize d
         /**
          * The programs interface, this one is used for a simple close countdown.
          */
-        public static class TestInterface extends IStandard {
+        public static class TestInterface extends Standard {
             private static final int INTERVAL_CLOSE = 5;
 
             private Timer timer;
@@ -67,7 +67,7 @@ The interface will require module, and can be used to load configs, initialize d
 
                     if (i == INTERVAL_CLOSE) {
                         FlounderLogger.log("TestInterface requesting close!");
-                        FlounderFramework.requestClose();
+                        Framework.requestClose();
                     } else {
                         FlounderLogger.log("TestInterface closing after: " + (INTERVAL_CLOSE - i) + " seconds!");
                     }
@@ -91,5 +91,5 @@ The interface will require module, and can be used to load configs, initialize d
                 return true;
             }
         }
-    }
+     }
 </pre>

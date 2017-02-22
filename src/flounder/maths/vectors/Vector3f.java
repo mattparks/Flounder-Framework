@@ -516,7 +516,7 @@ public class Vector3f {
 		}
 
 		Vector3f other = (Vector3f) object;
-		float eps = 0.01f;
+		float eps = 0.001f;
 
 		return Maths.almostEqual(x, other.x, eps) && Maths.almostEqual(y, other.y, eps) && Maths.almostEqual(z, other.z, eps);
 	}
