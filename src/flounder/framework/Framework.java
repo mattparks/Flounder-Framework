@@ -54,7 +54,7 @@ public class Framework extends Thread {
 		super.setName("framework");
 
 		// Increment revision every fix for the minor version release. Minor version represents the build month. Major incremented every two years OR after major core framework rewrites.
-		this.version = new Version("20.02.11");
+		this.version = new Version("21.02.11");
 
 		// Sets basic framework info.
 		this.closedRequested = false;
@@ -265,12 +265,12 @@ public class Framework extends Thread {
 	private void initialize() {
 		if (!initialized) {
 			// Initializes all modules.
-			modulesActive.forEach((module) -> {
+			for (Module module : INSTANCE.modulesActive) {
 				if (!module.isInitialized()) {
 					module.init();
 					module.setInitialized(true);
 				}
-			});
+			}
 
 			// Logs all registered modules.
 			for (Module module : INSTANCE.modulesActive) {
@@ -301,14 +301,14 @@ public class Framework extends Thread {
 		}
 
 		// Updates the module when needed always.
-		modulesActive.forEach((module) -> {
+		for (Module module : INSTANCE.modulesActive) {
 			if (module.getModuleUpdate().equals(Module.ModuleUpdate.UPDATE_ALWAYS)) {
 				module.getProfileTimer().startInvocation();
 				module.update();
 				module.getProfileTimer().stopInvocation();
 				module.getProfileTimer().reset();
 			}
-		});
+		}
 
 		// Updates when needed.
 		if (timerUpdate.isPassedTime()) {
@@ -316,24 +316,24 @@ public class Framework extends Thread {
 			deltaUpdate.update();
 
 			// Updates the modules when needed before the entrance.
-			modulesActive.forEach((module) -> {
+			for (Module module : INSTANCE.modulesActive) {
 				if (module.getModuleUpdate().equals(Module.ModuleUpdate.UPDATE_PRE)) {
 					module.getProfileTimer().startInvocation();
 					module.update();
 					module.getProfileTimer().stopInvocation();
 					module.getProfileTimer().reset();
 				}
-			});
+			}
 
 			// Updates the modules when needed after the entrance.
-			modulesActive.forEach((module) -> {
+			for (Module module : INSTANCE.modulesActive) {
 				if (module.getModuleUpdate().equals(Module.ModuleUpdate.UPDATE_POST)) {
 					module.getProfileTimer().startInvocation();
 					module.update();
 					module.getProfileTimer().stopInvocation();
 					module.getProfileTimer().reset();
 				}
-			});
+			}
 
 			// Resets the timer.
 			timerUpdate.resetStartTime();
@@ -345,14 +345,14 @@ public class Framework extends Thread {
 			deltaRender.update();
 
 			// Updates the module when needed after the rendering.
-			modulesActive.forEach((module) -> {
+			for (Module module : INSTANCE.modulesActive) {
 				if (module.getModuleUpdate().equals(Module.ModuleUpdate.UPDATE_RENDER)) {
 					module.getProfileTimer().startInvocation();
 					module.update();
 					module.getProfileTimer().stopInvocation();
 					module.getProfileTimer().reset();
 				}
-			});
+			}
 
 			// Resets the timer.
 			timerRender.resetStartTime();
@@ -379,10 +379,10 @@ public class Framework extends Thread {
 				FlounderProfiler.add(PROFILE_TAB_NAME, "Updates Per Second", Maths.roundToPlace(1.0f / getDelta(), 3));
 
 				// Profiles the module, also adding its profile timer values.
-				modulesActive.forEach((module) -> {
+				for (Module module : INSTANCE.modulesActive) {
 					FlounderProfiler.add(module.getProfileTab(), "Update Time", module.getProfileTimer().getFinalTime());
 					module.profile();
-				});
+				}
 			}
 
 			//	FlounderLogger.log(Maths.roundToPlace(1.0f / getDelta(), 2) + "ups, " + Maths.roundToPlace(1.0f / getDeltaRender(), 2) + "fps");
@@ -526,12 +526,12 @@ public class Framework extends Thread {
 			FlounderLogger.warning("Disposing framework! A new Framework object must be recreated if resetting the framework!");
 
 			Collections.reverse(modulesActive);
-			modulesActive.forEach((module) -> {
+			for (Module module : INSTANCE.modulesActive) {
 				if (module.isInitialized()) {
 					module.dispose();
 					module.setInitialized(false);
 				}
-			});
+			}
 
 			modulesActive.clear();
 			closedRequested = false;
