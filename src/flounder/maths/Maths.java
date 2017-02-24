@@ -496,7 +496,7 @@ public class Maths {
 	 *
 	 * @return If both are almost equal.
 	 */
-	public static boolean almostEqual(double a, double b, double eps){
+	public static boolean almostEqual(double a, double b, double eps) {
 		return Math.abs(a - b) < eps;
 	}
 
@@ -509,7 +509,7 @@ public class Maths {
 	 *
 	 * @return If both are almost equal.
 	 */
-	public static boolean almostEqual(float a, float b, float eps){
+	public static boolean almostEqual(float a, float b, float eps) {
 		return Math.abs(a - b) < eps;
 	}
 

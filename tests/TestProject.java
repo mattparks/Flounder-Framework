@@ -51,7 +51,7 @@ public class TestProject {
 					FlounderLogger.log("TestInterface requesting close!");
 					Framework.requestClose();
 				} else {
-				//	FlounderLogger.log("TestInterface closing after: " + (INTERVAL_CLOSE - i) + " seconds!");
+					//	FlounderLogger.log("TestInterface closing after: " + (INTERVAL_CLOSE - i) + " seconds!");
 				}
 
 				timer.resetStartTime();
