@@ -6,7 +6,7 @@ import java.io.*;
  * A helper for helping when writing to a file.
  */
 public class FileWriterHelper {
-	public static final int MAX_LINE_LENGTH = 5000;
+	public static final int MAX_LINE_LENGTH = 512;
 
 	private FileWriter fileWriter;
 	private int fileNestation;
@@ -34,7 +34,7 @@ public class FileWriterHelper {
 	public void endSegment(boolean enterTightSpace) throws IOException {
 		enterBlankLine();
 		fileNestation--;
-		fileWriter.write(getIndentations() + "};");
+		fileWriter.write(getIndentations() + "}");
 
 		if (!enterTightSpace) {
 			enterBlankLine();
