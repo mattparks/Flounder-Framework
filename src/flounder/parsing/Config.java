@@ -226,7 +226,7 @@ public class Config {
 		for (String key : map.keySet()) {
 			Pair<String, ConfigReference> pair = map.get(key);
 
-			if (pair.getSecond() != null) {
+			if (pair.getSecond() != null && pair.getSecond().getReading() != null) {
 				setValue(key, pair.getSecond().getReading().toString());
 			}
 		}
