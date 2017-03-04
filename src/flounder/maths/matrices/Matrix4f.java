@@ -10,8 +10,8 @@ import java.nio.*;
  * http://www.cs.cornell.edu/courses/cs4620/2011fa/lectures/10transformsWeb.pdf
  */
 public class Matrix4f {
-	private static final Vector3f REUSABLE_VECTOR = new Vector3f();
-	private static final Vector3f REUSABLE_SCALE_VECTOR = new Vector3f();
+	public static final Vector3f REUSABLE_VECTOR = new Vector3f();
+	public static final Vector3f REUSABLE_SCALE_VECTOR = new Vector3f();
 
 	public float m00, m01, m02, m03;
 	public float m10, m11, m12, m13;
