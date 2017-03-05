@@ -37,6 +37,7 @@ public class FactoryRequestLoad implements RequestResource, RequestOpenGL {
 	@Override
 	public void executeRequestGL() {
 		while (!object.isDataLoaded()) {
+			//	FlounderLogger.error("Request for " + name + " is waiting for data!");
 			// Wait for resources to load into data...
 		}
 
