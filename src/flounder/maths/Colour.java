@@ -223,10 +223,9 @@ public class Colour {
 			destination = new Colour();
 		}
 
-		double leftWeight = 1.0 - blend;
-		double r = leftWeight * left.r + blend * right.r;
-		double g = leftWeight * left.g + blend * right.g;
-		double b = leftWeight * left.b + blend * right.b;
+		double r = (1.0 - blend) * left.r + blend * right.r;
+		double g = (1.0 - blend) * left.g + blend * right.g;
+		double b = (1.0 - blend) * left.b + blend * right.b;
 		return destination.set((float) r, (float) g, (float) b, 1.0f, false);
 	}
 
