@@ -31,7 +31,6 @@ public class FactoryRequestLoad implements RequestResource, RequestOpenGL {
 	public void executeRequestResource() {
 		// Loads resource data into the object.
 		factory.loadData(object, builder, name);
-		object.setDataLoaded(true);
 	}
 
 	@Override
@@ -43,6 +42,5 @@ public class FactoryRequestLoad implements RequestResource, RequestOpenGL {
 
 		// Creates the object and sets as loaded.
 		factory.create(object, builder);
-		object.setFullyLoaded(true);
 	}
 }
