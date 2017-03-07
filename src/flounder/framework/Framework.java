@@ -54,7 +54,7 @@ public class Framework extends Thread {
 		super.setName("framework");
 
 		// Increment revision every fix for the minor version release. Minor version represents the build month. Major incremented every two years OR after major core framework rewrites.
-		this.version = new Version("04.03.11");
+		this.version = new Version("06.03.11");
 
 		// Sets basic framework info.
 		this.closedRequested = false;
@@ -312,12 +312,6 @@ public class Framework extends Thread {
 
 		// Updates when needed.
 		if (timerUpdate.isPassedTime()) {
-			// Resets the timer.
-			timerUpdate.resetStartTime();
-
-			// Updates the frameworks delta.
-			deltaUpdate.update();
-
 			// Updates the modules when needed before the entrance.
 			for (Module module : INSTANCE.modulesActive) {
 				if (module.getModuleUpdate().equals(Module.ModuleUpdate.UPDATE_PRE)) {
@@ -337,16 +331,16 @@ public class Framework extends Thread {
 					module.getProfileTimer().reset();
 				}
 			}
+
+			// Updates the frameworks delta.
+			deltaUpdate.update();
+
+			// Resets the timer.
+			timerUpdate.resetStartTime();
 		}
 
 		// Renders when needed.
 		if (timerRender.isPassedTime() || fpsLimit <= 0) {
-			// Resets the timer.
-			timerRender.resetStartTime();
-
-			// Updates the render delta, and render time extension.
-			deltaRender.update();
-
 			// Updates the module when needed after the rendering.
 			for (Module module : INSTANCE.modulesActive) {
 				if (module.getModuleUpdate().equals(Module.ModuleUpdate.UPDATE_RENDER)) {
@@ -356,6 +350,12 @@ public class Framework extends Thread {
 					module.getProfileTimer().reset();
 				}
 			}
+
+			// Updates the render delta, and render time extension.
+			deltaRender.update();
+
+			// Resets the timer.
+			timerRender.resetStartTime();
 		}
 
 		extensionsChanged = false;
