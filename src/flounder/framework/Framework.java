@@ -30,6 +30,7 @@ public class Framework extends Thread {
 	private List<Module> modulesActive;
 	private boolean extensionsChanged;
 
+	private float timeOffset;
 	private Delta deltaUpdate;
 	private Delta deltaRender;
 	private Timer timerUpdate;
@@ -74,6 +75,7 @@ public class Framework extends Thread {
 		}
 
 		// Creates variables to be used for timing updates and renders.
+		this.timeOffset = 0.0f;
 		this.deltaUpdate = new Delta();
 		this.deltaRender = new Delta();
 		this.timerUpdate = new Timer(1.0 / 60.0);
@@ -412,9 +414,27 @@ public class Framework extends Thread {
 	}
 
 	/**
+	 * Gets the added/removed time for the framework (seconds).
+	 *
+	 * @return The time offset.
+	 */
+	public static float getTimeOffset() {
+		return INSTANCE.timeOffset;
+	}
+
+	/**
+	 * Sets the time offset for the framework (seconds).
+	 *
+	 * @param timeOffset The new time offset.
+	 */
+	public static void setTimeOffset(float timeOffset) {
+		INSTANCE.timeOffset = timeOffset;
+	}
+
+	/**
 	 * Gets the delta (seconds) between updates.
 	 *
-	 * @return The deltaRender between updates.
+	 * @return The delta between updates.
 	 */
 	public static float getDelta() {
 		return (float) INSTANCE.deltaUpdate.getDelta();
@@ -454,7 +474,7 @@ public class Framework extends Thread {
 	 * @return The current framework time in milliseconds.
 	 */
 	public static float getTimeMs() {
-		return (System.nanoTime() - INSTANCE.startTime) / 1000000.0f; // The dividend can be used as a time scalar.
+		return ((System.nanoTime() - INSTANCE.startTime) / 1000000.0f) + (INSTANCE.timeOffset * 1000.0f);
 	}
 
 	/**
@@ -463,7 +483,7 @@ public class Framework extends Thread {
 	 * @return The current framework time in seconds.
 	 */
 	public static float getTimeSec() {
-		return (System.nanoTime() - INSTANCE.startTime) / 1000000000.0f;
+		return ((System.nanoTime() - INSTANCE.startTime) / 1000000000.0f) + INSTANCE.timeOffset;
 	}
 
 	/**
