@@ -1,5 +1,6 @@
 package flounder.maths;
 
+import flounder.logger.*;
 import flounder.maths.matrices.*;
 import flounder.maths.vectors.*;
 
@@ -565,6 +566,31 @@ public class Maths {
 		double x2 = 2.0 * Math.PI * u2;
 		double z1 = x1 * Math.sin(x2); // Random normal(0,1)
 		return (float) (z1 * standardDeviation + mean);
+	}
+
+	/**
+	 * Transforms a 3D world point into screen space.
+	 *
+	 * @param worldSpace The point to get into screen space.
+	 * @param viewMatrix The cameras view matrix.
+	 * @param projectionMatrix The cameras projection matrix.
+	 * @param destination The vector to write into.
+	 *
+	 * @return A 2D point stored in XY, and the distance (Z, if negative the point is behind the screen).
+	 */
+	public static Vector3f worldToScreenSpace(Vector3f worldSpace, Matrix4f viewMatrix, Matrix4f projectionMatrix, Vector3f destination) {
+		if (destination == null) {
+			destination = new Vector3f();
+		}
+
+		Vector4f point4 = new Vector4f(worldSpace.x, worldSpace.y, worldSpace.z, 1.0f);
+		point4 = Matrix4f.transform(viewMatrix, point4, null);
+		point4 = Matrix4f.transform(projectionMatrix, point4, null);
+		Vector3f point = new Vector3f(point4);
+
+		point.x /= point.z;
+		point.y /= point.z;
+		return destination.set(point.x, point.y, point.z);
 	}
 
 	/**
