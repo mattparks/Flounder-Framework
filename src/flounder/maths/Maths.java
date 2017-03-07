@@ -355,6 +355,18 @@ public class Maths {
 	}
 
 	/**
+	 * Does a mod like the GLSL function.
+	 *
+	 * @param x The first value.
+	 * @param y The second value.
+	 *
+	 * @return The resultant mod.
+	 */
+	public static float mod(float x, float y) {
+		return x - y * (float) Math.floor(x / y);
+	}
+
+	/**
 	 * Normalizes a angle into the range of 0-360.
 	 *
 	 * @param angle The source angle.
