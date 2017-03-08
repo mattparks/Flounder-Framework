@@ -1,6 +1,5 @@
 package flounder.maths;
 
-import flounder.logger.*;
 import flounder.maths.matrices.*;
 import flounder.maths.vectors.*;
 
