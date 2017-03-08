@@ -391,7 +391,7 @@ public class Maths {
 	 * @return The resultant mod.
 	 */
 	public static double mod(double x, double y) {
-		return x - y * (float) Math.floor(x / y);
+		return x - y * Math.floor(x / y);
 	}
 
 	/**
