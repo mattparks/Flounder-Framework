@@ -250,7 +250,7 @@ public class Framework extends Thread {
 			while (isRunning()) {
 				update();
 				profile();
-				//	sleep();
+				sleep();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -474,7 +474,7 @@ public class Framework extends Thread {
 	 * @return The current framework time in milliseconds.
 	 */
 	public static float getTimeMs() {
-		return (System.nanoTime() / 1000000.0f) + (INSTANCE.timeOffset * 1000.0f);
+		return ((System.nanoTime() - INSTANCE.startTime) / 1000000.0f) + (INSTANCE.timeOffset * 1000.0f);
 	}
 
 	/**
@@ -483,7 +483,7 @@ public class Framework extends Thread {
 	 * @return The current framework time in seconds.
 	 */
 	public static float getTimeSec() {
-		return (System.nanoTime() / 1000000000.0f) + INSTANCE.timeOffset;
+		return ((System.nanoTime() - INSTANCE.startTime) / 1000000000.0f) + INSTANCE.timeOffset;
 	}
 
 	/**
