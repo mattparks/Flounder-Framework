@@ -55,7 +55,7 @@ public class Framework extends Thread {
 		super.setName("framework");
 
 		// Increment revision every fix for the minor version release. Minor version represents the build month. Major incremented every two years OR after major core framework rewrites.
-		this.version = new Version("12.03.11");
+		this.version = new Version("13.03.11");
 
 		// Sets basic framework info.
 		this.closedRequested = false;
@@ -371,7 +371,7 @@ public class Framework extends Thread {
 			return;
 		}
 
-		// Profile some values to the logger.
+		// Profile some values to the profiler.
 		if (timerProfile.isPassedTime()) {
 			// Profile the framework, modules, and extensions.
 			if (FlounderProfiler.isOpen()) {
