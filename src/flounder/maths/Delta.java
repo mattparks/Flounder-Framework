@@ -21,8 +21,6 @@ public class Delta {
 
 		delta = 0.0;
 		time = 0.0;
-
-		update();
 	}
 
 	/**

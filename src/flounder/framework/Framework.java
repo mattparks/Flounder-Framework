@@ -1,8 +1,7 @@
 package flounder.framework;
 
+import flounder.framework.updater.*;
 import flounder.logger.*;
-import flounder.maths.*;
-import flounder.maths.Timer;
 import flounder.profiling.*;
 import flounder.resources.*;
 import flounder.standards.*;
@@ -23,19 +22,13 @@ public class Framework extends Thread {
 	private MyFile roamingFolder;
 
 	private Version version;
+	private IUpdater updater;
 
 	private boolean closedRequested;
-	private long startTime;
 
 	private List<Module> modulesActive;
 	private boolean extensionsChanged;
 
-	private float timeOffset;
-	private Delta deltaUpdate;
-	private Delta deltaRender;
-	private Timer timerUpdate;
-	private Timer timerRender;
-	private Timer timerProfile;
 	private int fpsLimit;
 
 	private boolean initialized;
@@ -44,10 +37,11 @@ public class Framework extends Thread {
 	 * Carries out the setup for basic framework components and the framework. Call {@link #run()} after creating a instance.
 	 *
 	 * @param unlocalizedName The name to be used when determining where the roaming save files are saved.
+	 * @param updater The definition for how the framework will run.
 	 * @param fpsLimit The limit to FPS, (-1 disables limits).
 	 * @param extensions The extensions to load for the framework.
 	 */
-	public Framework(String unlocalizedName, int fpsLimit, Extension... extensions) {
+	public Framework(String unlocalizedName, IUpdater updater, int fpsLimit, Extension... extensions) {
 		Framework.INSTANCE = this;
 
 		// Loads some simple framework runtime info.
@@ -57,9 +51,12 @@ public class Framework extends Thread {
 		// Increment revision every fix for the minor version release. Minor version represents the build month. Major incremented every two years OR after major core framework rewrites.
 		this.version = new Version("13.03.11");
 
+		// Sets the frameworks updater.
+		this.updater = updater;
+		this.updater.setFpsLimit(fpsLimit);
+
 		// Sets basic framework info.
 		this.closedRequested = false;
-		this.startTime = System.nanoTime();
 
 		// Sets up the module and extension managers.
 		this.modulesActive = new ArrayList<>();
@@ -74,13 +71,7 @@ public class Framework extends Thread {
 			extension.getExtendedModule().registerExtension(extension);
 		}
 
-		// Creates variables to be used for timing updates and renders.
-		this.timeOffset = 0.0f;
-		this.deltaUpdate = new Delta();
-		this.deltaRender = new Delta();
-		this.timerUpdate = new Timer(1.0 / 60.0);
-		this.timerRender = new Timer(Math.abs(1.0 / (double) fpsLimit));
-		this.timerProfile = new Timer(1.0 / 7.5);
+		// Sets the fps limit.
 		this.fpsLimit = fpsLimit;
 
 		// Sets the framework as initialized.
@@ -245,150 +236,21 @@ public class Framework extends Thread {
 	@Override
 	public void run() {
 		try {
-			initialize();
+			updater.initialize();
 
 			while (isRunning()) {
-				update();
-				profile();
-				sleep();
+				updater.update();
+				updater.profile();
+				extensionsChanged = false;
+				//	sleep();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			FlounderLogger.exception(e);
 			System.exit(-1);
 		} finally {
-			dispose();
-		}
-	}
-
-	/**
-	 * Function used to initialize the framework.
-	 */
-	private void initialize() {
-		if (!initialized) {
-			// Initializes all modules.
-			for (Module module : INSTANCE.modulesActive) {
-				if (!module.isInitialized()) {
-					module.init();
-					module.setInitialized(true);
-				}
-			}
-
-			// Logs all registered modules.
-			for (Module module : INSTANCE.modulesActive) {
-				// Log module data.
-				String requires = "";
-
-				for (int i = 0; i < module.getRequires().length; i++) {
-					requires += module.getRequires()[i].getSimpleName() + ((i == module.getRequires().length - 1) ? "" : ", ");
-				}
-
-				FlounderLogger.register("Registering " + module.getClass().getSimpleName() + ":" + FlounderLogger.ANSI_PURPLE + " (" + (Framework.isInitialized() ? "POST_INIT, " : "") + module.getModuleUpdate().name() + ")" + FlounderLogger.ANSI_RESET + ":" + FlounderLogger.ANSI_RED + " Requires(" + requires + ")" + FlounderLogger.ANSI_RESET);
-			}
-
-			// Logs initialize times.
-			FlounderLogger.log("Framework Initialize & Load Time: " + FlounderLogger.ANSI_RED + ((System.nanoTime() - startTime) / 1000000000.0) + FlounderLogger.ANSI_RESET + " seconds!");
-
-			// Sets the framework as initialized.
-			initialized = true;
-		}
-	}
-
-	/**
-	 * Function used to update the framework.
-	 */
-	private void update() {
-		if (!initialized) {
-			return;
-		}
-
-		// Updates the module when needed always.
-		for (Module module : INSTANCE.modulesActive) {
-			if (module.getModuleUpdate().equals(Module.ModuleUpdate.UPDATE_ALWAYS)) {
-				module.getProfileTimer().startInvocation();
-				module.update();
-				module.getProfileTimer().stopInvocation();
-				module.getProfileTimer().reset();
-			}
-		}
-
-		// Updates when needed.
-		if (timerUpdate.isPassedTime()) {
-			// Updates the modules when needed before the entrance.
-			for (Module module : INSTANCE.modulesActive) {
-				if (module.getModuleUpdate().equals(Module.ModuleUpdate.UPDATE_PRE)) {
-					module.getProfileTimer().startInvocation();
-					module.update();
-					module.getProfileTimer().stopInvocation();
-					module.getProfileTimer().reset();
-				}
-			}
-
-			// Updates the modules when needed after the entrance.
-			for (Module module : INSTANCE.modulesActive) {
-				if (module.getModuleUpdate().equals(Module.ModuleUpdate.UPDATE_POST)) {
-					module.getProfileTimer().startInvocation();
-					module.update();
-					module.getProfileTimer().stopInvocation();
-					module.getProfileTimer().reset();
-				}
-			}
-
-			// Updates the frameworks delta.
-			deltaUpdate.update();
-
-			// Resets the timer.
-			timerUpdate.resetStartTime();
-		}
-
-		// Renders when needed.
-		if (timerRender.isPassedTime() || fpsLimit <= 0) {
-			// Updates the module when needed after the rendering.
-			for (Module module : INSTANCE.modulesActive) {
-				if (module.getModuleUpdate().equals(Module.ModuleUpdate.UPDATE_RENDER)) {
-					module.getProfileTimer().startInvocation();
-					module.update();
-					module.getProfileTimer().stopInvocation();
-					module.getProfileTimer().reset();
-				}
-			}
-
-			// Updates the render delta, and render time extension.
-			deltaRender.update();
-
-			// Resets the timer.
-			timerRender.resetStartTime();
-		}
-
-		extensionsChanged = false;
-	}
-
-	/**
-	 * Function used to profile the framework.
-	 */
-	private void profile() {
-		if (!initialized) {
-			return;
-		}
-
-		// Profile some values to the profiler.
-		if (timerProfile.isPassedTime()) {
-			// Profile the framework, modules, and extensions.
-			if (FlounderProfiler.isOpen()) {
-				FlounderProfiler.add(PROFILE_TAB_NAME, "Running From Jar", runningFromJar);
-				FlounderProfiler.add(PROFILE_TAB_NAME, "Save Folder", roamingFolder.getPath());
-				FlounderProfiler.add(PROFILE_TAB_NAME, "Frames Per Second", Maths.roundToPlace(1.0f / getDeltaRender(), 3));
-				FlounderProfiler.add(PROFILE_TAB_NAME, "Updates Per Second", Maths.roundToPlace(1.0f / getDelta(), 3));
-
-				// Profiles the module, also adding its profile timer values.
-				for (Module module : INSTANCE.modulesActive) {
-					FlounderProfiler.add(module.getProfileTab(), "Update Time", module.getProfileTimer().getFinalTime());
-					module.profile();
-				}
-			}
-
-			//	FlounderLogger.log(Maths.roundToPlace(1.0f / getDelta(), 2) + "ups, " + Maths.roundToPlace(1.0f / getDeltaRender(), 2) + "fps");
-			timerProfile.resetStartTime();
+			updater.dispose();
+			INSTANCE = null;
 		}
 	}
 
@@ -413,13 +275,21 @@ public class Framework extends Thread {
 		return INSTANCE.version;
 	}
 
+	public static List<Module> getModulesActive() {
+		return INSTANCE.modulesActive;
+	}
+
+	public static void setInitialized(boolean initialized) {
+		INSTANCE.initialized = initialized;
+	}
+
 	/**
 	 * Gets the added/removed time for the framework (seconds).
 	 *
 	 * @return The time offset.
 	 */
 	public static float getTimeOffset() {
-		return INSTANCE.timeOffset;
+		return INSTANCE.updater.getTimeOffset();
 	}
 
 	/**
@@ -428,7 +298,7 @@ public class Framework extends Thread {
 	 * @param timeOffset The new time offset.
 	 */
 	public static void setTimeOffset(float timeOffset) {
-		INSTANCE.timeOffset = timeOffset;
+		INSTANCE.updater.setTimeOffset(timeOffset);
 	}
 
 	/**
@@ -437,7 +307,7 @@ public class Framework extends Thread {
 	 * @return The delta between updates.
 	 */
 	public static float getDelta() {
-		return (float) INSTANCE.deltaUpdate.getDelta();
+		return INSTANCE.updater.getDelta();
 	}
 
 	/**
@@ -446,7 +316,7 @@ public class Framework extends Thread {
 	 * @return The delta between renders.
 	 */
 	public static float getDeltaRender() {
-		return (float) INSTANCE.deltaRender.getDelta();
+		return INSTANCE.updater.getDeltaRender();
 	}
 
 	/**
@@ -465,7 +335,7 @@ public class Framework extends Thread {
 	 */
 	public static void setFpsLimit(int fpsLimit) {
 		INSTANCE.fpsLimit = fpsLimit;
-		INSTANCE.timerRender.setInterval(Math.abs(1.0f / fpsLimit));
+		INSTANCE.updater.setFpsLimit(fpsLimit);
 	}
 
 	/**
@@ -474,7 +344,7 @@ public class Framework extends Thread {
 	 * @return The current framework time in milliseconds.
 	 */
 	public static float getTimeMs() {
-		return ((System.nanoTime() - INSTANCE.startTime) / 1000000.0f) + (INSTANCE.timeOffset * 1000.0f);
+		return INSTANCE.updater.getTimeMs();
 	}
 
 	/**
@@ -483,7 +353,7 @@ public class Framework extends Thread {
 	 * @return The current framework time in seconds.
 	 */
 	public static float getTimeSec() {
-		return ((System.nanoTime() - INSTANCE.startTime) / 1000000000.0f) + INSTANCE.timeOffset;
+		return INSTANCE.updater.getTimeSec();
 	}
 
 	/**
@@ -536,28 +406,5 @@ public class Framework extends Thread {
 	 */
 	public static Framework getInstance() {
 		return INSTANCE;
-	}
-
-	/**
-	 * Disposed the framework if initialised.
-	 */
-	private void dispose() {
-		if (initialized) {
-			FlounderLogger.warning("Disposing framework! A new Framework object must be recreated if resetting the framework!");
-
-			Collections.reverse(modulesActive);
-			for (Module module : INSTANCE.modulesActive) {
-				if (module.isInitialized()) {
-					module.dispose();
-					module.setInitialized(false);
-				}
-			}
-
-			modulesActive.clear();
-			closedRequested = false;
-			initialized = false;
-
-			INSTANCE = null;
-		}
 	}
 }

@@ -68,7 +68,7 @@ public abstract class Module<T extends Module> {
 	 *
 	 * @return The classes that the module requires.
 	 */
-	protected Class<T>[] getRequires() {
+	public Class<T>[] getRequires() {
 		return requires;
 	}
 
@@ -162,11 +162,4 @@ public abstract class Module<T extends Module> {
 	 * Disposes the module.
 	 */
 	public abstract void dispose();
-
-	/**
-	 * A enum that defines where a module will update.
-	 */
-	public enum ModuleUpdate {
-		UPDATE_ALWAYS, UPDATE_PRE, UPDATE_POST, UPDATE_RENDER
-	}
 }

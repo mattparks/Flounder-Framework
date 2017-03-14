@@ -1,4 +1,5 @@
 import flounder.framework.*;
+import flounder.framework.updater.*;
 import flounder.logger.*;
 import flounder.maths.*;
 import flounder.standards.*;
@@ -9,7 +10,7 @@ import flounder.standards.*;
 public class TestProject {
 	public static void main(String[] args) {
 		// Creates a new framework object.
-		Framework framework = new Framework("test", -1, new TestInterface());
+		Framework framework = new Framework("test", new UpdaterDefault(), -1, new TestInterface());
 
 		// Runs the frameworks thread.
 		framework.run();

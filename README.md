@@ -3,7 +3,7 @@ Flounder Framework is a modular Java framework composed of modules and extension
 
 # Modules
 A module (IModule) is a class that is built to serve a specific purpose, for example: the processor module only acts to manage requests.
-When they are updated in the main iterative loop is determined from the IModule.ModuleUpdate enum they pass through the super constructor.
+When they are updated in the main iterative loop is determined from the ModuleUpdate enum they pass through the super constructor.
 Modules may depend on other modules, for example: the profiler requires the logger. A requirement list if built within the framework.
 
 # Extensions
