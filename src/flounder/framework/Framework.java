@@ -217,22 +217,6 @@ public class Framework extends Thread {
 		}
 	}
 
-	/**
-	 * Forces the framework to reevaluate extension usage within modules. This should be called a extensions active state changes.
-	 */
-	public static void forceChange() {
-		INSTANCE.extensionsChanged = true;
-	}
-
-	/**
-	 * Gets if the extensions list needs to be reevaluated.
-	 *
-	 * @return If the extensions list needs to be reevaluated.
-	 */
-	public static boolean isChanged() {
-		return INSTANCE.extensionsChanged;
-	}
-
 	@Override
 	public void run() {
 		try {
@@ -242,27 +226,14 @@ public class Framework extends Thread {
 				updater.update();
 				updater.profile();
 				extensionsChanged = false;
-				//	sleep();
 			}
+
+			updater.dispose();
+			INSTANCE = null;
 		} catch (Exception e) {
 			e.printStackTrace();
 			FlounderLogger.exception(e);
 			System.exit(-1);
-		} finally {
-			updater.dispose();
-			INSTANCE = null;
-		}
-	}
-
-	/**
-	 * Function used to sleep the framework for 1 millisecond.
-	 */
-	private void sleep() {
-		// Sleep a bit after updating or rendering.
-		try {
-			Thread.sleep(1);
-		} catch (InterruptedException ex) {
-			Thread.currentThread().interrupt();
 		}
 	}
 
@@ -320,6 +291,22 @@ public class Framework extends Thread {
 	}
 
 	/**
+	 * Forces the framework to reevaluate extension usage within modules. This should be called a extensions active state changes.
+	 */
+	public static void forceChange() {
+		INSTANCE.extensionsChanged = true;
+	}
+
+	/**
+	 * Gets if the extensions list needs to be reevaluated.
+	 *
+	 * @return If the extensions list needs to be reevaluated.
+	 */
+	public static boolean isChanged() {
+		return INSTANCE.extensionsChanged;
+	}
+
+	/**
 	 * Gets the current FPS limit.
 	 *
 	 * @return The current FPS limit.
@@ -341,19 +328,19 @@ public class Framework extends Thread {
 	/**
 	 * Gets the current time of the framework instance.
 	 *
-	 * @return The current framework time in milliseconds.
+	 * @return The current framework time in seconds.
 	 */
-	public static float getTimeMs() {
-		return INSTANCE.updater.getTimeMs();
+	public static float getTimeSec() {
+		return INSTANCE.updater.getTimeSec();
 	}
 
 	/**
 	 * Gets the current time of the framework instance.
 	 *
-	 * @return The current framework time in seconds.
+	 * @return The current framework time in milliseconds.
 	 */
-	public static float getTimeSec() {
-		return INSTANCE.updater.getTimeSec();
+	public static float getTimeMs() {
+		return INSTANCE.updater.getTimeMs();
 	}
 
 	/**

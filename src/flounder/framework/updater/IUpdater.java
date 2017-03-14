@@ -57,14 +57,14 @@ public interface IUpdater {
 	/**
 	 * Gets the current time of the framework instance.
 	 *
-	 * @return The current framework time in milliseconds.
+	 * @return The current framework time in seconds.
 	 */
-	float getTimeMs();
+	float getTimeSec();
 
 	/**
 	 * Gets the current time of the framework instance.
 	 *
-	 * @return The current framework time in seconds.
+	 * @return The current framework time in milliseconds.
 	 */
-	float getTimeSec();
+	float getTimeMs();
 }

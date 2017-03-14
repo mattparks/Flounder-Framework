@@ -8,7 +8,11 @@ import flounder.profiling.*;
 
 import java.util.*;
 
+/**
+ * The default updater for the framework.
+ */
 public class UpdaterDefault implements IUpdater {
+	private TimingReference timing;
 	private long startTime;
 
 	private float timeOffset;
@@ -18,15 +22,18 @@ public class UpdaterDefault implements IUpdater {
 	private Timer timerRender;
 	private Timer timerProfile;
 
-	public UpdaterDefault() {
+	public UpdaterDefault(TimingReference timing) {
+		// Sets the timing for the updater to run from.
+		this.timing = timing;
+
 		// Sets basic updater info.
-		this.startTime = System.nanoTime();
+		this.startTime = 0; // System.nanoTime()
 
 		// Creates variables to be used for timing updates and renders.
 		this.timeOffset = 0.0f;
 		this.deltaUpdate = new Delta();
 		this.deltaRender = new Delta();
-		this.timerUpdate = new Timer(1.0 / 60.0);
+		this.timerUpdate = new Timer(1.0 / 64.0);
 		this.timerRender = new Timer(1.0 / 60.0);
 		this.timerProfile = new Timer(1.0 / 5.0);
 	}
@@ -110,7 +117,7 @@ public class UpdaterDefault implements IUpdater {
 		}
 
 		// Renders when needed.
-		if (timerRender.isPassedTime() || Framework.getFpsLimit() <= 0) {
+		if ((timerRender.isPassedTime() || Framework.getFpsLimit() <= 0) && Maths.almostEqual(timerUpdate.getInterval(), deltaUpdate.getDelta(), 6.0)) {
 			// Updates the render delta, and render time extension.
 			deltaRender.update();
 
@@ -153,6 +160,18 @@ public class UpdaterDefault implements IUpdater {
 					module.profile();
 				}
 			}
+		}
+	}
+
+	/**
+	 * Function used to sleep the framework for 1 millisecond.
+	 */
+	private void sleep() {
+		// Sleep a bit after updating or rendering.
+		try {
+			Thread.sleep(1);
+		} catch (InterruptedException ex) {
+			Thread.currentThread().interrupt();
 		}
 	}
 
@@ -202,12 +221,30 @@ public class UpdaterDefault implements IUpdater {
 	}
 
 	@Override
-	public float getTimeMs() {
-		return ((System.nanoTime() - startTime) / 1000000.0f) + (timeOffset * 1000.0f);
+	public float getTimeSec() {
+		double time = System.nanoTime() * 1e-9;
+
+		if (timing != null) {
+			time = timing.getTime();
+		}
+
+		return ((float) time - startTime) + timeOffset;
 	}
 
 	@Override
-	public float getTimeSec() {
-		return ((System.nanoTime() - startTime) / 1000000000.0f) + timeOffset;
+	public float getTimeMs() {
+		return getTimeSec() * 1000.0f;
+	}
+
+	/**
+	 * A reference to a time fetching function
+	 */
+	public interface TimingReference<T> {
+		/**
+		 * Gets the time from the function.
+		 *
+		 * @return The time read in seconds.
+		 */
+		double getTime();
 	}
 }

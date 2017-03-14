@@ -10,7 +10,7 @@ import flounder.standards.*;
 public class TestProject {
 	public static void main(String[] args) {
 		// Creates a new framework object.
-		Framework framework = new Framework("test", new UpdaterDefault(), -1, new TestInterface());
+		Framework framework = new Framework("test", new UpdaterDefault(null), -1, new TestInterface());
 
 		// Runs the frameworks thread.
 		framework.run();
