@@ -1,10 +1,12 @@
 package flounder.maths;
 
+import flounder.framework.*;
+
 /**
  * A timer implementation for events.
  */
 public class Timer {
-	private long startTime;
+	private double startTime;
 	private double interval;
 
 	/**
@@ -13,7 +15,12 @@ public class Timer {
 	 * @param interval The time between events (seconds).
 	 */
 	public Timer(double interval) {
-		this.startTime = System.currentTimeMillis();
+		if (Framework.getInstance() != null) {
+			this.startTime = Framework.getTimeMs();
+		} else {
+			this.startTime = 0.0f;
+		}
+
 		this.interval = interval * 1000.0;
 	}
 
@@ -23,14 +30,14 @@ public class Timer {
 	 * @return If the interval was exceeded.
 	 */
 	public boolean isPassedTime() {
-		return System.currentTimeMillis() - startTime > interval;
+		return Framework.getTimeMs() - startTime > interval;
 	}
 
 	/**
 	 * Adds the intervals value to the start time.
 	 */
 	public void resetStartTime() {
-		startTime = System.currentTimeMillis();
+		startTime = Framework.getTimeMs();
 	}
 
 	/**
@@ -49,6 +56,6 @@ public class Timer {
 	 */
 	public void setInterval(double interval) {
 		this.interval = (long) (interval * 1000.0);
-		this.startTime = System.currentTimeMillis();
+		this.startTime = Framework.getTimeMs();
 	}
 }

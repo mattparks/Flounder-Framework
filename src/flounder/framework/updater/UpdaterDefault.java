@@ -13,7 +13,7 @@ import java.util.*;
  */
 public class UpdaterDefault implements IUpdater {
 	private TimingReference timing;
-	private long startTime;
+	private double startTime;
 
 	private float timeOffset;
 	private Delta deltaUpdate;
@@ -27,13 +27,17 @@ public class UpdaterDefault implements IUpdater {
 		this.timing = timing;
 
 		// Sets basic updater info.
-		this.startTime = 0; // System.nanoTime()
+		this.startTime = System.nanoTime();
+
+		if (timing != null) {
+			this.startTime = timing.getTime();
+		}
 
 		// Creates variables to be used for timing updates and renders.
 		this.timeOffset = 0.0f;
 		this.deltaUpdate = new Delta();
 		this.deltaRender = new Delta();
-		this.timerUpdate = new Timer(1.0 / 64.0);
+		this.timerUpdate = new Timer(1.0 / 70.0);
 		this.timerRender = new Timer(1.0 / 60.0);
 		this.timerProfile = new Timer(1.0 / 5.0);
 	}
@@ -117,7 +121,7 @@ public class UpdaterDefault implements IUpdater {
 		}
 
 		// Renders when needed.
-		if ((timerRender.isPassedTime() || Framework.getFpsLimit() <= 0) && Maths.almostEqual(timerUpdate.getInterval(), deltaUpdate.getDelta(), 6.0)) {
+		if ((timerRender.isPassedTime() || Framework.getFpsLimit() <= 0) && Maths.almostEqual(timerUpdate.getInterval(), deltaUpdate.getDelta(), 10.0)) {
 			// Updates the render delta, and render time extension.
 			deltaRender.update();
 
@@ -160,18 +164,6 @@ public class UpdaterDefault implements IUpdater {
 					module.profile();
 				}
 			}
-		}
-	}
-
-	/**
-	 * Function used to sleep the framework for 1 millisecond.
-	 */
-	private void sleep() {
-		// Sleep a bit after updating or rendering.
-		try {
-			Thread.sleep(1);
-		} catch (InterruptedException ex) {
-			Thread.currentThread().interrupt();
 		}
 	}
 
@@ -228,7 +220,7 @@ public class UpdaterDefault implements IUpdater {
 			time = timing.getTime();
 		}
 
-		return ((float) time - startTime) + timeOffset;
+		return (float) (time - startTime) + timeOffset;
 	}
 
 	@Override
