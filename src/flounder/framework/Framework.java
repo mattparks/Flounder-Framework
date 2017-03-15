@@ -49,7 +49,7 @@ public class Framework extends Thread {
 		super.setName("framework");
 
 		// Increment revision every fix for the minor version release. Minor version represents the build month. Major incremented every two years OR after major core framework rewrites.
-		this.version = new Version("13.03.11");
+		this.version = new Version("15.03.11");
 
 		// Sets the frameworks updater.
 		this.updater = updater;
@@ -219,7 +219,7 @@ public class Framework extends Thread {
 
 	@Override
 	public void run() {
-		try {
+	//	try {
 			updater.initialize();
 
 			while (isRunning()) {
@@ -230,11 +230,11 @@ public class Framework extends Thread {
 
 			updater.dispose();
 			INSTANCE = null;
-		} catch (Exception e) {
-			e.printStackTrace();
-			FlounderLogger.exception(e);
-			System.exit(-1);
-		}
+	//	} catch (Exception e) {
+	//		e.printStackTrace();
+	//		FlounderLogger.exception(e);
+	//		System.exit(-1);
+	//	}
 	}
 
 	/**
