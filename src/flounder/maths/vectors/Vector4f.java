@@ -187,6 +187,15 @@ public class Vector4f {
 	}
 
 	/**
+	 * Gets if all the components to the vector are zero.
+	 *
+	 * @return If the vector is zero.
+	 */
+	public boolean isZero() {
+		return x == 0.0f && y == 0.0f && z == 0.0f && w == 0.0f;
+	}
+
+	/**
 	 * Negates a vector and places the result in the destination vector.
 	 *
 	 * @param source The source vector.
