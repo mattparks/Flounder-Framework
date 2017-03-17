@@ -1,5 +1,7 @@
 package flounder.factory;
 
+import flounder.logger.*;
+import flounder.maths.*;
 import flounder.processing.opengl.*;
 import flounder.processing.resource.*;
 
@@ -35,8 +37,24 @@ public class FactoryRequestLoad implements RequestResource, RequestOpenGL {
 
 	@Override
 	public void executeRequestGL() {
-		while (!object.isDataLoaded()) {
-			//	FlounderLogger.error("Request for " + name + " is waiting for data!");
+		Timer timer = null;
+
+		while (object == null || !object.isDataLoaded()) {
+			if (timer == null) {
+				FlounderLogger.error("Factory request for " + name + " is waiting for data!");
+				timer = new Timer(5.0); // Waits 5 seconds for data, if it stays unloaded then this object is not loaded.
+			}
+
+			if (timer.isPassedTime()) {
+				if (object != null) {
+					object.setDataLoaded(false);
+					object.setFullyLoaded(false);
+				}
+
+				timer.resetStartTime();
+				FlounderLogger.error("Factory request for " + name + " failed! The object will not be loaded!");
+			}
+
 			// Wait for resources to load into data...
 		}
 
