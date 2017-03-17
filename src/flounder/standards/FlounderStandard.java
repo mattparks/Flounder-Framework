@@ -1,6 +1,7 @@
 package flounder.standards;
 
 import flounder.framework.*;
+import flounder.logger.*;
 import flounder.profiling.*;
 
 import java.util.*;
