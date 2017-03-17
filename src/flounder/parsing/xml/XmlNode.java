@@ -1,5 +1,7 @@
 package flounder.parsing.xml;
 
+import flounder.logger.*;
+
 import java.util.*;
 
 /**
@@ -64,6 +66,7 @@ public class XmlNode {
 			}
 		}
 
+		FlounderLogger.error("Could not find Xml node child: " + childName + " in parent " + name);
 		return null;
 	}
 
@@ -92,6 +95,7 @@ public class XmlNode {
 			}
 		}
 
+		FlounderLogger.error("Could not find Xml node child: " + childName + " in parent " + name + " with attribute " + attribute);
 		return null;
 	}
 
