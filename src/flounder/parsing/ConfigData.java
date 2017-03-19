@@ -6,15 +6,11 @@ package flounder.parsing;
 public class ConfigData implements Comparable<ConfigData> {
 	protected String key;
 	protected String data;
-	protected String description;
-
 	protected ConfigReference reference;
 
-	protected ConfigData(String key, String data, String description, ConfigReference reference) {
+	protected ConfigData(String key, String data, ConfigReference reference) {
 		this.key = fixDataString(key);
 		this.data = fixDataString(data);
-		this.description = fixDataString(description);
-
 		this.reference = reference;
 	}
 

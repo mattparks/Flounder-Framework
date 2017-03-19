@@ -44,7 +44,7 @@ public class Config {
 
 				if (line.startsWith("#")) {
 					currentSection = null;
-					String section = line.substring(1, line.length()).split("\\(")[0].trim();
+					String section = line.substring(1, line.length()).split(":")[0].trim();
 
 					for (ConfigSection s : ConfigSection.values()) {
 						if (s.name().equals(section)) {
@@ -52,12 +52,9 @@ public class Config {
 						}
 					}
 				} else if (line.startsWith("$")) {
-					String key = line.substring(1, line.length()).split("\\(")[0].trim();
+					String key = line.substring(1, line.length()).split(":")[0].trim();
 					String data = line.split(":")[1].trim();
-					String description = line.split(":")[0];
-					description = description.substring(description.indexOf("(") + 1);
-					description = description.substring(0, description.indexOf(")"));
-					this.dataMap.get(currentSection).add(new ConfigData(key, data, description, null));
+					this.dataMap.get(currentSection).add(new ConfigData(key, data, null));
 				}
 			}
 		} catch (IOException e) {
@@ -71,13 +68,12 @@ public class Config {
 	 * @param section The section the key is found under.
 	 * @param key The name of the key to find the data under.
 	 * @param defaultData The default data that is used if this config is not found.
-	 * @param defaultDescription The default description that is used if this config is not found.
 	 * @param <T> The type of default data.
 	 *
 	 * @return The data loaded from the config.
 	 */
-	public <T> ConfigData getData(ConfigSection section, String key, T defaultData, String defaultDescription) {
-		return getData(section, key, defaultData, defaultDescription, null);
+	public <T> ConfigData getData(ConfigSection section, String key, T defaultData) {
+		return getData(section, key, defaultData, null);
 	}
 
 	/**
@@ -86,20 +82,14 @@ public class Config {
 	 * @param section The section the key is found under.
 	 * @param key The name of the key to find the data under.
 	 * @param defaultData The default data that is used if this config is not found.
-	 * @param defaultDescription The default description that is used if this config is not found.
 	 * @param reference The reference to a code variable used when resaving the data.
 	 * @param <T> The type of default data.
 	 *
 	 * @return The data loaded from the config.
 	 */
-	public <T> ConfigData getData(ConfigSection section, String key, T defaultData, String defaultDescription, ConfigReference reference) {
+	public <T> ConfigData getData(ConfigSection section, String key, T defaultData, ConfigReference reference) {
 		for (ConfigData data : dataMap.get(section)) {
 			if (data.key.equals(key)) {
-				// Fix descriptions and references.
-				if (!data.description.equals(defaultDescription)) {
-					data.description = defaultDescription;
-				}
-
 				if (data.reference == null) {
 					data.reference = reference;
 				}
@@ -109,7 +99,7 @@ public class Config {
 			}
 		}
 
-		ConfigData configData = new ConfigData(key, defaultData.toString(), defaultDescription, reference);
+		ConfigData configData = new ConfigData(key, defaultData.toString(), reference);
 		dataMap.get(section).add(configData);
 		return configData;
 	}
@@ -125,11 +115,11 @@ public class Config {
 			FileWriterHelper fileWriterHelper = new FileWriterHelper(fileWriter);
 
 			for (ConfigSection section : dataMap.keySet()) {
-				fileWriterHelper.beginNewSegment("#" + section.name() + "(\'" + section.description + "\'):", false);
+				fileWriterHelper.beginNewSegment("#" + section.name() + ":", false);
 
 				for (ConfigData data : ArraySorting.insertionSort(dataMap.get(section))) {
 					String save = data.reference == null ? data.data : data.reference.getReading().toString();
-					fileWriterHelper.writeSegmentData("$" + data.key + "(\'" + data.description + "\'): " + save, true);
+					fileWriterHelper.writeSegmentData("$" + data.key + ": " + save, true);
 				}
 
 				fileWriterHelper.endSegment(true, false);
