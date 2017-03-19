@@ -7,10 +7,18 @@ import flounder.resources.*;
 import java.io.*;
 import java.util.*;
 
+/**
+ * A class used for loading and parsing a configuration file.
+ */
 public class Config {
 	private Map<ConfigSection, List<ConfigData>> dataMap;
 	private MyFile file;
 
+	/**
+	 * Loads and parses a configuration file.
+	 *
+	 * @param file The path to the configuration file.
+	 */
 	public Config(MyFile file) {
 		this.dataMap = new HashMap<>();
 
@@ -23,7 +31,7 @@ public class Config {
 		load();
 	}
 
-	public void load() {
+	private void load() {
 		File saveFile = insureFile();
 
 		try (BufferedReader br = new BufferedReader(new FileReader(saveFile))) {
@@ -57,10 +65,33 @@ public class Config {
 		}
 	}
 
+	/**
+	 * Gets data from the loaded config, defaults are used to set if not found. These data sets are also used when saving the config.
+	 *
+	 * @param section The section the key is found under.
+	 * @param key The name of the key to find the data under.
+	 * @param defaultData The default data that is used if this config is not found.
+	 * @param defaultDescription The default description that is used if this config is not found.
+	 * @param <T> The type of default data.
+	 *
+	 * @return The data loaded from the config.
+	 */
 	public <T> ConfigData getData(ConfigSection section, String key, T defaultData, String defaultDescription) {
 		return getData(section, key, defaultData, defaultDescription, null);
 	}
 
+	/**
+	 * Gets data from the loaded config, defaults are used to set if not found. These data sets are also used when saving the config.
+	 *
+	 * @param section The section the key is found under.
+	 * @param key The name of the key to find the data under.
+	 * @param defaultData The default data that is used if this config is not found.
+	 * @param defaultDescription The default description that is used if this config is not found.
+	 * @param reference The reference to a code variable used when resaving the data.
+	 * @param <T> The type of default data.
+	 *
+	 * @return The data loaded from the config.
+	 */
 	public <T> ConfigData getData(ConfigSection section, String key, T defaultData, String defaultDescription, ConfigReference reference) {
 		for (ConfigData data : dataMap.get(section)) {
 			if (data.key.equals(key)) {
@@ -83,6 +114,9 @@ public class Config {
 		return configData;
 	}
 
+	/**
+	 * Saves the config, data references are used to find new up to data data.
+	 */
 	public void save() {
 		try {
 			File saveFile = insureFile();
@@ -138,10 +172,11 @@ public class Config {
 		return saveFile;
 	}
 
-	public Map<ConfigSection, List<ConfigData>> getDataMap() {
-		return dataMap;
-	}
-
+	/**
+	 * Gets the file the config is loaded from.
+	 *
+	 * @return The config file.
+	 */
 	public MyFile getFile() {
 		return file;
 	}
