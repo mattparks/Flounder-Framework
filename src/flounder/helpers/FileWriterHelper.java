@@ -24,7 +24,11 @@ public class FileWriterHelper {
 	}
 
 	public void beginNewSegment(String name) throws IOException {
-		name = getIndentations() + name + " {";
+		beginNewSegment(name, true);
+	}
+
+	public void beginNewSegment(String name, boolean brackets) throws IOException {
+		name = getIndentations() + name + (brackets ? " {" : "");
 		fileWriter.write(name);
 		enterBlankLine();
 		lineLength = 0;
@@ -32,9 +36,13 @@ public class FileWriterHelper {
 	}
 
 	public void endSegment(boolean enterTightSpace) throws IOException {
+		endSegment(enterTightSpace, true);
+	}
+
+	public void endSegment(boolean enterTightSpace, boolean brackets) throws IOException {
 		enterBlankLine();
 		fileNestation--;
-		fileWriter.write(getIndentations() + "}");
+		fileWriter.write(getIndentations() + (brackets ? " {" : ""));
 
 		if (!enterTightSpace) {
 			enterBlankLine();
