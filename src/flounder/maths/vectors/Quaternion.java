@@ -76,35 +76,38 @@ public class Quaternion {
 	 * @return This.
 	 */
 	public Quaternion set(Matrix4f source) {
-		float diagonal = source.m00 + source.m11 + source.m22;
+		this.x = 0.0f;
+		this.y = 0.0f;
+		this.z = 0.0f;
+		this.w = 0.0f;
 
-		if (diagonal > 0.0f) {
-			float w4 = (float) (Math.sqrt(diagonal + 1.0f) * 2.0f);
-			this.w = w4 / 4.0f;
-			this.x = (source.m21 - source.m12) / w4;
-			this.y = (source.m02 - source.m20) / w4;
-			this.z = (source.m10 - source.m01) / w4;
+		float diagonal = source.m00 + source.m11 + source.m22;
+		if (diagonal > 0) {
+			float w4 = (float) (Math.sqrt(diagonal + 1f) * 2f);
+			w = w4 / 4f;
+			x = (source.m21 - source.m12) / w4;
+			y = (source.m02 - source.m20) / w4;
+			z = (source.m10 - source.m01) / w4;
 		} else if ((source.m00 > source.m11) && (source.m00 > source.m22)) {
-			float x4 = (float) (Math.sqrt(1.0f + source.m00 - source.m11 - source.m22) * 2.0f);
-			this.w = (source.m21 - source.m12) / x4;
-			this.x = x4 / 4.0f;
-			this.y = (source.m01 + source.m10) / x4;
-			this.z = (source.m02 + source.m20) / x4;
+			float x4 = (float) (Math.sqrt(1f + source.m00 - source.m11 - source.m22) * 2f);
+			w = (source.m21 - source.m12) / x4;
+			x = x4 / 4f;
+			y = (source.m01 + source.m10) / x4;
+			z = (source.m02 + source.m20) / x4;
 		} else if (source.m11 > source.m22) {
-			float y4 = (float) (Math.sqrt(1.0f + source.m11 - source.m00 - source.m22) * 2.0f);
-			this.w = (source.m02 - source.m20) / y4;
-			this.x = (source.m01 + source.m10) / y4;
-			this.y = y4 / 4.0f;
-			this.z = (source.m12 + source.m21) / y4;
+			float y4 = (float) (Math.sqrt(1f + source.m11 - source.m00 - source.m22) * 2f);
+			w = (source.m02 - source.m20) / y4;
+			x = (source.m01 + source.m10) / y4;
+			y = y4 / 4f;
+			z = (source.m12 + source.m21) / y4;
 		} else {
-			float z4 = (float) (Math.sqrt(1f + source.m22 - source.m00 - source.m11) * 2.0f);
-			this.w = (source.m10 - source.m01) / z4;
-			this.x = (source.m02 + source.m20) / z4;
-			this.y = (source.m12 + source.m21) / z4;
-			this.z = z4 / 4.0f;
+			float z4 = (float) (Math.sqrt(1f + source.m22 - source.m00 - source.m11) * 2f);
+			w = (source.m10 - source.m01) / z4;
+			x = (source.m02 + source.m20) / z4;
+			y = (source.m12 + source.m21) / z4;
+			z = z4 / 4f;
 		}
 
-		this.normalize();
 		return this;
 	}
 
@@ -227,6 +230,38 @@ public class Quaternion {
 		double newY = y * sinAngleOverTwo;
 		double newZ = z * sinAngleOverTwo;
 		return new Quaternion((float) newW, (float) newX, (float) newY, (float) newZ);
+	}
+
+	/**
+	 * Interpolates between two quaternion rotations and returns the resulting quaternion rotation.
+	 * The interpolation method here is "nlerp", or "normalized-lerp". Another mnethod that could be used is "slerp".
+	 * There is a comparison of the methods at these places:
+	 * https://keithmaggio.wordpress.com/2011/02/15/math-magician-lerp-slerp-and-nlerp/
+	 * http://number-none.com/product/Understanding%20Slerp,%20Then%20Not%20Using%20It/
+	 *
+	 * @param a
+	 * @param b
+	 * @param blend A value between 0 and 1 indicating how far to interpolate between the two quaternions.
+	 *
+	 * @return The resulting interpolated rotation in quaternion format.
+	 */
+	public static Quaternion interpolate(Quaternion a, Quaternion b, float blend) {
+		Quaternion result = new Quaternion(0, 0, 0, 1);
+		float dot = a.w * b.w + a.x * b.x + a.y * b.y + a.z * b.z;
+		float blendI = 1f - blend;
+		if (dot < 0) {
+			result.w = blendI * a.w + blend * -b.w;
+			result.x = blendI * a.x + blend * -b.x;
+			result.y = blendI * a.y + blend * -b.y;
+			result.z = blendI * a.z + blend * -b.z;
+		} else {
+			result.w = blendI * a.w + blend * b.w;
+			result.x = blendI * a.x + blend * b.x;
+			result.y = blendI * a.y + blend * b.y;
+			result.z = blendI * a.z + blend * b.z;
+		}
+		result.normalize();
+		return result;
 	}
 
 	public static Quaternion slerp(Quaternion start, Quaternion end, float progression) {
