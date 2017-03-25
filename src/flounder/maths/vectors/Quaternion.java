@@ -232,57 +232,25 @@ public class Quaternion {
 		return new Quaternion((float) newW, (float) newX, (float) newY, (float) newZ);
 	}
 
-	/**
-	 * Interpolates between two quaternion rotations and returns the resulting quaternion rotation.
-	 * The interpolation method here is "nlerp", or "normalized-lerp". Another mnethod that could be used is "slerp".
-	 * There is a comparison of the methods at these places:
-	 * https://keithmaggio.wordpress.com/2011/02/15/math-magician-lerp-slerp-and-nlerp/
-	 * http://number-none.com/product/Understanding%20Slerp,%20Then%20Not%20Using%20It/
-	 *
-	 * @param a
-	 * @param b
-	 * @param blend A value between 0 and 1 indicating how far to interpolate between the two quaternions.
-	 *
-	 * @return The resulting interpolated rotation in quaternion format.
-	 */
-	public static Quaternion interpolate(Quaternion a, Quaternion b, float blend) {
-		Quaternion result = new Quaternion(0, 0, 0, 1);
-		float dot = a.w * b.w + a.x * b.x + a.y * b.y + a.z * b.z;
-		float blendI = 1f - blend;
-		if (dot < 0) {
-			result.w = blendI * a.w + blend * -b.w;
-			result.x = blendI * a.x + blend * -b.x;
-			result.y = blendI * a.y + blend * -b.y;
-			result.z = blendI * a.z + blend * -b.z;
-		} else {
-			result.w = blendI * a.w + blend * b.w;
-			result.x = blendI * a.x + blend * b.x;
-			result.y = blendI * a.y + blend * b.y;
-			result.z = blendI * a.z + blend * b.z;
-		}
-		result.normalize();
-		return result;
-	}
-
 	public static Quaternion slerp(Quaternion start, Quaternion end, float progression) {
 		start.normalize();
 		end.normalize();
 		final float d = start.x * end.x + start.y * end.y + start.z * end.z + start.w * end.w;
-		float absDot = d < 0f ? -d : d;
-		float scale0 = 1f - progression;
+		float absDot = d < 0.0f ? -d : d;
+		float scale0 = 1.0f - progression;
 		float scale1 = progression;
 
-		if ((1 - absDot) > 0.1f) {
-
+		if ((1.0f - absDot) > 0.1f) {
 			final float angle = (float) Math.acos(absDot);
-			final float invSinTheta = 1f / (float) Math.sin(angle);
-			scale0 = ((float) Math.sin((1f - progression) * angle) * invSinTheta);
+			final float invSinTheta = 1.0f / (float) Math.sin(angle);
+			scale0 = ((float) Math.sin((1.0f - progression) * angle) * invSinTheta);
 			scale1 = ((float) Math.sin((progression * angle)) * invSinTheta);
 		}
 
-		if (d < 0f) {
+		if (d < 0.0f) {
 			scale1 = -scale1;
 		}
+
 		float newX = (scale0 * start.x) + (scale1 * end.x);
 		float newY = (scale0 * start.y) + (scale1 * end.y);
 		float newZ = (scale0 * start.z) + (scale1 * end.z);
