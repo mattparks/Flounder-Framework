@@ -119,6 +119,7 @@ public class Config {
 
 				for (ConfigData data : ArraySorting.insertionSort(dataMap.get(section))) {
 					String save = data.reference == null ? data.data : data.reference.getReading().toString();
+					data.data = save;
 					fileWriterHelper.writeSegmentData("$" + data.key + ": " + save, true);
 				}
 
