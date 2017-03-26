@@ -42,13 +42,7 @@ public abstract class FactoryBuilder {
 			FlounderLogger.log(name + " is being loaded into the " + factory.getFactoryName() + " factory right now!");
 			factory.getLoaded().remove(name);
 			object = factory.newObject();
-
-		/*	factory.loadData(object, this, name);
-			object.setDataLoaded(true);
-			factory.create(object, this);
-			object.setFullyLoaded(true);*/
 			FlounderProcessors.sendRequest(new FactoryRequestLoad(name, factory, object, this));
-
 			factory.getLoaded().put(name, new SoftReference<>(object));
 		}
 
