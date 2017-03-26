@@ -63,4 +63,12 @@ public class Pair<FIRST, SECOND> {
 	public void setSecond(SECOND second) {
 		this.second = second;
 	}
+
+	@Override
+	public String toString() {
+		return "Pair{" +
+				"first=" + first +
+				", second=" + second +
+				'}';
+	}
 }
