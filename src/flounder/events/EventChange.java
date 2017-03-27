@@ -27,7 +27,11 @@ public abstract class EventChange<T> implements IEvent {
 	}
 
 	@Override
-	public abstract void onEvent();
+	public void onEvent() {
+		onEvent(current);
+	}
+
+	public abstract void onEvent(T newValue);
 
 	/**
 	 * A reference to a value.

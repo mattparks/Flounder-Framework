@@ -121,7 +121,7 @@ public class UpdaterDefault implements IUpdater {
 		}
 
 		// Renders when needed.
-		if ((timerRender.isPassedTime() || Framework.getFpsLimit() <= 0) && Maths.almostEqual(timerUpdate.getInterval(), deltaUpdate.getDelta(), 10.0)) {
+		if ((timerRender.isPassedTime() || Framework.getFpsLimit() == -1 || Framework.getFpsLimit() > 1000.0f) && Maths.almostEqual(timerUpdate.getInterval(), deltaUpdate.getDelta(), 10.0)) {
 			// Updates the render delta, and render time extension.
 			deltaRender.update();
 
