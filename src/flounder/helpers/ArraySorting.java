@@ -92,7 +92,7 @@ public class ArraySorting {
 
 		right = mergeSort(right);
 		left = mergeSort(left);
-		List<T> result = new ArrayList<T>();
+		List<T> result = new ArrayList<>();
 		Iterator<T> it1 = left.iterator();
 		Iterator<T> it2 = right.iterator();
 

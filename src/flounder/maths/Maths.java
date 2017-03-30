@@ -27,8 +27,7 @@ public class Maths {
 	public static float randomInRange(float min, float max) {
 		float range = max - min;
 		float scaled = RANDOM.nextFloat() * range;
-		float shifted = scaled + min;
-		return shifted; // == (rand.nextDouble() * (max-min)) + min;
+		return scaled + min; // == (rand.nextDouble() * (max-min)) + min;
 	}
 
 	/**
@@ -42,8 +41,7 @@ public class Maths {
 	public static double randomInRange(double min, double max) {
 		double range = max - min;
 		double scaled = RANDOM.nextDouble() * range;
-		double shifted = scaled + min;
-		return shifted;
+		return scaled + min;
 	}
 
 	/**

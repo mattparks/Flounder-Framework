@@ -34,10 +34,7 @@ public class FlounderTabMenu extends JTabbedPane {
 	}
 
 	protected void dispose() {
-		Iterator disposalIterator = components.entrySet().iterator();
-
-		while (disposalIterator.hasNext()) {
-			HashMap.Entry pair = (HashMap.Entry) disposalIterator.next();
+		for (Map.Entry pair : components.entrySet()) {
 			FlounderProfilerTab disposeObject = (FlounderProfilerTab) pair.getValue();
 			disposeObject.dispose();
 		}
