@@ -19,6 +19,7 @@ public abstract class Module<T extends Module> {
 	 * Creates a new abstract module.
 	 *
 	 * @param moduleUpdate How/when the module will update.
+	 * @param profileTab The tab name used in this module.
 	 * @param requires Classes the module depends on.
 	 */
 	public Module(ModuleUpdate moduleUpdate, String profileTab, Class<T>... requires) {

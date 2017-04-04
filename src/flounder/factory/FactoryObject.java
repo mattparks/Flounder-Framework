@@ -26,6 +26,8 @@ public abstract class FactoryObject {
 
 	/**
 	 * Sets that the factory has data loaded.
+	 *
+	 * @param dataLoaded If the data has been loaded.
 	 */
 	protected void setDataLoaded(boolean dataLoaded) {
 		this.dataLoaded = dataLoaded;
@@ -42,6 +44,8 @@ public abstract class FactoryObject {
 
 	/**
 	 * Sets that the factory has been loaded.
+	 *
+	 * @param fullyLoaded If the factory has been loaded.
 	 */
 	protected void setFullyLoaded(boolean fullyLoaded) {
 		this.fullyLoaded = fullyLoaded;
