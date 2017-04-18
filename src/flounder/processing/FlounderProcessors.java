@@ -97,11 +97,15 @@ public class FlounderProcessors extends Module {
 	 * @param request The resource request to add.
 	 */
 	public static void sendRequest(Object request) {
-		INSTANCE.processors.forEach(processor -> {
-			if (processor.getRequestClass().isInstance(request)) {
-				processor.addRequestToQueue(request);
-			}
-		});
+		try {
+			INSTANCE.processors.forEach(processor -> {
+				if (processor.getRequestClass().isInstance(request)) {
+					processor.addRequestToQueue(request);
+				}
+			});
+		} catch (ConcurrentModificationException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
