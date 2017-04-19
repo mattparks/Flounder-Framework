@@ -10,10 +10,10 @@ import java.util.*;
  */
 public class Maths {
 	public static final float PI = 3.14159265358979323846f;
-	public static final float DEGREES_IN_CIRCLE = 360;
-	public static final float DEGREES_IN_HALF_CIRCLE = 180;
+	public static final float DEGREES_IN_CIRCLE = 360.0f;
+	public static final float DEGREES_IN_HALF_CIRCLE = 180.0f;
 	public static final float ANG2RAD = PI / DEGREES_IN_HALF_CIRCLE;
-	public static final float LOG_HALF = (float) Math.log(0.5f);
+	public static final float LOG_HALF = (float) Math.log(0.5);
 	public static final Random RANDOM = new Random();
 
 	/**
