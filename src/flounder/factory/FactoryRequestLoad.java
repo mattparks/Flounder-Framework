@@ -41,7 +41,7 @@ public class FactoryRequestLoad implements RequestResource, RequestOpenGL {
 
 		while (object == null || !object.isDataLoaded()) {
 			if (timer == null) {
-				FlounderLogger.error("Factory request for " + name + " is waiting for data!");
+				FlounderLogger.warning("Factory request for " + name + " is waiting for data!");
 				timer = new Timer(5.0); // Waits 5 seconds for data, if it stays unloaded then this object is not loaded.
 			}
 
