@@ -68,7 +68,7 @@ public class FlounderProcessors extends Module {
 			processors.addAll(newCasted);
 
 			// Initializes any not initialized processors.
-			processors.forEach(standard -> {
+			new ArrayList<>(processors).forEach(standard -> {
 				if (!standard.isInitialized()) {
 					standard.init();
 					standard.setInitialized(true);
@@ -78,7 +78,7 @@ public class FlounderProcessors extends Module {
 
 		// Runs updates for the processors.
 		if (processors != null && !processors.isEmpty()) {
-			processors.forEach(Processor::update);
+			new ArrayList<>(processors).forEach(Processor::update);
 		}
 	}
 
