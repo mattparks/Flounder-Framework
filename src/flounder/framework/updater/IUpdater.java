@@ -5,19 +5,9 @@ package flounder.framework.updater;
  */
 public interface IUpdater {
 	/**
-	 * Function used to initialize the framework.
+	 * Function called by the framework to initialize and start the game loop used for updating and profiling.
 	 */
-	void initialize();
-
-	/**
-	 * Function used to update the framework.
-	 */
-	void update();
-
-	/**
-	 * Function used to profile the framework.
-	 */
-	void profile();
+	void run();
 
 	/**
 	 * Disposed the framework if initialised.

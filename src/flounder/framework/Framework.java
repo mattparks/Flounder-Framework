@@ -220,17 +220,11 @@ public class Framework extends Thread {
 	@Override
 	public void run() {
 		try {
-			updater.initialize();
-
-			while (isRunning()) {
-				updater.update();
-				updater.profile();
-				extensionsChanged = false;
-			}
+			updater.run();
 		} catch (Exception e) {
 			e.printStackTrace();
 			FlounderLogger.exception(e);
-			System.exit(-1);
+			//	System.exit(-1);
 		} finally {
 			updater.dispose();
 			INSTANCE = null;
@@ -341,6 +335,24 @@ public class Framework extends Thread {
 	 */
 	public static float getTimeMs() {
 		return INSTANCE.updater.getTimeMs();
+	}
+
+	/**
+	 * Gets if the extensions list changed.
+	 *
+	 * @return If the extensions list changed.
+	 */
+	public static boolean isExtensionsChanged() {
+		return INSTANCE.extensionsChanged;
+	}
+
+	/**
+	 * Sets if the extensions list has changed.
+	 *
+	 * @extensionsChanged If the extensions list has changed.
+	 */
+	public static void setExtensionsChanged(boolean extensionsChanged) {
+		INSTANCE.extensionsChanged = extensionsChanged;
 	}
 
 	/**

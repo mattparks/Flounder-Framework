@@ -37,13 +37,25 @@ public class UpdaterDefault implements IUpdater {
 		this.timeOffset = 0.0f;
 		this.deltaUpdate = new Delta();
 		this.deltaRender = new Delta();
-		this.timerUpdate = new Timer(1.0 / 70.0);
+		this.timerUpdate = new Timer(1.0 / 60.0);
 		this.timerRender = new Timer(1.0 / 60.0);
-		this.timerProfile = new Timer(1.0 / 5.0);
+		this.timerProfile = new Timer(1.0 / 4.0);
 	}
 
 	@Override
-	public void initialize() {
+	public void run() {
+		initialize();
+
+		while (Framework.isRunning()) {
+			if (Framework.isInitialized()) {
+				update();
+				profile();
+				Framework.setExtensionsChanged(false);
+			}
+		}
+	}
+
+	private void initialize() {
 		if (Framework.isInitialized()) {
 			return;
 		}
@@ -75,12 +87,7 @@ public class UpdaterDefault implements IUpdater {
 		Framework.setInitialized(true);
 	}
 
-	@Override
-	public void update() {
-		if (!Framework.isInitialized()) {
-			return;
-		}
-
+	private void update() {
 		// Updates the module when needed always.
 		for (Module module : Framework.getModulesActive()) {
 			if (module.getModuleUpdate().equals(ModuleUpdate.UPDATE_ALWAYS)) {
@@ -93,11 +100,11 @@ public class UpdaterDefault implements IUpdater {
 
 		// Updates when needed.
 		if (timerUpdate.isPassedTime()) {
-			// Updates the frameworks delta.
-			deltaUpdate.update();
-
 			// Resets the timer.
 			timerUpdate.resetStartTime();
+
+			// Updates the frameworks delta.
+			deltaUpdate.update();
 
 			// Updates the modules when needed before the entrance.
 			for (Module module : Framework.getModulesActive()) {
@@ -122,11 +129,11 @@ public class UpdaterDefault implements IUpdater {
 
 		// Renders when needed.
 		if ((timerRender.isPassedTime() || Framework.getFpsLimit() == -1 || Framework.getFpsLimit() > 1000.0f) && Maths.almostEqual(timerUpdate.getInterval(), deltaUpdate.getDelta(), 10.0)) {
-			// Updates the render delta, and render time extension.
-			deltaRender.update();
-
 			// Resets the timer.
 			timerRender.resetStartTime();
+
+			// Updates the render delta, and render time extension.
+			deltaRender.update();
 
 			// Updates the module when needed after the rendering.
 			for (Module module : Framework.getModulesActive()) {
@@ -140,8 +147,7 @@ public class UpdaterDefault implements IUpdater {
 		}
 	}
 
-	@Override
-	public void profile() {
+	private void profile() {
 		if (!Framework.isInitialized()) {
 			return;
 		}
