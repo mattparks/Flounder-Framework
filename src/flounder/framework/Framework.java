@@ -219,15 +219,20 @@ public class Framework extends Thread {
 
 	@Override
 	public void run() {
+		LoggerFrame logger = null;
+
 		try {
 			updater.run();
 		} catch (Exception e) {
-			e.printStackTrace();
 			FlounderLogger.exception(e);
-			//	System.exit(-1);
+			logger = new LoggerFrame();
 		} finally {
 			updater.dispose();
 			INSTANCE = null;
+		}
+
+		if (logger != null) {
+			logger.run();
 		}
 	}
 

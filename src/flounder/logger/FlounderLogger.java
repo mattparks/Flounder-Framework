@@ -174,6 +174,10 @@ public class FlounderLogger extends Module {
 				INSTANCE.saveData.add("");
 			} else {
 				INSTANCE.saveData.add("EXCEPTION [" + getDateString() + "]: " + getString(exception));
+
+				for (StackTraceElement element : exception.getStackTrace()) {
+					INSTANCE.saveData.add("    " + element);
+				}
 			}
 		}
 
@@ -240,6 +244,10 @@ public class FlounderLogger extends Module {
 		outputFile.close();
 
 		return result;
+	}
+
+	protected static List<String> getSaveData() {
+		return INSTANCE.saveData;
 	}
 
 	@Override
