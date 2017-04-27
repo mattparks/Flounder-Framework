@@ -14,6 +14,8 @@ public interface IUpdater {
 	 */
 	void dispose();
 
+	void setTiming(TimingReference timing);
+
 	/**
 	 * Gets the added/removed time for the framework (seconds).
 	 *
