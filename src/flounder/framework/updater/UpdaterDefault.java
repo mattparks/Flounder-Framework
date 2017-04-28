@@ -194,6 +194,12 @@ public class UpdaterDefault implements IUpdater {
 	}
 
 	@Override
+	public void setTiming(TimingReference timing) {
+		this.timing = timing;
+		this.startTime = timing.getTime();
+	}
+
+	@Override
 	public float getTimeOffset() {
 		return timeOffset;
 	}
@@ -232,17 +238,5 @@ public class UpdaterDefault implements IUpdater {
 	@Override
 	public float getTimeMs() {
 		return getTimeSec() * 1000.0f;
-	}
-
-	/**
-	 * A reference to a time fetching function
-	 */
-	public interface TimingReference<T> {
-		/**
-		 * Gets the time from the function.
-		 *
-		 * @return The time read in seconds.
-		 */
-		double getTime();
 	}
 }

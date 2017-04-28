@@ -245,6 +245,10 @@ public class Framework extends Thread {
 		return INSTANCE.version;
 	}
 
+	public static IUpdater getUpdater() {
+		return INSTANCE.updater;
+	}
+
 	public static List<Module> getModulesActive() {
 		return INSTANCE.modulesActive;
 	}
