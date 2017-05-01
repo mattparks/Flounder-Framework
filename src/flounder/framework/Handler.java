@@ -1,5 +1,7 @@
 package flounder.framework;
 
+import flounder.logger.*;
+
 import java.lang.annotation.*;
 import java.lang.reflect.*;
 
@@ -42,7 +44,9 @@ public class Handler {
 			try {
 				method.invoke(module);
 			} catch (IllegalAccessException | InvocationTargetException e) {
-				e.printStackTrace();
+				FlounderLogger.get().error("Handler could not call method: " + method.toString());
+				FlounderLogger.get().exception(e);
+				Framework.requestClose();
 			}
 
 			hasRun = true;

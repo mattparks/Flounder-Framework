@@ -103,11 +103,12 @@ public class Framework {
 			FlounderLogger.get().exception(e);
 			logger = new LoggerFrame();
 		} finally {
+			logger = new LoggerFrame();
 			updater.dispose();
-		}
 
-		if (logger != null) {
-			logger.run();
+			if (logger != null) {
+				logger.run();
+			}
 		}
 	}
 
