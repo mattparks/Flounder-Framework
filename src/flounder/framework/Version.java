@@ -35,15 +35,15 @@ public class Version {
 
 			if (!versionFile.exists()) {
 				if (!versionFile.createNewFile()) {
-					FlounderLogger.error("Failed to create new version file!");
+					FlounderLogger.get().error("Failed to create new version file!");
 				}
 			} else {
 				if (!versionFile.delete()) {
-					FlounderLogger.error("Failed to delete version file!");
+					FlounderLogger.get().error("Failed to delete version file!");
 				}
 
 				if (!versionFile.createNewFile()) {
-					FlounderLogger.error("Failed to create new version file!");
+					FlounderLogger.get().error("Failed to create new version file!");
 				}
 			}
 

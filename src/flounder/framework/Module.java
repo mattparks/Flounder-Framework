@@ -1,58 +1,42 @@
 package flounder.framework;
 
-import flounder.profiling.*;
-
+import java.lang.annotation.*;
+import java.lang.reflect.*;
 import java.util.*;
 
 /**
- * A simple interface that can be used to create framework modules.
+ * A simple interface used for defining framework modules.
+ *
+ * @param <T> The type of module.
  */
-public abstract class Module<T extends Module> {
-	private ModuleUpdate moduleUpdate;
+public class Module<T extends Module> {
 	private String profileTab;
-	private final Class<T>[] requires;
+	private Class<T>[] dependencies;
+	private List<Handler> handlers;
 	private List<Extension> extensions;
-	private ProfileTimer profileTimer;
-	private boolean initialized;
+
+	private boolean extensionChange;
 
 	/**
-	 * Creates a new abstract module.
+	 * Creates a new module object.
 	 *
-	 * @param moduleUpdate How/when the module will update.
-	 * @param profileTab The tab name used in this module.
-	 * @param requires Classes the module depends on.
+	 * @param dependencies The list of module classes this module depends on.
 	 */
-	public Module(ModuleUpdate moduleUpdate, String profileTab, Class<T>... requires) {
-		this.moduleUpdate = moduleUpdate;
-		this.profileTab = profileTab;
-		this.requires = requires;
+	public Module(Class<T>... dependencies) {
+		//	this.profileTab = profileTab; // TODO: Get from method.
+		this.dependencies = dependencies;
+		this.handlers = new ArrayList<>();
 		this.extensions = new ArrayList<>();
-		this.profileTimer = new ProfileTimer();
-		this.initialized = false;
-	}
 
-	/**
-	 * Initializes the module.
-	 */
-	public abstract void init();
+		this.extensionChange = true;
 
-	/**
-	 * Runs a update of the module.
-	 */
-	public abstract void update();
+		for (Method method : this.getClass().getDeclaredMethods()) {
+			Handler.Function function = method.getAnnotation(Handler.Function.class);
 
-	/**
-	 * Profiles the module.
-	 */
-	public abstract void profile();
-
-	/**
-	 * Gets how/when the module will update.
-	 *
-	 * @return How/when the module will update.
-	 */
-	public ModuleUpdate getModuleUpdate() {
-		return moduleUpdate;
+			if (function != null) {
+				this.handlers.add(new Handler(function.value(), method, this));
+			}
+		}
 	}
 
 	/**
@@ -65,12 +49,62 @@ public abstract class Module<T extends Module> {
 	}
 
 	/**
-	 * Gets the classes that the module requires.
+	 * Gets all of the handlers.
 	 *
-	 * @return The classes that the module requires.
+	 * @return The handlers.
 	 */
-	public Class<T>[] getRequires() {
-		return requires;
+	protected List<Handler> getHandlers() {
+		return handlers;
+	}
+
+	protected Handler getHandler(int flag) {
+		for (Handler handler : handlers) {
+			if (handler.getFlag() == flag) {
+				return handler;
+			}
+		}
+
+		return null;
+	}
+
+	protected void runHandler(int flag) {
+		for (Handler handler : handlers) {
+			if (handler.getFlag() == flag) {
+				handler.run();
+			}
+		}
+	}
+
+	protected boolean hasHandlerRun(int flag) {
+		for (Handler handler : handlers) {
+			if (handler.getFlag() == flag) {
+				return handler.hasRun();
+			}
+		}
+
+		return false;
+	}
+
+	public void registerHandler(Handler handler) {
+		this.handlers.add(handler);
+	}
+
+	/**
+	 * Gets all of the dependencies.
+	 *
+	 * @return The dependencies.
+	 */
+	protected Class<T>[] getDependencies() {
+		return dependencies;
+	}
+
+	/**
+	 * Gets all of the extensions.
+	 *
+	 * @return The extensions.
+	 */
+	protected List<Extension> getExtensions() {
+		return extensions;
 	}
 
 	/**
@@ -80,9 +114,9 @@ public abstract class Module<T extends Module> {
 	 */
 	protected void registerExtension(Extension extension) {
 		if (!extensions.contains(extension)) {
-			Framework.registerModules(Framework.loadModules(extension.getRequires()));
-			Framework.forceChange();
+			Framework.registerModules(Framework.loadModules(extension.getDependencies()));
 			extensions.add(extension);
+			extensionChange = true;
 		}
 	}
 
@@ -102,19 +136,22 @@ public abstract class Module<T extends Module> {
 	 *
 	 * @param last The last object to compare to.
 	 * @param type The class type of object to find a extension that matches for.
-	 * @param onlyRunOnChange When this and {@link Framework#extensionsChanged} is true, this will update a check, otherwise a object will not be checked for (returning null).
+	 * @param onlyRunOnChange When this and {@link #extensionChange} is true, this will update a check, otherwise a object will not be checked for (returning null).
 	 * @param <Y> The type of extension class to be found.
 	 *
 	 * @return The found extension to be active and matched the specs provided.
 	 */
-	public <Y> Extension getExtensionMatch(Extension last, Class<Y> type, boolean onlyRunOnChange) {
-		if (Framework.isChanged() || !onlyRunOnChange) {
-			if (!extensions.isEmpty()) {
-				for (Extension extension : extensions) {
-					if (extension.isActive() && type.isInstance(extension) && !extension.equals(last)) {
-						return extension;
-					}
-				}
+	public <Y> Extension getExtension(Extension last, Class<Y> type, boolean onlyRunOnChange) {
+		if ((onlyRunOnChange && !extensionChange) || extensions.isEmpty()) {
+			return null;
+
+		}
+
+		this.extensionChange = false;
+
+		for (Extension extension : extensions) {
+			if (extension.isActive() && type.isInstance(extension) && !extension.equals(last)) {
+				return extension;
 			}
 		}
 
@@ -122,45 +159,46 @@ public abstract class Module<T extends Module> {
 	}
 
 	/**
-	 * Gets all extensions for this module.
+	 * Gets if the extensions list has changed.
 	 *
-	 * @return This modules extensions.
+	 * @return If the extensions list has changed.
 	 */
-	public List<Extension> getExtensions() {
-		return extensions;
+	public boolean hasExtensionChanged() {
+		return extensionChange;
 	}
 
-	public ProfileTimer getProfileTimer() {
-		return profileTimer;
-	}
+	public Module getInstance() {
+		Module override = Framework.getOverride(this.getClass());
+		Module actual = Framework.getModule(this.getClass());
 
-	/**
-	 * Gets if the module is initialized.
-	 *
-	 * @return If the module is initialized.
-	 */
-	public boolean isInitialized() {
-		return initialized;
-	}
+		if (actual == null) {
+			actual = this;
+		}
 
-	/**
-	 * Sets if the module is initialized.
-	 *
-	 * @param initialized If the module is initialized.
-	 */
-	public void setInitialized(boolean initialized) {
-		this.initialized = initialized;
+		return override == null ? actual : override;
 	}
 
 	/**
-	 * Gets the current module instance.
-	 *
-	 * @return The current module instance.
+	 * Represents a class that overrides/replaces a existing module.
 	 */
-	public abstract Module getInstance();
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target(ElementType.TYPE)
+	public @interface Replace {
+	}
 
 	/**
-	 * Disposes the module.
+	 * Represents a method that gets the instance to a module.
 	 */
-	public abstract void dispose();
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target(ElementType.METHOD)
+	public @interface Instance {
+	}
+
+	/**
+	 * Represents a method that gets the profile tab name to a module.
+	 */
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target(ElementType.METHOD)
+	public @interface TabName {
+	}
 }

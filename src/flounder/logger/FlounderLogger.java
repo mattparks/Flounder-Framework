@@ -10,12 +10,6 @@ import java.util.*;
  * A module used for logging outputs, errors, and exceptions to files and the console.
  */
 public class FlounderLogger extends Module {
-	private final static FlounderLogger INSTANCE = new FlounderLogger();
-	public static final String PROFILE_TAB_NAME = "Logger";
-
-	public static final boolean LOG_TO_CONSOLE = true;
-	public static final boolean LOG_TO_FILE = true;
-
 	public static final String ANSI_RESET = "\u001B[0m";
 	public static final String ANSI_BLACK = "\u001B[30m";
 	public static final String ANSI_RED = "\u001B[31m";
@@ -33,24 +27,22 @@ public class FlounderLogger extends Module {
 	 * Creates a new logger manager.
 	 */
 	public FlounderLogger() {
-		super(ModuleUpdate.UPDATE_ALWAYS, PROFILE_TAB_NAME, FlounderProfiler.class);
+		super(FlounderProfiler.class);
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_INIT)
 	public void init() {
 		this.saveData = new ArrayList<>();
 		this.linesPrinted = 0;
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_UPDATE_ALWAYS)
 	public void update() {
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_PROFILE)
 	public void profile() {
-		FlounderProfiler.add(PROFILE_TAB_NAME, "Record To Console", LOG_TO_CONSOLE);
-		FlounderProfiler.add(PROFILE_TAB_NAME, "Record To Files", LOG_TO_FILE);
-		FlounderProfiler.add(PROFILE_TAB_NAME, "Lines Recorded", linesPrinted);
+		FlounderProfiler.get().add(getTab(), "Lines Recorded", linesPrinted);
 	}
 
 	/**
@@ -59,24 +51,20 @@ public class FlounderLogger extends Module {
 	 * @param value Text or numbers being added to the log file and possibly to the IDES console.
 	 * @param <T> The object type to be logged.
 	 */
-	public static <T> void register(T value) {
-		if (LOG_TO_CONSOLE) {
-			if (getString(value).isEmpty()) {
-				System.out.println();
-			} else {
-				System.out.println(ANSI_GREEN + "REGISTER [" + getDateString() + "]: " + ANSI_RESET + getString(value));
-			}
+	public <T> void register(T value) {
+		if (getString(value).isEmpty()) {
+			System.out.println();
+		} else {
+			System.out.println(ANSI_GREEN + "REGISTER [" + getDateString() + "]: " + ANSI_RESET + getString(value));
 		}
 
-		if (LOG_TO_FILE) {
-			if (getString(value).isEmpty()) {
-				INSTANCE.saveData.add("");
-			} else {
-				INSTANCE.saveData.add("REGISTER [" + getDateString() + "]: " + getString(value).replaceAll("\u001B\\[[\\d;]*[^\\d;]", ""));
-			}
+		if (getString(value).isEmpty()) {
+			saveData.add("");
+		} else {
+			saveData.add("REGISTER [" + getDateString() + "]: " + getString(value).replaceAll("\u001B\\[[\\d;]*[^\\d;]", ""));
 		}
 
-		INSTANCE.linesPrinted += getString(value).split("\n").length;
+		linesPrinted += getString(value).split("\n").length;
 	}
 
 	/**
@@ -85,24 +73,20 @@ public class FlounderLogger extends Module {
 	 * @param value Text or numbers being added to the log file and possibly to the IDES console.
 	 * @param <T> The object type to be logged.
 	 */
-	public static <T> void log(T value) {
-		if (LOG_TO_CONSOLE) {
-			if (getString(value).isEmpty()) {
-				System.out.println();
-			} else {
-				System.out.println(ANSI_YELLOW + "LOG [" + getDateString() + "]: " + ANSI_RESET + getString(value));
-			}
+	public <T> void log(T value) {
+		if (getString(value).isEmpty()) {
+			System.out.println();
+		} else {
+			System.out.println(ANSI_YELLOW + "LOG [" + getDateString() + "]: " + ANSI_RESET + getString(value));
 		}
 
-		if (LOG_TO_FILE) {
-			if (getString(value).isEmpty()) {
-				INSTANCE.saveData.add("");
-			} else {
-				INSTANCE.saveData.add("LOG [" + getDateString() + "]: " + getString(value).replaceAll("\u001B\\[[\\d;]*[^\\d;]", ""));
-			}
+		if (getString(value).isEmpty()) {
+			saveData.add("");
+		} else {
+			saveData.add("LOG [" + getDateString() + "]: " + getString(value).replaceAll("\u001B\\[[\\d;]*[^\\d;]", ""));
 		}
 
-		INSTANCE.linesPrinted += getString(value).split("\n").length;
+		linesPrinted += getString(value).split("\n").length;
 	}
 
 	/**
@@ -111,24 +95,20 @@ public class FlounderLogger extends Module {
 	 * @param value Warnings being added to the log file and possibly to your IDES console.
 	 * @param <T> The object type to be logged.
 	 */
-	public static <T> void warning(T value) {
-		if (LOG_TO_CONSOLE) {
-			if (getString(value).isEmpty()) {
-				System.out.println();
-			} else {
-				System.out.println(ANSI_PURPLE + "WARNING [" + getDateString() + "]: " + ANSI_RESET + getString(value));
-			}
+	public <T> void warning(T value) {
+		if (getString(value).isEmpty()) {
+			System.out.println();
+		} else {
+			System.out.println(ANSI_PURPLE + "WARNING [" + getDateString() + "]: " + ANSI_RESET + getString(value));
 		}
 
-		if (LOG_TO_FILE) {
-			if (getString(value).isEmpty()) {
-				INSTANCE.saveData.add("");
-			} else {
-				INSTANCE.saveData.add("WARNING [" + getDateString() + "]: " + getString(value).replaceAll("\u001B\\[[\\d;]*[^\\d;]", ""));
-			}
+		if (getString(value).isEmpty()) {
+			saveData.add("");
+		} else {
+			saveData.add("WARNING [" + getDateString() + "]: " + getString(value).replaceAll("\u001B\\[[\\d;]*[^\\d;]", ""));
 		}
 
-		INSTANCE.linesPrinted += getString(value).split("\n").length;
+		linesPrinted += getString(value).split("\n").length;
 	}
 
 	/**
@@ -137,25 +117,20 @@ public class FlounderLogger extends Module {
 	 * @param value Errors being added to the log file and possibly to your IDES console.
 	 * @param <T> The object type to be logged.
 	 */
-	public static <T> void error(T value) {
-		if (LOG_TO_CONSOLE) {
-			if (getString(value).isEmpty()) {
-				System.out.println();
-			} else {
-				System.out.println(ANSI_RED + "ERROR [" + getDateString() + "]: " + ANSI_RESET + getString(value));
-			}
+	public <T> void error(T value) {
+		if (getString(value).isEmpty()) {
+			System.out.println();
+		} else {
+			System.out.println(ANSI_RED + "ERROR [" + getDateString() + "]: " + ANSI_RESET + getString(value));
 		}
 
-
-		if (LOG_TO_FILE) {
-			if (getString(value).isEmpty()) {
-				INSTANCE.saveData.add("");
-			} else {
-				INSTANCE.saveData.add("ERROR [" + getDateString() + "]: " + getString(value).replaceAll("\u001B\\[[\\d;]*[^\\d;]", ""));
-			}
+		if (getString(value).isEmpty()) {
+			saveData.add("");
+		} else {
+			saveData.add("ERROR [" + getDateString() + "]: " + getString(value).replaceAll("\u001B\\[[\\d;]*[^\\d;]", ""));
 		}
 
-		INSTANCE.linesPrinted += getString(value).split("\n").length;
+		linesPrinted += getString(value).split("\n").length;
 	}
 
 	/**
@@ -163,25 +138,21 @@ public class FlounderLogger extends Module {
 	 *
 	 * @param exception The exception added to the log file and possibly to your IDES console.
 	 */
-	public static void exception(Exception exception) {
-		if (LOG_TO_CONSOLE) {
-			System.err.println(ANSI_PURPLE + "EXCEPTION [" + getDateString() + "]: " + ANSI_RESET + getString(exception));
-			exception.printStackTrace();
-		}
+	public void exception(Exception exception) {
+		System.err.println(ANSI_PURPLE + "EXCEPTION [" + getDateString() + "]: " + ANSI_RESET + getString(exception));
+		exception.printStackTrace();
 
-		if (LOG_TO_FILE) {
-			if (getString(exception).isEmpty()) {
-				INSTANCE.saveData.add("");
-			} else {
-				INSTANCE.saveData.add("EXCEPTION [" + getDateString() + "]: " + getString(exception));
+		if (getString(exception).isEmpty()) {
+			saveData.add("");
+		} else {
+			saveData.add("EXCEPTION [" + getDateString() + "]: " + getString(exception));
 
-				for (StackTraceElement element : exception.getStackTrace()) {
-					INSTANCE.saveData.add("    " + element);
-				}
+			for (StackTraceElement element : exception.getStackTrace()) {
+				saveData.add("    " + element);
 			}
 		}
 
-		INSTANCE.linesPrinted += getString(exception).split("\n").length;
+		linesPrinted += getString(exception).split("\n").length;
 	}
 
 	/**
@@ -192,7 +163,7 @@ public class FlounderLogger extends Module {
 	 *
 	 * @return The string found.
 	 */
-	private static <T> String getString(T value) {
+	private <T> String getString(T value) {
 		if (value == null) {
 			return "NULL";
 		}
@@ -205,7 +176,7 @@ public class FlounderLogger extends Module {
 	 *
 	 * @return Returns the string of the current date as [hour:minute:second | day/month/year].
 	 */
-	private static String getDateString() {
+	private String getDateString() {
 		int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
 		int minute = Calendar.getInstance().get(Calendar.MINUTE);
 		int second = Calendar.getInstance().get(Calendar.SECOND) + 1;
@@ -246,26 +217,29 @@ public class FlounderLogger extends Module {
 		return result;
 	}
 
-	protected static List<String> getSaveData() {
-		return INSTANCE.saveData;
+	protected List<String> getSaveData() {
+		return saveData;
 	}
 
-	@Override
-	public Module getInstance() {
-		return INSTANCE;
-	}
-
-	@Override
+	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
-		if (LOG_TO_FILE) {
-			try (PrintWriter out = new PrintWriter(getLogsSave())) {
-				for (String line : saveData) {
-					out.println(line);
-				}
-			} catch (IOException e) {
-				System.err.println("Could not save logs!");
-				e.printStackTrace();
+		try (PrintWriter out = new PrintWriter(getLogsSave())) {
+			for (String line : saveData) {
+				out.println(line);
 			}
+		} catch (IOException e) {
+			System.err.println("Could not save logs!");
+			e.printStackTrace();
 		}
+	}
+
+	@Module.Instance
+	public static FlounderLogger get() {
+		return (FlounderLogger) Framework.getInstance(FlounderLogger.class);
+	}
+
+	@Module.TabName
+	public static String getTab() {
+		return "Logger";
 	}
 }

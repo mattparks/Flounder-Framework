@@ -39,8 +39,8 @@ public class ProcessorResource extends Processor {
 
 	@Override
 	public void profile() {
-		FlounderProfiler.add(FlounderProcessors.PROFILE_TAB_NAME, "Resource Requests", requestQueue.count());
-		FlounderProfiler.add(FlounderProcessors.PROFILE_TAB_NAME, "Resource History", history);
+		FlounderProfiler.get().add(FlounderProcessors.getTab(), "Resource Requests", requestQueue.count());
+		FlounderProfiler.get().add(FlounderProcessors.getTab(), "Resource History", history);
 	}
 
 	@Override
@@ -72,8 +72,8 @@ public class ProcessorResource extends Processor {
 				try {
 					wait();
 				} catch (InterruptedException e) {
-					FlounderLogger.log("Request was interrupted.");
-					FlounderLogger.exception(e);
+					FlounderLogger.get().log("Request was interrupted.");
+					FlounderLogger.get().exception(e);
 				}
 			}
 		}

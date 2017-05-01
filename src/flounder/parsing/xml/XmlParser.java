@@ -30,7 +30,7 @@ public class XmlParser {
 			reader = file.getReader();
 		} catch (Exception e) {
 			e.printStackTrace();
-			FlounderLogger.log("Can't find the XML file: " + file.getPath());
+			FlounderLogger.get().log("Can't find the XML file: " + file.getPath());
 			System.exit(0);
 			return null;
 		}
@@ -42,7 +42,7 @@ public class XmlParser {
 			return node;
 		} catch (Exception e) {
 			e.printStackTrace();
-			FlounderLogger.log("Error with XML file format for: " + file.getPath());
+			FlounderLogger.get().log("Error with XML file format for: " + file.getPath());
 			System.exit(0);
 			return null;
 		}

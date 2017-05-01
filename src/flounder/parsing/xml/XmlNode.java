@@ -66,7 +66,7 @@ public class XmlNode {
 			}
 		}
 
-		FlounderLogger.error("Could not find Xml node child: " + childName + " in parent " + name);
+		FlounderLogger.get().error("Could not find Xml node child: " + childName + " in parent " + name);
 		return null;
 	}
 
@@ -95,7 +95,7 @@ public class XmlNode {
 			}
 		}
 
-		FlounderLogger.error("Could not find Xml node child: " + childName + " in parent " + name + " with attribute " + attribute);
+		FlounderLogger.get().error("Could not find Xml node child: " + childName + " in parent " + name + " with attribute " + attribute);
 		return null;
 	}
 

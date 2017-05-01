@@ -80,8 +80,8 @@ public class MyFile {
 		try {
 			return new BufferedReader(new InputStreamReader(getInputStream()));
 		} catch (Exception e) {
-			FlounderLogger.error("Couldn't get reader for: " + path);
-			FlounderLogger.exception(e);
+			FlounderLogger.get().error("Couldn't get reader for: " + path);
+			FlounderLogger.get().exception(e);
 			return null;
 		}
 	}
@@ -101,8 +101,8 @@ public class MyFile {
 
 			return new FileInputStream(new File(path));
 		} catch (IOException e) {
-			FlounderLogger.error("Couldn't get input stream to: " + path);
-			FlounderLogger.exception(e);
+			FlounderLogger.get().error("Couldn't get input stream to: " + path);
+			FlounderLogger.get().exception(e);
 			return null;
 		}
 	}

@@ -50,7 +50,6 @@ public class UpdaterDefault implements IUpdater {
 			if (Framework.isInitialized()) {
 				update();
 				profile();
-				Framework.setExtensionsChanged(false);
 			}
 		}
 	}
@@ -61,27 +60,13 @@ public class UpdaterDefault implements IUpdater {
 		}
 
 		// Initializes all modules.
-		for (Module module : Framework.getModulesActive()) {
-			if (!module.isInitialized()) {
-				module.init();
-				module.setInitialized(true);
-			}
-		}
+		Framework.runHandlers(Handler.FLAG_INIT);
 
 		// Logs all registered modules.
-		for (Module module : Framework.getModulesActive()) {
-			// Log module data.
-			String requires = "";
-
-			for (int i = 0; i < module.getRequires().length; i++) {
-				requires += module.getRequires()[i].getSimpleName() + ((i == module.getRequires().length - 1) ? "" : ", ");
-			}
-
-			FlounderLogger.register("Registering " + module.getClass().getSimpleName() + ":" + FlounderLogger.ANSI_PURPLE + " (" + (Framework.isInitialized() ? "POST_INIT, " : "") + module.getModuleUpdate().name() + ")" + FlounderLogger.ANSI_RESET + ":" + FlounderLogger.ANSI_RED + " Requires(" + requires + ")" + FlounderLogger.ANSI_RESET);
-		}
+		Framework.logModules();
 
 		// Logs initialize times.
-		FlounderLogger.log("Framework Initialize & Load Time: " + FlounderLogger.ANSI_RED + ((System.nanoTime() - startTime) / 1000000000.0) + FlounderLogger.ANSI_RESET + " seconds!");
+		FlounderLogger.get().log("Framework Initialize & Load Time: " + FlounderLogger.ANSI_RED + ((System.nanoTime() - startTime) / 1000000000.0) + FlounderLogger.ANSI_RESET + " seconds!");
 
 		// Sets the framework as initialized.
 		Framework.setInitialized(true);
@@ -89,14 +74,7 @@ public class UpdaterDefault implements IUpdater {
 
 	private void update() {
 		// Updates the module when needed always.
-		for (Module module : Framework.getModulesActive()) {
-			if (module.getModuleUpdate().equals(ModuleUpdate.UPDATE_ALWAYS)) {
-				module.getProfileTimer().startInvocation();
-				module.update();
-				module.getProfileTimer().stopInvocation();
-				module.getProfileTimer().reset();
-			}
-		}
+		Framework.runHandlers(Handler.FLAG_UPDATE_ALWAYS);
 
 		// Updates when needed.
 		if (timerUpdate.isPassedTime()) {
@@ -107,24 +85,10 @@ public class UpdaterDefault implements IUpdater {
 			deltaUpdate.update();
 
 			// Updates the modules when needed before the entrance.
-			for (Module module : Framework.getModulesActive()) {
-				if (module.getModuleUpdate().equals(ModuleUpdate.UPDATE_PRE)) {
-					module.getProfileTimer().startInvocation();
-					module.update();
-					module.getProfileTimer().stopInvocation();
-					module.getProfileTimer().reset();
-				}
-			}
+			Framework.runHandlers(Handler.FLAG_UPDATE_PRE);
 
 			// Updates the modules when needed after the entrance.
-			for (Module module : Framework.getModulesActive()) {
-				if (module.getModuleUpdate().equals(ModuleUpdate.UPDATE_POST)) {
-					module.getProfileTimer().startInvocation();
-					module.update();
-					module.getProfileTimer().stopInvocation();
-					module.getProfileTimer().reset();
-				}
-			}
+			Framework.runHandlers(Handler.FLAG_UPDATE_POST);
 		}
 
 		// Renders when needed.
@@ -136,14 +100,7 @@ public class UpdaterDefault implements IUpdater {
 			deltaRender.update();
 
 			// Updates the module when needed after the rendering.
-			for (Module module : Framework.getModulesActive()) {
-				if (module.getModuleUpdate().equals(ModuleUpdate.UPDATE_RENDER)) {
-					module.getProfileTimer().startInvocation();
-					module.update();
-					module.getProfileTimer().stopInvocation();
-					module.getProfileTimer().reset();
-				}
-			}
+			Framework.runHandlers(Handler.FLAG_RENDER);
 		}
 	}
 
@@ -154,42 +111,34 @@ public class UpdaterDefault implements IUpdater {
 
 		// Profile some values to the profiler.
 		if (timerProfile.isPassedTime()) {
-			//	FlounderLogger.log(Maths.roundToPlace(1.0f / getDelta(), 2) + "ups, " + Maths.roundToPlace(1.0f / getDeltaRender(), 2) + "fps");
+			//	FlounderLogger.get().log(Maths.roundToPlace(1.0f / getDelta(), 2) + "ups, " + Maths.roundToPlace(1.0f / getDeltaRender(), 2) + "fps");
 			timerProfile.resetStartTime();
 
 			// Profile the framework, modules, and extensions.
-			if (FlounderProfiler.isOpen()) {
-				FlounderProfiler.add(Framework.PROFILE_TAB_NAME, "Running From Jar", Framework.isRunningFromJar());
-				FlounderProfiler.add(Framework.PROFILE_TAB_NAME, "Save Folder", Framework.getRoamingFolder().getPath());
-				FlounderProfiler.add(Framework.PROFILE_TAB_NAME, "Frames Per Second", Maths.roundToPlace(1.0f / getDeltaRender(), 3));
-				FlounderProfiler.add(Framework.PROFILE_TAB_NAME, "Updates Per Second", Maths.roundToPlace(1.0f / getDelta(), 3));
+			if (FlounderProfiler.get().isOpen()) {
+				FlounderProfiler.get().add("Framework", "Running From Jar", Framework.isRunningFromJar());
+				FlounderProfiler.get().add("Framework", "Save Folder", Framework.getRoamingFolder().getPath());
+				FlounderProfiler.get().add("Framework", "Frames Per Second", Maths.roundToPlace(1.0f / getDeltaRender(), 3));
+				FlounderProfiler.get().add("Framework", "Updates Per Second", Maths.roundToPlace(1.0f / getDelta(), 3));
 
 				// Profiles the module, also adding its profile timer values.
-				for (Module module : Framework.getModulesActive()) {
-					FlounderProfiler.add(module.getProfileTab(), "Update Time", module.getProfileTimer().getFinalTime());
-					module.profile();
-				}
+				Framework.runHandlers(Handler.FLAG_PROFILE);
 			}
 		}
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
 		if (!Framework.isInitialized()) {
 			return;
 		}
 
-		FlounderLogger.warning("Disposing framework! A new Framework object must be recreated if resetting the framework!");
+		FlounderLogger.get().warning("Disposing framework! A new Framework object must be recreated if resetting the framework!");
 
-		Collections.reverse(Framework.getModulesActive());
-		for (Module module : Framework.getModulesActive()) {
-			if (module.isInitialized()) {
-				module.dispose();
-				module.setInitialized(false);
-			}
-		}
+		Collections.reverse(Framework.getModules());
+		Framework.runHandlers(Handler.FLAG_DISPOSE);
 
-		Framework.getModulesActive().clear();
+		Framework.getModules().clear();
 		Framework.setInitialized(false);
 	}
 

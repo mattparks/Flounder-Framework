@@ -12,19 +12,16 @@ import java.util.*;
  * A module used for processing types of requests.
  */
 public class FlounderProcessors extends Module {
-	private static final FlounderProcessors INSTANCE = new FlounderProcessors();
-	public static final String PROFILE_TAB_NAME = "Processors";
-
 	private List<Processor> processors;
 
 	/**
 	 * Creates a new request processor.
 	 */
 	public FlounderProcessors() {
-		super(ModuleUpdate.UPDATE_PRE, PROFILE_TAB_NAME, FlounderLogger.class, FlounderProfiler.class);
+		super(FlounderLogger.class, FlounderProfiler.class);
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_INIT)
 	public void init() {
 		this.processors = new ArrayList<>();
 
@@ -40,7 +37,7 @@ public class FlounderProcessors extends Module {
 		});
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_UPDATE_PRE)
 	public void update() {
 		// Gets new processors, if available.
 		List<Extension> newProcessors = getExtensions();
@@ -82,13 +79,13 @@ public class FlounderProcessors extends Module {
 		}
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_PROFILE)
 	public void profile() {
 		if (processors != null && !processors.isEmpty()) {
 			processors.forEach(Processor::profile);
 		}
 
-		FlounderProfiler.add(PROFILE_TAB_NAME, "Processors", processors.size());
+		FlounderProfiler.get().add(getTab(), "Processors", processors.size());
 	}
 
 	/**
@@ -96,9 +93,9 @@ public class FlounderProcessors extends Module {
 	 *
 	 * @param request The resource request to add.
 	 */
-	public static void sendRequest(Object request) {
+	public void sendRequest(Object request) {
 		try {
-			INSTANCE.processors.forEach(processor -> {
+			processors.forEach(processor -> {
 				if (processor.getRequestClass().isInstance(request)) {
 					processor.addRequestToQueue(request);
 				}
@@ -108,12 +105,8 @@ public class FlounderProcessors extends Module {
 		}
 	}
 
-	@Override
-	public Module getInstance() {
-		return INSTANCE;
-	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
 		// Disposes the processorss with the module.
 		if (processors != null && !processors.isEmpty()) {
@@ -122,5 +115,15 @@ public class FlounderProcessors extends Module {
 				processor.setInitialized(false);
 			});
 		}
+	}
+
+	@Module.Instance
+	public static FlounderProcessors get() {
+		return (FlounderProcessors) Framework.getInstance(FlounderProcessors.class);
+	}
+
+	@Module.TabName
+	public static String getTab() {
+		return "Processors";
 	}
 }

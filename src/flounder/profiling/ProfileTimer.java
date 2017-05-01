@@ -32,7 +32,7 @@ public class ProfileTimer {
 	 */
 	public void stopInvocation() {
 		if (startTime == 0) {
-			FlounderLogger.error("Stop Invocation called without matching start invocation!");
+			FlounderLogger.get().error("Stop Invocation called without matching start invocation!");
 			assert (startTime != 0); // Stops from running faulty data.
 		}
 

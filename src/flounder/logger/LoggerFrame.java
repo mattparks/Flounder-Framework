@@ -28,7 +28,7 @@ public class LoggerFrame extends JFrame {
 
 		JTextArea display = new JTextArea();
 
-		for (String data : FlounderLogger.getSaveData()) {
+		for (String data : FlounderLogger.get().getSaveData()) {
 			display.append(data + "\n");
 		}
 
@@ -44,7 +44,7 @@ public class LoggerFrame extends JFrame {
 	}
 
 	public void run() {
-		while(running) {
+		while (running) {
 
 		}
 	}

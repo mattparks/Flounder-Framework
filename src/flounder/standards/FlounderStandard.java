@@ -9,24 +9,21 @@ import java.util.*;
  * A module used for managing simple update injection standards.
  */
 public class FlounderStandard extends Module {
-	private static final FlounderStandard INSTANCE = new FlounderStandard();
-	public static final String PROFILE_TAB_NAME = "Standards";
-
 	private List<Standard> standards;
 
 	/**
 	 * Creates a new standards manager.
 	 */
 	public FlounderStandard() {
-		super(ModuleUpdate.UPDATE_PRE, PROFILE_TAB_NAME);
+		super();
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_INIT)
 	public void init() {
 		standards = new ArrayList<>();
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_UPDATE_PRE)
 	public void update() {
 		List<Extension> newStandards = getExtensions();
 
@@ -63,22 +60,18 @@ public class FlounderStandard extends Module {
 		}
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_PROFILE)
 	public void profile() {
 		if (standards != null && !standards.isEmpty()) {
 			standards.forEach(Standard::update);
 			standards.forEach(Standard::profile);
 		}
 
-		FlounderProfiler.add(PROFILE_TAB_NAME, "Standards", standards.size());
+		FlounderProfiler.get().add(getTab(), "Standards", standards.size());
 	}
 
-	@Override
-	public Module getInstance() {
-		return INSTANCE;
-	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
 		if (standards != null && !standards.isEmpty()) {
 			standards.forEach(standard -> {
@@ -87,5 +80,15 @@ public class FlounderStandard extends Module {
 			});
 			standards.clear();
 		}
+	}
+
+	@Module.Instance
+	public static FlounderStandard get() {
+		return (FlounderStandard) Framework.getInstance(FlounderStandard.class);
+	}
+
+	@Module.TabName
+	public static String getTab() {
+		return "Standards";
 	}
 }

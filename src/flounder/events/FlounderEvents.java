@@ -9,24 +9,21 @@ import java.util.*;
  * A module used for managing events on framework updates.
  */
 public class FlounderEvents extends Module {
-	private static final FlounderEvents INSTANCE = new FlounderEvents();
-	public static final String PROFILE_TAB_NAME = "Events";
-
 	private List<IEvent> events;
 
 	/**
 	 * Creates a new event manager.
 	 */
 	public FlounderEvents() {
-		super(ModuleUpdate.UPDATE_PRE, PROFILE_TAB_NAME);
+		super();
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_INIT)
 	public void init() {
 		this.events = new ArrayList<>();
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_UPDATE_PRE)
 	public void update() {
 		events.forEach(event -> {
 			if (event.eventTriggered()) {
@@ -40,8 +37,8 @@ public class FlounderEvents extends Module {
 	 *
 	 * @param event The event to add.
 	 */
-	public static void addEvent(IEvent event) {
-		INSTANCE.events.add(event);
+	public void addEvent(IEvent event) {
+		this.events.add(event);
 	}
 
 	/**
@@ -49,22 +46,28 @@ public class FlounderEvents extends Module {
 	 *
 	 * @param event The event to remove.
 	 */
-	public static void removeEvent(IEvent event) {
-		INSTANCE.events.remove(event);
+	public void removeEvent(IEvent event) {
+		this.events.remove(event);
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_PROFILE)
 	public void profile() {
-		FlounderProfiler.add(PROFILE_TAB_NAME, "Events Active", events.size());
+		FlounderProfiler.get().add(getTab(), "Events Active", events.size());
 	}
 
-	@Override
-	public Module getInstance() {
-		return INSTANCE;
-	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
 		events.clear();
+	}
+
+	@Module.Instance
+	public static FlounderEvents get() {
+		return (FlounderEvents) Framework.getInstance(FlounderEvents.class);
+	}
+
+	@Module.TabName
+	public static String getTab() {
+		return "Events";
 	}
 }
