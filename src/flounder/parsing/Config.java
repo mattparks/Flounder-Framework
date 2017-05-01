@@ -129,8 +129,8 @@ public class Config {
 			// Closes the file for writing.
 			fileWriter.close();
 		} catch (IOException e) {
-			FlounderLogger.error("File saver for config " + file.getName() + " did not save successfully!");
-			FlounderLogger.exception(e);
+			FlounderLogger.get().error("File saver for config " + file.getName() + " did not save successfully!");
+			FlounderLogger.get().exception(e);
 		}
 	}
 

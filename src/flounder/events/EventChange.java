@@ -36,6 +36,7 @@ public abstract class EventChange<T> implements IEvent {
 	/**
 	 * A reference to a value.
 	 */
+	@FunctionalInterface
 	public interface ValueReference<T> {
 		/**
 		 * Gets the value.

@@ -51,7 +51,7 @@ The interface will require module, and can be used to load configs, initialize d
 
             @Override
             public void init() {
-                FlounderLogger.log("TestInterface initialized!");
+                FlounderLogger.get().log("TestInterface initialized!");
 
                 this.timer = new Timer(1.0);
                 this.i = 0;
@@ -66,10 +66,10 @@ The interface will require module, and can be used to load configs, initialize d
                     i++;
 
                     if (i == INTERVAL_CLOSE) {
-                        FlounderLogger.log("TestInterface requesting close!");
+                        FlounderLogger.get().log("TestInterface requesting close!");
                         Framework.requestClose();
                     } else {
-                        //	FlounderLogger.log("TestInterface closing after: " + (INTERVAL_CLOSE - i) + " seconds!");
+                        //	FlounderLogger.get().log("TestInterface closing after: " + (INTERVAL_CLOSE - i) + " seconds!");
                     }
 
                     timer.resetStartTime();
@@ -83,7 +83,7 @@ The interface will require module, and can be used to load configs, initialize d
 
             @Override
             public void dispose() {
-                FlounderLogger.log("TestInterface disposed!");
+                FlounderLogger.get().log("TestInterface disposed!");
             }
 
             @Override

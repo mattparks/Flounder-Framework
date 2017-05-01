@@ -7,23 +7,24 @@ import flounder.standards.*;
 /**
  * The class that contains the main method.
  */
-public class TestProject {
+public class TestProject extends Framework {
 	public static void main(String[] args) {
-		// Creates a new framework object.
-		Framework framework = new Framework("test", new UpdaterDefault(null), -1, new TestInterface());
-
-		// Runs the frameworks thread.
-		framework.run();
+		// Creates and runs a new framework object.
+		new TestProject().run();
 
 		// After close, exits the programs.
 		System.exit(0);
+	}
+
+	public TestProject() {
+		super("test", new UpdaterDefault(null), -1, new Extension[]{new TestInterface()}, new Module[]{});
 	}
 
 	/**
 	 * The programs interface, this one is used for a simple close countdown.
 	 */
 	public static class TestInterface extends Standard {
-		private static final int INTERVAL_CLOSE = 60;
+		private static final int INTERVAL_CLOSE = 10;
 
 		private Timer timer;
 		private int i;
@@ -34,7 +35,7 @@ public class TestProject {
 
 		@Override
 		public void init() {
-			FlounderLogger.log("TestInterface initialized!");
+			FlounderLogger.get().log("TestInterface initialized!");
 
 			this.timer = new Timer(1.0);
 			this.i = 0;
@@ -49,10 +50,10 @@ public class TestProject {
 				i++;
 
 				if (i == INTERVAL_CLOSE) {
-					FlounderLogger.log("TestInterface requesting close!");
+					FlounderLogger.get().log("TestInterface requesting close!");
 					Framework.requestClose();
 				} else {
-					//	FlounderLogger.log("TestInterface closing after: " + (INTERVAL_CLOSE - i) + " seconds!");
+					FlounderLogger.get().log("TestInterface closing after: " + (INTERVAL_CLOSE - i) + " seconds!");
 				}
 
 				timer.resetStartTime();
@@ -66,7 +67,7 @@ public class TestProject {
 
 		@Override
 		public void dispose() {
-			FlounderLogger.log("TestInterface disposed!");
+			FlounderLogger.get().log("TestInterface disposed!");
 		}
 
 		@Override
