@@ -37,7 +37,7 @@ public class UpdaterDefault implements IUpdater {
 		this.timeOffset = 0.0f;
 		this.deltaUpdate = new Delta();
 		this.deltaRender = new Delta();
-		this.timerUpdate = new Timer(1.0 / 60.0);
+		this.timerUpdate = new Timer(1.0 / 70.0);
 		this.timerRender = new Timer(1.0 / 60.0);
 		this.timerProfile = new Timer(1.0 / 4.0);
 	}

@@ -144,7 +144,6 @@ public class Module<T extends Module> {
 	public <Y> Extension getExtension(Extension last, Class<Y> type, boolean onlyRunOnChange) {
 		if ((onlyRunOnChange && !extensionChange) || extensions.isEmpty()) {
 			return null;
-
 		}
 
 		for (Extension extension : extensions) {
