@@ -15,8 +15,7 @@ import java.util.*;
  * Implementing interfaces like {@link Standard} with your extension can allow you do task specific things with your Extensions. After creating your Framework object call {@link #run()} to start.
  */
 public class Framework {
-	private static boolean runningFromJar;
-	private static MyFile roamingFolder;
+	private static String unlocalizedName;
 
 	private static Version version;
 	private static IUpdater updater;
@@ -37,11 +36,11 @@ public class Framework {
 	 * @param overrides The module overrides to load for the framework.
 	 */
 	public Framework(String unlocalizedName, IUpdater updater, int fpsLimit, Extension[] extensions, Module[] overrides) {
-		// Loads some simple framework runtime info.
-		loadFlounderStatics(unlocalizedName);
+		// Sets the instances name.
+		Framework.unlocalizedName = unlocalizedName;
 
 		// Increment revision every fix for the minor version release. Minor version represents the build month. Major incremented every two years OR after major core framework rewrites.
-		Framework.version = new Version("30.04.12");
+		Framework.version = new Version("01.05.12");
 
 		// Sets the frameworks updater.
 		Framework.updater = updater;
@@ -63,35 +62,6 @@ public class Framework {
 		Framework.initialized = false;
 		Framework.running = true;
 		Framework.fpsLimit = fpsLimit;
-	}
-
-	/**
-	 * Called before the framework loads, used to setup roaming folders and other statics.
-	 *
-	 * @param unlocalizedName The implementations name, used to set the roaming save folder.
-	 */
-	private static void loadFlounderStatics(String unlocalizedName) {
-		runningFromJar = Framework.class.getResource("/" + Framework.class.getName().replace('.', '/') + ".class").toString().startsWith("jar:");
-		String saveDir;
-
-		if (System.getProperty("os.name").contains("Windows")) {
-			saveDir = System.getenv("APPDATA");
-		} else {
-			saveDir = System.getProperty("user.home");
-		}
-
-		roamingFolder = new MyFile(saveDir, "." + unlocalizedName);
-		File save = new File(saveDir + "/." + unlocalizedName + "/");
-
-		if (!save.exists()) {
-			System.out.println("Creating directory: " + save);
-
-			try {
-				save.mkdir();
-			} catch (SecurityException e) {
-				e.printStackTrace();
-			}
-		}
 	}
 
 	public void run() {
@@ -129,7 +99,7 @@ public class Framework {
 	 * @return Is the framework is currently running from a jar?
 	 */
 	public static boolean isRunningFromJar() {
-		return Framework.runningFromJar;
+		return Framework.class.getResource("/" + Framework.class.getName().replace('.', '/') + ".class").toString().startsWith("jar:");
 	}
 
 	/**
@@ -138,7 +108,48 @@ public class Framework {
 	 * @return The roaming folder file.
 	 */
 	public static MyFile getRoamingFolder() {
-		return Framework.roamingFolder;
+		return getRoamingFolder(unlocalizedName);
+	}
+
+	/**
+	 * Gets the file that goes to the roaming folder, the unlocalized string overrides the frameworks name in this method.
+	 *
+	 * @param unlocalized The unlocalized name of the folder.
+	 *
+	 * @return The roaming folder file.
+	 */
+	public static MyFile getRoamingFolder(String unlocalized) {
+		String saveDir;
+
+		if (System.getProperty("os.name").contains("Windows")) {
+			saveDir = System.getenv("APPDATA");
+		} else {
+			saveDir = System.getProperty("user.home");
+		}
+
+		MyFile roamingFolder = new MyFile(saveDir, "." + unlocalized);
+		File save = new File(saveDir + "/." + unlocalized + "/");
+
+		if (!save.exists()) {
+			System.out.println("Creating directory: " + save);
+
+			try {
+				save.mkdir();
+			} catch (SecurityException e) {
+				e.printStackTrace();
+			}
+		}
+
+		return roamingFolder;
+	}
+
+	/**
+	 * Gets the instances unlocalized name.
+	 *
+	 * @return The unlocalized name.
+	 */
+	public static String getUnlocalizedName() {
+		return unlocalizedName;
 	}
 
 	/**
