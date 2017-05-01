@@ -14,24 +14,18 @@ import java.util.*;
  * Start off by creating a new Framework object in your main thread, using Extensions in the constructor. By using Extensions: Modules can be required and therefor loaded into the framework.
  * Implementing interfaces like {@link Standard} with your extension can allow you do task specific things with your Extensions. After creating your Framework object call {@link #run()} to start.
  */
-public class Framework extends Thread {
-	private static Framework INSTANCE;
-	public static final String PROFILE_TAB_NAME = "Framework";
+public class Framework {
+	private static boolean runningFromJar;
+	private static MyFile roamingFolder;
 
-	private boolean runningFromJar;
-	private MyFile roamingFolder;
+	private static Version version;
+	private static IUpdater updater;
 
-	private Version version;
-	private IUpdater updater;
-
-	private boolean closedRequested;
-
-	private List<Module> modulesActive;
-	private boolean extensionsChanged;
-
-	private int fpsLimit;
-
-	private boolean initialized;
+	private static List<Module> modules;
+	private static List<Module> overrides;
+	private static boolean initialized;
+	private static boolean running;
+	private static int fpsLimit;
 
 	/**
 	 * Carries out the setup for basic framework components and the framework. Call {@link #run()} after creating a instance.
@@ -40,27 +34,22 @@ public class Framework extends Thread {
 	 * @param updater The definition for how the framework will run.
 	 * @param fpsLimit The limit to FPS, (-1 disables limits).
 	 * @param extensions The extensions to load for the framework.
+	 * @param overrides The module overrides to load for the framework.
 	 */
-	public Framework(String unlocalizedName, IUpdater updater, int fpsLimit, Extension... extensions) {
-		Framework.INSTANCE = this;
-
+	public Framework(String unlocalizedName, IUpdater updater, int fpsLimit, Extension[] extensions, Module[] overrides) {
 		// Loads some simple framework runtime info.
 		loadFlounderStatics(unlocalizedName);
-		super.setName("framework");
 
 		// Increment revision every fix for the minor version release. Minor version represents the build month. Major incremented every two years OR after major core framework rewrites.
-		this.version = new Version("24.04.11");
+		Framework.version = new Version("30.04.12");
 
 		// Sets the frameworks updater.
-		this.updater = updater;
-		this.updater.setFpsLimit(fpsLimit);
-
-		// Sets basic framework info.
-		this.closedRequested = false;
+		Framework.updater = updater;
+		Framework.updater.setFpsLimit(fpsLimit);
 
 		// Sets up the module and extension managers.
-		this.modulesActive = new ArrayList<>();
-		this.extensionsChanged = true;
+		Framework.modules = new ArrayList<>();
+		Framework.overrides = Arrays.asList(overrides);
 
 		// Registers these modules as global, we do this as everyone loves these guys <3
 		registerModules(loadModule(FlounderLogger.class));
@@ -68,14 +57,12 @@ public class Framework extends Thread {
 
 		// Force registers the extensions, as the framework was null when they were constructed.
 		for (Extension extension : extensions) {
-			extension.getExtendedModule().registerExtension(extension);
+			registerModule(loadModule(extension.getModule())).registerExtension(extension);
 		}
 
-		// Sets the fps limit.
-		this.fpsLimit = fpsLimit;
-
-		// Sets the framework as initialized.
-		this.initialized = false;
+		Framework.initialized = false;
+		Framework.running = true;
+		Framework.fpsLimit = fpsLimit;
 	}
 
 	/**
@@ -83,7 +70,7 @@ public class Framework extends Thread {
 	 *
 	 * @param unlocalizedName The implementations name, used to set the roaming save folder.
 	 */
-	private void loadFlounderStatics(String unlocalizedName) {
+	private static void loadFlounderStatics(String unlocalizedName) {
 		runningFromJar = Framework.class.getResource("/" + Framework.class.getName().replace('.', '/') + ".class").toString().startsWith("jar:");
 		String saveDir;
 
@@ -107,6 +94,127 @@ public class Framework extends Thread {
 		}
 	}
 
+	public void run() {
+		LoggerFrame logger = null;
+
+		try {
+			updater.run();
+		} catch (Exception e) {
+			FlounderLogger.get().exception(e);
+			logger = new LoggerFrame();
+		} finally {
+			updater.dispose();
+		}
+
+		if (logger != null) {
+			logger.run();
+		}
+	}
+
+	/**
+	 * Runs the handlers using a specific flag.
+	 *
+	 * @param flag The flag to run from.
+	 */
+	public static void runHandlers(int flag) {
+		for (Module module : modules) {
+			module.getInstance().runHandler(flag);
+		}
+	}
+
+	/**
+	 * Gets if the framework is currently running from a jar.
+	 *
+	 * @return Is the framework is currently running from a jar?
+	 */
+	public static boolean isRunningFromJar() {
+		return Framework.runningFromJar;
+	}
+
+	/**
+	 * Gets the file that goes to the roaming folder.
+	 *
+	 * @return The roaming folder file.
+	 */
+	public static MyFile getRoamingFolder() {
+		return Framework.roamingFolder;
+	}
+
+	/**
+	 * Gets the frameworks current version.
+	 *
+	 * @return The frameworks current version.
+	 */
+	public static Version getVersion() {
+		return Framework.version;
+	}
+
+	/**
+	 * Gets the frameworks updater.
+	 *
+	 * @return The updater.
+	 */
+	public static IUpdater getUpdater() {
+		return Framework.updater;
+	}
+
+	public static List<Module> getModules() {
+		return modules;
+	}
+
+	public static List<Module> getOverrides() {
+		return overrides;
+	}
+
+	/**
+	 * Gets a loaded and registered module from the framework.
+	 *
+	 * @param object The module class.
+	 *
+	 * @return The module.
+	 */
+	public static Module getModule(Class object) {
+		if (containsModule(object)) {
+			for (Module module : modules) {
+				if (object.isInstance(module)) {
+					return module;
+				}
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * Gets a loaded and registered module override from the framework.
+	 *
+	 * @param parent The module parent class.
+	 *
+	 * @return The module override.
+	 */
+	public static Module getOverride(Class parent) {
+		for (Module module : overrides) {
+			if (!module.getClass().equals(parent) && parent.isInstance(module)) {
+				return module;
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * Gets a module instance, or the override to the module.
+	 *
+	 * @param object The module class.
+	 *
+	 * @return The module instance.
+	 */
+	public static Module getInstance(Class object) {
+		Module override = Framework.getOverride(object);
+		Module actual = Framework.getModule(object);
+		return override == null ? actual : override;
+	}
+
 	/**
 	 * Gets if the framework contains a module.
 	 *
@@ -115,7 +223,7 @@ public class Framework extends Thread {
 	 * @return If the framework contains a module.
 	 */
 	protected static boolean containsModule(Class object) {
-		for (Module m : INSTANCE.modulesActive) {
+		for (Module m : modules) {
 			if (m.getClass().getName().equals(object.getName())) {
 				return true;
 			}
@@ -149,6 +257,12 @@ public class Framework extends Thread {
 	 * @return The module INSTANCE class.
 	 */
 	protected static Module loadModule(Class object) {
+		Module m = getModule(object);
+
+		if (m != null) {
+			return m;
+		}
+
 		try {
 			return ((Module) object.newInstance()).getInstance();
 		} catch (IllegalAccessException | InstantiationException e) {
@@ -181,70 +295,58 @@ public class Framework extends Thread {
 	 *
 	 * @param module The module to register.
 	 */
-	protected static void registerModule(Module module) {
+	protected static Module registerModule(Module module) {
 		if (module == null || containsModule(module.getClass())) {
-			return;
+			return module;
 		}
 
 		// Add the module temporally.
-		INSTANCE.modulesActive.add(module);
+		modules.add(module);
 
 		// Will load and register required modules if needed.
-		if (!containsModules(module.getRequires())) {
+		if (!containsModules(module.getDependencies())) {
 			// Registers all required modules.
-			registerModules(loadModules(module.getRequires()));
+			registerModules(loadModules(module.getDependencies()));
 
 			// Add the module to the modules list.
-			INSTANCE.modulesActive.remove(module);
-			INSTANCE.modulesActive.add(module);
+			modules.remove(module);
+			modules.add(module);
 		}
 
 		// Initialize modules if needed,
-		if (Framework.isInitialized() && !module.isInitialized()) {
-			module.init();
-			module.setInitialized(true);
+		if (initialized && module.hasHandlerRun(Handler.FLAG_INIT)) {
+			module.getHandler(Handler.FLAG_INIT).run();
 		}
+
+		return module;
 	}
 
 	/**
 	 * Registers a list of modules, and initializes them if the engine has already started.
 	 *
-	 * @param modules The list of modules to register.
+	 * @param list The list of modules to register.
 	 */
-	protected static void registerModules(Module... modules) {
-		for (Module module : modules) {
+	protected static void registerModules(Module... list) {
+		for (Module module : list) {
 			registerModule(module);
 		}
 	}
 
-	@Override
-	public void run() {
-		LoggerFrame logger = null;
-
-		try {
-			updater.run();
-		} catch (Exception e) {
-			FlounderLogger.exception(e);
-			logger = new LoggerFrame();
-		} finally {
-			updater.dispose();
-			INSTANCE = null;
-		}
-
-		if (logger != null) {
-			logger.run();
-		}
-	}
-
 	/**
-	 * Gets the frameworks current version.
-	 *
-	 * @return The frameworks current version.
+	 * Logs all information from a module.
 	 */
-	public static Version getVersion() {
-		return INSTANCE.version;
-	}
+	public static void logModules() {
+		// Logs all registered modules.
+		for (Module module : modules) {
+			// Log module data.
+			String requires = "";
+			String override = "" + getOverride(module.getClass());
 
+<<<<<<< HEAD
+			for (int i = 0; i < module.getDependencies().length; i++) {
+				requires += module.getDependencies()[i].getSimpleName() + ((i == module.getDependencies().length - 1) ? "" : ", ");
+			}
+=======
 	public static IUpdater getUpdater() {
 		return INSTANCE.updater;
 	}
@@ -252,9 +354,10 @@ public class Framework extends Thread {
 	public static List<Module> getModulesActive() {
 		return INSTANCE.modulesActive;
 	}
+>>>>>>> master
 
-	public static void setInitialized(boolean initialized) {
-		INSTANCE.initialized = initialized;
+			FlounderLogger.get().register("Registering " + module.getClass().getSimpleName() + ": " + FlounderLogger.ANSI_PURPLE + "Override(" + override + "): " + FlounderLogger.ANSI_RED + "Requires(" + requires + ")" + FlounderLogger.ANSI_RESET);
+		}
 	}
 
 	/**
@@ -263,7 +366,7 @@ public class Framework extends Thread {
 	 * @return The time offset.
 	 */
 	public static float getTimeOffset() {
-		return INSTANCE.updater.getTimeOffset();
+		return Framework.updater.getTimeOffset();
 	}
 
 	/**
@@ -272,7 +375,7 @@ public class Framework extends Thread {
 	 * @param timeOffset The new time offset.
 	 */
 	public static void setTimeOffset(float timeOffset) {
-		INSTANCE.updater.setTimeOffset(timeOffset);
+		Framework.updater.setTimeOffset(timeOffset);
 	}
 
 	/**
@@ -281,7 +384,7 @@ public class Framework extends Thread {
 	 * @return The delta between updates.
 	 */
 	public static float getDelta() {
-		return INSTANCE.updater.getDelta();
+		return Framework.updater.getDelta();
 	}
 
 	/**
@@ -290,42 +393,7 @@ public class Framework extends Thread {
 	 * @return The delta between renders.
 	 */
 	public static float getDeltaRender() {
-		return INSTANCE.updater.getDeltaRender();
-	}
-
-	/**
-	 * Forces the framework to reevaluate extension usage within modules. This should be called a extensions active state changes.
-	 */
-	public static void forceChange() {
-		INSTANCE.extensionsChanged = true;
-	}
-
-	/**
-	 * Gets if the extensions list needs to be reevaluated.
-	 *
-	 * @return If the extensions list needs to be reevaluated.
-	 */
-	public static boolean isChanged() {
-		return INSTANCE.extensionsChanged;
-	}
-
-	/**
-	 * Gets the current FPS limit.
-	 *
-	 * @return The current FPS limit.
-	 */
-	public static int getFpsLimit() {
-		return INSTANCE.fpsLimit;
-	}
-
-	/**
-	 * Sets a limit to the fps, (-1 disabled limits).
-	 *
-	 * @param fpsLimit The FPS limit.
-	 */
-	public static void setFpsLimit(int fpsLimit) {
-		INSTANCE.fpsLimit = fpsLimit;
-		INSTANCE.updater.setFpsLimit(fpsLimit);
+		return Framework.updater.getDeltaRender();
 	}
 
 	/**
@@ -334,7 +402,7 @@ public class Framework extends Thread {
 	 * @return The current framework time in seconds.
 	 */
 	public static float getTimeSec() {
-		return INSTANCE.updater.getTimeSec();
+		return Framework.updater.getTimeSec();
 	}
 
 	/**
@@ -343,41 +411,7 @@ public class Framework extends Thread {
 	 * @return The current framework time in milliseconds.
 	 */
 	public static float getTimeMs() {
-		return INSTANCE.updater.getTimeMs();
-	}
-
-	/**
-	 * Gets if the extensions list changed.
-	 *
-	 * @return If the extensions list changed.
-	 */
-	public static boolean isExtensionsChanged() {
-		return INSTANCE.extensionsChanged;
-	}
-
-	/**
-	 * Sets if the extensions list has changed.
-	 *
-	 * @extensionsChanged If the extensions list has changed.
-	 */
-	public static void setExtensionsChanged(boolean extensionsChanged) {
-		INSTANCE.extensionsChanged = extensionsChanged;
-	}
-
-	/**
-	 * Gets if the framework still running.
-	 *
-	 * @return Is the framework still running?
-	 */
-	public static boolean isRunning() {
-		return !INSTANCE.closedRequested;
-	}
-
-	/**
-	 * Requests the implementation-loop to stop and the implementation to exit.
-	 */
-	public static void requestClose() {
-		INSTANCE.closedRequested = true;
+		return Framework.updater.getTimeMs();
 	}
 
 	/**
@@ -386,33 +420,50 @@ public class Framework extends Thread {
 	 * @return Is the framework is currently initialized?
 	 */
 	public static boolean isInitialized() {
-		return INSTANCE != null && INSTANCE.initialized;
+		return Framework.initialized;
 	}
 
 	/**
-	 * Gets if the framework is currently running from a jar.
+	 * Sets if the framework is initialized.
 	 *
-	 * @return Is the framework is currently running from a jar?
+	 * @param initialized If the framework is initialized.
 	 */
-	public static boolean isRunningFromJar() {
-		return INSTANCE.runningFromJar;
+	public static void setInitialized(boolean initialized) {
+		Framework.initialized = initialized;
 	}
 
 	/**
-	 * Gets the file that goes to the roaming folder.
+	 * Gets if the framework still running.
 	 *
-	 * @return The roaming folder file.
+	 * @return Is the framework still running?
 	 */
-	public static MyFile getRoamingFolder() {
-		return INSTANCE.roamingFolder;
+	public static boolean isRunning() {
+		return Framework.running;
 	}
 
 	/**
-	 * Gets the current framework instance.
-	 *
-	 * @return The current instance.
+	 * Requests the implementation-loop to stop and the implementation to exit.
 	 */
-	public static Framework getInstance() {
-		return INSTANCE;
+	public static void requestClose() {
+		Framework.running = false;
+	}
+
+	/**
+	 * Gets the current FPS limit.
+	 *
+	 * @return The current FPS limit.
+	 */
+	public static int getFpsLimit() {
+		return Framework.fpsLimit;
+	}
+
+	/**
+	 * Sets a limit to the fps, (-1 disabled limits).
+	 *
+	 * @param fpsLimit The FPS limit.
+	 */
+	public static void setFpsLimit(int fpsLimit) {
+		Framework.fpsLimit = fpsLimit;
+		Framework.updater.setFpsLimit(fpsLimit);
 	}
 }
