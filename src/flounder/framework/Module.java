@@ -147,8 +147,6 @@ public class Module<T extends Module> {
 
 		}
 
-		this.extensionChange = false;
-
 		for (Extension extension : extensions) {
 			if (extension.isActive() && type.isInstance(extension) && !extension.equals(last)) {
 				return extension;
@@ -165,6 +163,10 @@ public class Module<T extends Module> {
 	 */
 	public boolean hasExtensionChanged() {
 		return extensionChange;
+	}
+
+	public void setExtensionChanged(boolean extensionChanged) {
+	//	this.extensionChange = extensionChanged;
 	}
 
 	public Module getInstance() {

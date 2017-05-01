@@ -89,6 +89,10 @@ public class UpdaterDefault implements IUpdater {
 
 			// Updates the modules when needed after the entrance.
 			Framework.runHandlers(Handler.FLAG_UPDATE_POST);
+
+			for (Module module : Framework.getModules()) {
+				module.setExtensionChanged(false);
+			}
 		}
 
 		// Renders when needed.
