@@ -342,19 +342,9 @@ public class Framework {
 			String requires = "";
 			String override = "" + getOverride(module.getClass());
 
-<<<<<<< HEAD
 			for (int i = 0; i < module.getDependencies().length; i++) {
 				requires += module.getDependencies()[i].getSimpleName() + ((i == module.getDependencies().length - 1) ? "" : ", ");
 			}
-=======
-	public static IUpdater getUpdater() {
-		return INSTANCE.updater;
-	}
-
-	public static List<Module> getModulesActive() {
-		return INSTANCE.modulesActive;
-	}
->>>>>>> master
 
 			FlounderLogger.get().register("Registering " + module.getClass().getSimpleName() + ": " + FlounderLogger.ANSI_PURPLE + "Override(" + override + "): " + FlounderLogger.ANSI_RED + "Requires(" + requires + ")" + FlounderLogger.ANSI_RESET);
 		}
