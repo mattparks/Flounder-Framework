@@ -20,8 +20,8 @@ public class Framework {
 	private static Version version;
 	private static IUpdater updater;
 
-	private static List<Module> modules;
-	private static List<Module> overrides;
+	private static List<Module> modules = new ArrayList<>();
+	private static List<Module> overrides = new ArrayList<>();
 	private static boolean initialized;
 	private static boolean running;
 	private static int fpsLimit;
@@ -47,8 +47,8 @@ public class Framework {
 		Framework.updater.setFpsLimit(fpsLimit);
 
 		// Sets up the module and extension managers.
-		Framework.modules = new ArrayList<>();
-		Framework.overrides = Arrays.asList(overrides);
+	//	Framework.modules = new ArrayList<>();
+		Framework.overrides.addAll(Arrays.asList(overrides));
 
 		// Registers these modules as global, we do this as everyone loves these guys <3
 		registerModules(loadModule(FlounderLogger.class));
@@ -80,6 +80,10 @@ public class Framework {
 				logger.run();
 			}
 		}
+	}
+
+	public static void addOverrides(Module... list) {
+		Framework.overrides.addAll(Arrays.asList(list));
 	}
 
 	/**

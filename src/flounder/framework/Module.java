@@ -1,5 +1,7 @@
 package flounder.framework;
 
+import flounder.logger.*;
+
 import java.lang.annotation.*;
 import java.lang.reflect.*;
 import java.util.*;
@@ -23,7 +25,6 @@ public class Module<T extends Module> {
 	 * @param dependencies The list of module classes this module depends on.
 	 */
 	public Module(Class<T>... dependencies) {
-		//	this.profileTab = profileTab; // TODO: Get from method.
 		this.dependencies = dependencies;
 		this.handlers = new ArrayList<>();
 		this.extensions = new ArrayList<>();
@@ -32,9 +33,18 @@ public class Module<T extends Module> {
 
 		for (Method method : this.getClass().getDeclaredMethods()) {
 			Handler.Function function = method.getAnnotation(Handler.Function.class);
+			Module.TabName tabName = method.getAnnotation(Module.TabName.class);
 
 			if (function != null) {
 				this.handlers.add(new Handler(function.value(), method, this));
+			}
+
+			if (tabName != null) {
+				try {
+					this.profileTab = (String) method.invoke(this);
+				} catch (IllegalAccessException | InvocationTargetException e) {
+					// Ignore, not important!
+				}
 			}
 		}
 	}
@@ -146,6 +156,8 @@ public class Module<T extends Module> {
 			return null;
 		}
 
+		// TODO: Switch state for extensionChange.
+
 		for (Extension extension : extensions) {
 			if (extension.isActive() && type.isInstance(extension) && !extension.equals(last)) {
 				return extension;
@@ -180,11 +192,19 @@ public class Module<T extends Module> {
 	}
 
 	/**
-	 * Represents a class that overrides/replaces a existing module.
+	 * Represents a class that overrides a existing module.
 	 */
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.TYPE)
-	public @interface Replace {
+	public @interface ModuleOverride {
+	}
+
+	/**
+	 * Represents a method that has to be implemented by a module override.
+	 */
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target(ElementType.METHOD)
+	public @interface MethodReplace {
 	}
 
 	/**
