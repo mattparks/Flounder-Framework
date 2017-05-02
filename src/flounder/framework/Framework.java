@@ -24,6 +24,7 @@ public class Framework {
 	private static List<Module> overrides = new ArrayList<>();
 	private static boolean initialized;
 	private static boolean running;
+	private static LoggerFrame error;
 	private static int fpsLimit;
 
 	/**
@@ -61,25 +62,28 @@ public class Framework {
 
 		Framework.initialized = false;
 		Framework.running = true;
+		Framework.error = null;
 		Framework.fpsLimit = fpsLimit;
 	}
 
 	public void run() {
-		LoggerFrame logger = null;
-
 		try {
 			updater.run();
 		} catch (Exception e) {
 			FlounderLogger.get().exception(e);
-			logger = new LoggerFrame();
+			createErrorFrame();
 		} finally {
-			logger = new LoggerFrame();
+			// logger = new LoggerFrame();
 			updater.dispose();
 
-			if (logger != null) {
-				logger.run();
+			if (error != null) {
+				error.run();
 			}
 		}
+	}
+
+	public static void createErrorFrame() {
+		Framework.error = new LoggerFrame();
 	}
 
 	public static void addOverrides(Module... list) {

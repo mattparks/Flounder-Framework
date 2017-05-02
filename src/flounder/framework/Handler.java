@@ -46,6 +46,7 @@ public class Handler {
 			} catch (IllegalAccessException | InvocationTargetException e) {
 				FlounderLogger.get().error("Handler could not call method: " + method.toString());
 				FlounderLogger.get().exception(e);
+				Framework.createErrorFrame();
 				Framework.requestClose();
 			}
 
