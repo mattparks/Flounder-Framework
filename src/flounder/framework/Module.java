@@ -1,7 +1,5 @@
 package flounder.framework;
 
-import flounder.logger.*;
-
 import java.lang.annotation.*;
 import java.lang.reflect.*;
 import java.util.*;
@@ -177,7 +175,7 @@ public class Module<T extends Module> {
 	}
 
 	public void setExtensionChanged(boolean extensionChanged) {
-	//	this.extensionChange = extensionChanged;
+		//	this.extensionChange = extensionChanged;
 	}
 
 	public Module getInstance() {

@@ -48,7 +48,7 @@ public class Framework {
 		Framework.updater.setFpsLimit(fpsLimit);
 
 		// Sets up the module and extension managers.
-	//	Framework.modules = new ArrayList<>();
+		//	Framework.modules = new ArrayList<>();
 		Framework.overrides.addAll(Arrays.asList(overrides));
 
 		// Registers these modules as global, we do this as everyone loves these guys <3
