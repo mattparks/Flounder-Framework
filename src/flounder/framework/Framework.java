@@ -71,7 +71,7 @@ public class Framework {
 			updater.run();
 		} catch (Exception e) {
 			FlounderLogger.get().exception(e);
-			createErrorFrame();
+			Framework.requestClose(true);
 		} finally {
 			// logger = new LoggerFrame();
 			updater.dispose();
@@ -80,10 +80,6 @@ public class Framework {
 				error.run();
 			}
 		}
-	}
-
-	public static void createErrorFrame() {
-		Framework.error = new LoggerFrame();
 	}
 
 	public static void addOverrides(Module... list) {
@@ -453,9 +449,15 @@ public class Framework {
 
 	/**
 	 * Requests the implementation-loop to stop and the implementation to exit.
+	 *
+	 * @param error If a error screen will be created.
 	 */
-	public static void requestClose() {
+	public static void requestClose(boolean error) {
 		Framework.running = false;
+
+		if (error) {
+			Framework.error = new LoggerFrame();
+		}
 	}
 
 	/**

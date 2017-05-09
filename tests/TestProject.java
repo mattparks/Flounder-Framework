@@ -51,7 +51,7 @@ public class TestProject extends Framework {
 
 				if (i == INTERVAL_CLOSE) {
 					FlounderLogger.get().log("TestInterface requesting close!");
-					Framework.requestClose();
+					Framework.requestClose(false);
 				} else {
 					FlounderLogger.get().log("TestInterface closing after: " + (INTERVAL_CLOSE - i) + " seconds!");
 				}
