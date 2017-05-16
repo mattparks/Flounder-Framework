@@ -41,7 +41,7 @@ public class Framework {
 		Framework.unlocalizedName = unlocalizedName;
 
 		// Increment revision every fix for the minor version release. Minor version represents the build month. Major incremented every two years OR after major core framework rewrites.
-		Framework.version = new Version("01.05.12");
+		Framework.version = new Version("15.05.12");
 
 		// Sets the frameworks updater.
 		Framework.updater = updater;
@@ -361,6 +361,8 @@ public class Framework {
 			for (int i = 0; i < module.getDependencies().length; i++) {
 				requires += module.getDependencies()[i].getSimpleName() + ((i == module.getDependencies().length - 1) ? "" : ", ");
 			}
+
+			// TODO: Fix overrides being logged as modules, and overrides not being displayed under modules.
 
 			FlounderLogger.get().register("Registering " + module.getClass().getSimpleName() + ": " + FlounderLogger.ANSI_PURPLE + "Override(" + override + "): " + FlounderLogger.ANSI_RED + "Requires(" + requires + ")" + FlounderLogger.ANSI_RESET);
 		}
