@@ -118,7 +118,7 @@ public class Module<T extends Module> {
 	/**
 	 * Registers an extension with a module.
 	 *
-	 * @param extension The extension to register.
+	 * @param extension The extension to init.
 	 */
 	protected void registerExtension(Extension extension) {
 		if (!extensions.contains(extension)) {
@@ -131,7 +131,7 @@ public class Module<T extends Module> {
 	/**
 	 * Registers extensions with a module.
 	 *
-	 * @param extensions The extensions to register.
+	 * @param extensions The extensions to init.
 	 */
 	protected void registerExtensions(Extension... extensions) {
 		for (Extension extension : extensions) {

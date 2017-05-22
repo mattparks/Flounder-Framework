@@ -70,7 +70,6 @@ public class FlounderStandard extends Module {
 		FlounderProfiler.get().add(getTab(), "Standards", standards.size());
 	}
 
-
 	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
 		if (standards != null && !standards.isEmpty()) {

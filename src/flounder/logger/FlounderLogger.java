@@ -34,6 +34,9 @@ public class FlounderLogger extends Module {
 	public void init() {
 		this.saveData = new ArrayList<>();
 		this.linesPrinted = 0;
+
+		// Logs all registered modules.
+		Framework.logModules();
 	}
 
 	@Handler.Function(Handler.FLAG_UPDATE_ALWAYS)
@@ -51,17 +54,17 @@ public class FlounderLogger extends Module {
 	 * @param value Text or numbers being added to the log file and possibly to the IDES console.
 	 * @param <T> The object type to be logged.
 	 */
-	public <T> void register(T value) {
+	public <T> void init(T value) {
 		if (getString(value).isEmpty()) {
 			System.out.println();
 		} else {
-			System.out.println(ANSI_GREEN + "REGISTER [" + getDateString() + "]: " + ANSI_RESET + getString(value));
+			System.out.println(ANSI_GREEN + "INIT [" + getDateString() + "]: " + ANSI_RESET + getString(value));
 		}
 
 		if (getString(value).isEmpty()) {
 			saveData.add("");
 		} else {
-			saveData.add("REGISTER [" + getDateString() + "]: " + getString(value).replaceAll("\u001B\\[[\\d;]*[^\\d;]", ""));
+			saveData.add("INIT [" + getDateString() + "]: " + getString(value).replaceAll("\u001B\\[[\\d;]*[^\\d;]", ""));
 		}
 
 		linesPrinted += getString(value).split("\n").length;

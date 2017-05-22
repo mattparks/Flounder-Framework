@@ -24,7 +24,7 @@ public class Framework {
 	private static List<Module> overrides = new ArrayList<>();
 	private static boolean initialized;
 	private static boolean running;
-	private static LoggerFrame error;
+	private static boolean error;
 	private static int fpsLimit;
 
 	/**
@@ -41,7 +41,7 @@ public class Framework {
 		Framework.unlocalizedName = unlocalizedName;
 
 		// Increment revision every fix for the minor version release. Minor version represents the build month. Major incremented every two years OR after major core framework rewrites.
-		Framework.version = new Version("15.05.12");
+		Framework.version = new Version("21.05.12");
 
 		// Sets the frameworks updater.
 		Framework.updater = updater;
@@ -62,7 +62,7 @@ public class Framework {
 
 		Framework.initialized = false;
 		Framework.running = true;
-		Framework.error = null;
+		Framework.error = false;
 		Framework.fpsLimit = fpsLimit;
 	}
 
@@ -73,11 +73,11 @@ public class Framework {
 			FlounderLogger.get().exception(e);
 			Framework.requestClose(true);
 		} finally {
-			// logger = new LoggerFrame();
-			updater.dispose();
-
-			if (error != null) {
-				error.run();
+			if (error) {
+				new LoggerFrame().run();
+				System.exit(-1);
+			} else {
+				updater.dispose();
 			}
 		}
 	}
@@ -309,7 +309,7 @@ public class Framework {
 	/**
 	 * Registers a module, and initializes if the engine has already started.
 	 *
-	 * @param module The module to register.
+	 * @param module The module to init.
 	 */
 	protected static Module registerModule(Module module) {
 		if (module == null || containsModule(module.getClass())) {
@@ -319,7 +319,7 @@ public class Framework {
 		// Add the module temporally.
 		modules.add(module);
 
-		// Will load and register required modules if needed.
+		// Will load and init required modules if needed.
 		if (!containsModules(module.getDependencies())) {
 			// Registers all required modules.
 			registerModules(loadModules(module.getDependencies()));
@@ -340,7 +340,7 @@ public class Framework {
 	/**
 	 * Registers a list of modules, and initializes them if the engine has already started.
 	 *
-	 * @param list The list of modules to register.
+	 * @param list The list of modules to init.
 	 */
 	protected static void registerModules(Module... list) {
 		for (Module module : list) {
@@ -354,17 +354,15 @@ public class Framework {
 	public static void logModules() {
 		// Logs all registered modules.
 		for (Module module : modules) {
-			// Log module data.
 			String requires = "";
-			String override = "" + getOverride(module.getClass());
 
 			for (int i = 0; i < module.getDependencies().length; i++) {
 				requires += module.getDependencies()[i].getSimpleName() + ((i == module.getDependencies().length - 1) ? "" : ", ");
 			}
 
-			// TODO: Fix overrides being logged as modules, and overrides not being displayed under modules.
+			boolean last = module.equals(modules.get(modules.size() - 1));
 
-			FlounderLogger.get().register("Registering " + module.getClass().getSimpleName() + ": " + FlounderLogger.ANSI_PURPLE + "Override(" + override + "): " + FlounderLogger.ANSI_RED + "Requires(" + requires + ")" + FlounderLogger.ANSI_RESET);
+			FlounderLogger.get().init("Registering " + module.getClass().getSimpleName() + ": " + FlounderLogger.ANSI_PURPLE + "Requires(" + requires + ")" + FlounderLogger.ANSI_RESET + (last ? "\n" : ""));
 		}
 	}
 
@@ -392,7 +390,7 @@ public class Framework {
 	 * @return The delta between updates.
 	 */
 	public static float getDelta() {
-		return Framework.updater.getDelta();
+		return Framework.updater.getDelta(); // Math.min(1.0f / 60.0f, Framework.updater.getDelta());
 	}
 
 	/**
@@ -457,8 +455,9 @@ public class Framework {
 	public static void requestClose(boolean error) {
 		Framework.running = false;
 
+		// A statement in case it was already true.
 		if (error) {
-			Framework.error = new LoggerFrame();
+			Framework.error = true;
 		}
 	}
 

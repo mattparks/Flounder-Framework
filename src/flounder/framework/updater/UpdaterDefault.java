@@ -27,7 +27,7 @@ public class UpdaterDefault implements IUpdater {
 		this.timing = timing;
 
 		// Sets basic updater info.
-		this.startTime = System.nanoTime();
+		this.startTime = System.nanoTime() * 1e-9;
 
 		if (timing != null) {
 			this.startTime = timing.getTime();
@@ -37,9 +37,9 @@ public class UpdaterDefault implements IUpdater {
 		this.timeOffset = 0.0f;
 		this.deltaUpdate = new Delta();
 		this.deltaRender = new Delta();
-		this.timerUpdate = new Timer(1.0 / 70.0);
+		this.timerUpdate = new Timer(1.0 / 60.0);
 		this.timerRender = new Timer(1.0 / 60.0);
-		this.timerProfile = new Timer(1.0 / 4.0);
+		this.timerProfile = new Timer(1.0 / 2.0);
 	}
 
 	@Override
@@ -62,11 +62,8 @@ public class UpdaterDefault implements IUpdater {
 		// Initializes all modules.
 		Framework.runHandlers(Handler.FLAG_INIT);
 
-		// Logs all registered modules.
-		Framework.logModules();
-
 		// Logs initialize times.
-		// FlounderLogger.get().log("Framework Initialize & Load Time: " + FlounderLogger.ANSI_RED + ((System.nanoTime() - startTime) / 1000000000.0) + FlounderLogger.ANSI_RESET + " seconds!");
+		FlounderLogger.get().init("Framework Initialize & Load Time: " + FlounderLogger.ANSI_RED + (getTimeSec() - startTime) + FlounderLogger.ANSI_RESET + " seconds!");
 
 		// Sets the framework as initialized.
 		Framework.setInitialized(true);
