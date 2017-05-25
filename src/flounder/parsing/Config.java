@@ -115,15 +115,17 @@ public class Config {
 			FileWriterHelper fileWriterHelper = new FileWriterHelper(fileWriter);
 
 			for (ConfigSection section : dataMap.keySet()) {
-				fileWriterHelper.beginNewSegment("#" + section.name() + ":", false);
+				if (!dataMap.get(section).isEmpty()) {
+					fileWriterHelper.beginNewSegment("#" + section.name() + ":", false);
 
-				for (ConfigData data : ArraySorting.insertionSort(dataMap.get(section))) {
-					String save = (data.reference == null || data.reference.getReading() == null) ? data.data : data.reference.getReading().toString();
-					data.data = save;
-					fileWriterHelper.writeSegmentData("$" + data.key + ": " + save, true);
+					for (ConfigData data : ArraySorting.insertionSort(dataMap.get(section))) {
+						String save = (data.reference == null || data.reference.getReading() == null) ? data.data : data.reference.getReading().toString();
+						data.data = save;
+						fileWriterHelper.writeSegmentData("$" + data.key + ": " + save, true);
+					}
+
+					fileWriterHelper.endSegment(true, false);
 				}
-
-				fileWriterHelper.endSegment(true, false);
 			}
 
 			// Closes the file for writing.
