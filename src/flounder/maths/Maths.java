@@ -172,7 +172,7 @@ public class Maths {
 	 * @return The maximum value.
 	 */
 	public static float maxValue(float... fs) {
-		float max = 0.0f;
+		float max = Float.NEGATIVE_INFINITY;
 
 		for (float v : fs) {
 			if (v > max) {
@@ -191,7 +191,7 @@ public class Maths {
 	 * @return The minimum value.
 	 */
 	public static float minValue(float... fs) {
-		float min = 0.0f;
+		float min = Float.POSITIVE_INFINITY;
 
 		for (float v : fs) {
 			if (v < min) {
