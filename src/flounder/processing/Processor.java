@@ -26,11 +26,6 @@ public abstract class Processor extends Extension {
 	public abstract void update();
 
 	/**
-	 * Run when profiling the processor.
-	 */
-	public abstract void profile();
-
-	/**
 	 * Used to add a request into the processor.
 	 *
 	 * @param request The request object to add to the que.

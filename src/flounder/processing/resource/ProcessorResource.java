@@ -2,7 +2,6 @@ package flounder.processing.resource;
 
 import flounder.logger.*;
 import flounder.processing.*;
-import flounder.profiling.*;
 
 /**
  * A extension that is responsible for processing resource requests in a separate thread.
@@ -35,12 +34,6 @@ public class ProcessorResource extends Processor {
 
 	@Override
 	public void update() {
-	}
-
-	@Override
-	public void profile() {
-		FlounderProfiler.get().add(FlounderProcessors.getTab(), "Resource Requests", requestQueue.count());
-		FlounderProfiler.get().add(FlounderProcessors.getTab(), "Resource History", history);
 	}
 
 	@Override

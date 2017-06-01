@@ -1,7 +1,6 @@
 package flounder.logger;
 
 import flounder.framework.*;
-import flounder.profiling.*;
 
 import java.io.*;
 import java.util.*;
@@ -27,7 +26,7 @@ public class FlounderLogger extends Module {
 	 * Creates a new logger manager.
 	 */
 	public FlounderLogger() {
-		super(FlounderProfiler.class);
+		super();
 	}
 
 	@Handler.Function(Handler.FLAG_INIT)
@@ -41,11 +40,6 @@ public class FlounderLogger extends Module {
 
 	@Handler.Function(Handler.FLAG_UPDATE_ALWAYS)
 	public void update() {
-	}
-
-	@Handler.Function(Handler.FLAG_PROFILE)
-	public void profile() {
-		FlounderProfiler.get().add(getTab(), "Lines Recorded", linesPrinted);
 	}
 
 	/**

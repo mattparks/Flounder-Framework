@@ -1,7 +1,6 @@
 package flounder.processing.opengl;
 
 import flounder.processing.*;
-import flounder.profiling.*;
 
 /**
  * A extension that is responsible for processing OpenGL requests.
@@ -41,12 +40,6 @@ public class ProcessorOpenGL extends Processor {
 				break;
 			}
 		}
-	}
-
-	@Override
-	public void profile() {
-		FlounderProfiler.get().add(FlounderProcessors.getTab(), "OpenGL Requests", requestQueue.count());
-		FlounderProfiler.get().add(FlounderProcessors.getTab(), "OpenGL History", history);
 	}
 
 	@Override

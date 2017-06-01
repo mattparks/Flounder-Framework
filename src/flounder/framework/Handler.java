@@ -14,7 +14,6 @@ public class Handler {
 	public static final int FLAG_UPDATE_PRE = 5;
 	public static final int FLAG_UPDATE_POST = 7;
 	public static final int FLAG_RENDER = 10;
-	public static final int FLAG_PROFILE = 18;
 	public static final int FLAG_DISPOSE = -2;
 
 	private int flag;

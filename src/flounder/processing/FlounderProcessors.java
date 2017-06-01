@@ -4,7 +4,6 @@ import flounder.framework.*;
 import flounder.logger.*;
 import flounder.processing.opengl.*;
 import flounder.processing.resource.*;
-import flounder.profiling.*;
 
 import java.util.*;
 
@@ -18,7 +17,7 @@ public class FlounderProcessors extends Module {
 	 * Creates a new request processor.
 	 */
 	public FlounderProcessors() {
-		super(FlounderLogger.class, FlounderProfiler.class);
+		super(FlounderLogger.class);
 	}
 
 	@Handler.Function(Handler.FLAG_INIT)
@@ -77,15 +76,6 @@ public class FlounderProcessors extends Module {
 		if (processors != null && !processors.isEmpty()) {
 			processors.forEach(Processor::update);
 		}
-	}
-
-	@Handler.Function(Handler.FLAG_PROFILE)
-	public void profile() {
-		if (processors != null && !processors.isEmpty()) {
-			processors.forEach(Processor::profile);
-		}
-
-		FlounderProfiler.get().add(getTab(), "Processors", processors.size());
 	}
 
 	/**

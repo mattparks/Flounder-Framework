@@ -2,7 +2,6 @@ package flounder.framework;
 
 import flounder.framework.updater.*;
 import flounder.logger.*;
-import flounder.profiling.*;
 import flounder.resources.*;
 import flounder.standards.*;
 
@@ -41,7 +40,7 @@ public class Framework {
 		Framework.unlocalizedName = unlocalizedName;
 
 		// Increment revision every fix for the minor version release. Minor version represents the build month. Major incremented every two years OR after major core framework rewrites.
-		Framework.version = new Version("26.05.12");
+		Framework.version = new Version("31.05.12");
 
 		// Sets the frameworks updater.
 		Framework.updater = updater;
@@ -53,7 +52,6 @@ public class Framework {
 
 		// Registers these modules as global, we do this as everyone loves these guys <3
 		registerModules(loadModule(FlounderLogger.class));
-		registerModules(loadModule(FlounderProfiler.class));
 
 		// Force registers the extensions, as the framework was null when they were constructed.
 		for (Extension extension : extensions) {

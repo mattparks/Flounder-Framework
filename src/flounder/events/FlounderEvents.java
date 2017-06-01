@@ -1,7 +1,6 @@
 package flounder.events;
 
 import flounder.framework.*;
-import flounder.profiling.*;
 
 import java.util.*;
 
@@ -49,12 +48,6 @@ public class FlounderEvents extends Module {
 	public void removeEvent(IEvent event) {
 		this.events.remove(event);
 	}
-
-	@Handler.Function(Handler.FLAG_PROFILE)
-	public void profile() {
-		FlounderProfiler.get().add(getTab(), "Events Active", events.size());
-	}
-
 
 	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {

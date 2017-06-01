@@ -1,7 +1,6 @@
 package flounder.standards;
 
 import flounder.framework.*;
-import flounder.profiling.*;
 
 import java.util.*;
 
@@ -58,16 +57,6 @@ public class FlounderStandard extends Module {
 		if (standards != null && !standards.isEmpty()) {
 			standards.forEach(Standard::update);
 		}
-	}
-
-	@Handler.Function(Handler.FLAG_PROFILE)
-	public void profile() {
-		if (standards != null && !standards.isEmpty()) {
-			standards.forEach(Standard::update);
-			standards.forEach(Standard::profile);
-		}
-
-		FlounderProfiler.get().add(getTab(), "Standards", standards.size());
 	}
 
 	@Handler.Function(Handler.FLAG_DISPOSE)

@@ -4,7 +4,6 @@ import flounder.framework.*;
 import flounder.logger.*;
 import flounder.maths.*;
 import flounder.maths.Timer;
-import flounder.profiling.*;
 
 import java.util.*;
 
@@ -114,17 +113,6 @@ public class UpdaterDefault implements IUpdater {
 		if (timerProfile.isPassedTime()) {
 			//	FlounderLogger.get().log(Maths.roundToPlace(1.0f / getDelta(), 2) + "ups, " + Maths.roundToPlace(1.0f / getDeltaRender(), 2) + "fps");
 			timerProfile.resetStartTime();
-
-			// Profile the framework, modules, and extensions.
-			if (FlounderProfiler.get().isOpen()) {
-				FlounderProfiler.get().add("Framework", "Running From Jar", Framework.isRunningFromJar());
-				FlounderProfiler.get().add("Framework", "Save Folder", Framework.getRoamingFolder().getPath());
-				FlounderProfiler.get().add("Framework", "Frames Per Second", Maths.roundToPlace(1.0f / getDeltaRender(), 3));
-				FlounderProfiler.get().add("Framework", "Updates Per Second", Maths.roundToPlace(1.0f / getDelta(), 3));
-
-				// Profiles the module, also adding its profile timer values.
-				Framework.runHandlers(Handler.FLAG_PROFILE);
-			}
 		}
 	}
 
