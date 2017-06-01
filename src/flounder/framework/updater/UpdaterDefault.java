@@ -134,7 +134,7 @@ public class UpdaterDefault implements IUpdater {
 			return;
 		}
 
-		FlounderLogger.get().warning("Disposing framework! A new Framework object must be recreated if resetting the framework!");
+		FlounderLogger.get().warning("Disposing framework!"); // A new Framework object must be recreated if resetting the framework!
 
 		Collections.reverse(Framework.getModules());
 		Framework.runHandlers(Handler.FLAG_DISPOSE);

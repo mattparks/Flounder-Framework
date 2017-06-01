@@ -10,8 +10,8 @@ import java.awt.event.*;
  * A module used for profiling many parts of the framework.
  */
 public class FlounderProfiler extends Module {
-	private JFrame profilerJFrame;
-	private FlounderTabMenu primaryTabMenu;
+	//private JFrame profilerJFrame;
+	//private FlounderTabMenu primaryTabMenu;
 	private boolean profilerOpen;
 
 	/**
@@ -24,11 +24,11 @@ public class FlounderProfiler extends Module {
 	@Handler.Function(Handler.FLAG_INIT)
 	public void init() {
 		String title = "Flounder Framework Profiler";
-		this.profilerJFrame = new JFrame(title);
-		profilerJFrame.setSize(420, 720);
-		profilerJFrame.setResizable(true);
+	//	this.profilerJFrame = new JFrame(title);
+	//	profilerJFrame.setSize(420, 720);
+	//	profilerJFrame.setResizable(true);
 
-		try {
+	/*	try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
 			ex.printStackTrace();
@@ -48,7 +48,7 @@ public class FlounderProfiler extends Module {
 		});
 
 		this.primaryTabMenu = new FlounderTabMenu();
-		this.profilerJFrame.add(primaryTabMenu);
+		this.profilerJFrame.add(primaryTabMenu);*/
 
 		// Opens the profiler if not running from jar.
 		// toggle(!Framework.isRunningFromJar());
@@ -56,9 +56,9 @@ public class FlounderProfiler extends Module {
 
 	@Handler.Function(Handler.FLAG_UPDATE_ALWAYS)
 	public void update() {
-		if (profilerJFrame.isVisible() != profilerOpen) {
-			profilerJFrame.setVisible(profilerOpen);
-		}
+	//	if (profilerJFrame.isVisible() != profilerOpen) {
+	//		profilerJFrame.setVisible(profilerOpen);
+	//	}
 	}
 
 	@Handler.Function(Handler.FLAG_PROFILE)
@@ -75,13 +75,13 @@ public class FlounderProfiler extends Module {
 	 * @param <T> The type of value to add.
 	 */
 	public <T> void add(String tabName, String title, T value) {
-		if (this.primaryTabMenu == null) {
-			return;
-		}
+	//	if (this.primaryTabMenu == null) {
+	//		return;
+	//	}
 
-		addTab(tabName); // Forces the tab to be there.
-		FlounderProfilerTab tab = this.primaryTabMenu.getCategoryComponent(tabName).get();
-		tab.addLabel(title, value); // Adds the label to the tab.
+	//	addTab(tabName); // Forces the tab to be there.
+	//	FlounderProfilerTab tab = this.primaryTabMenu.getCategoryComponent(tabName).get();
+	//	tab.addLabel(title, value); // Adds the label to the tab.
 	}
 
 	/**
@@ -90,9 +90,9 @@ public class FlounderProfiler extends Module {
 	 * @param tabName The tab name to add.
 	 */
 	public void addTab(String tabName) {
-		if (!this.primaryTabMenu.doesCategoryExist(tabName)) {
-			this.primaryTabMenu.createCategory(tabName);
-		}
+	//	if (!this.primaryTabMenu.doesCategoryExist(tabName)) {
+	//		this.primaryTabMenu.createCategory(tabName);
+	//	}
 	}
 
 	/**
@@ -116,8 +116,8 @@ public class FlounderProfiler extends Module {
 	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
 		this.profilerOpen = false;
-		primaryTabMenu.dispose();
-		profilerJFrame.dispose();
+	//	primaryTabMenu.dispose();
+	//	profilerJFrame.dispose();
 	}
 
 	@Module.Instance
