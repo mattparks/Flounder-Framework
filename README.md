@@ -1,6 +1,9 @@
 # Flounder-Framework
 Flounder Framework is a modular Java framework composed of modules and extensions.
 
+# MacOS
+MacOS must be run with the vm args: '-XstartOnFirstThread -Djava.awt.headless=true', because of the way it is...
+
 # Modules
 A module (IModule) is a class that is built to serve a specific purpose, for example: the processor module only acts to manage requests.
 When they are updated in the main iterative loop is determined from the ModuleUpdate enum they pass through the super constructor.
