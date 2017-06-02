@@ -9,6 +9,7 @@ import java.util.*;
  */
 public class FlounderTasks extends Module {
 	private List<ITask> tasks;
+	private List<ITask> clones;
 
 	/**
 	 * Creates a new event manager.
@@ -20,14 +21,18 @@ public class FlounderTasks extends Module {
 	@Handler.Function(Handler.FLAG_INIT)
 	public void init() {
 		this.tasks = new ArrayList<>();
+		this.clones = new ArrayList<>();
 	}
 
 	@Handler.Function(Handler.FLAG_UPDATE_PRE)
 	public void update() {
-		new ArrayList<>(tasks).forEach((task) -> {
+		clones.clear();
+		clones.addAll(tasks);
+
+		clones.forEach((task) -> {
 			task.execute();
 			tasks.remove(task);
-		}); // TODO: Optimise.
+		});
 	}
 
 	/**

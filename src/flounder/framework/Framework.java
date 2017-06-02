@@ -40,7 +40,7 @@ public class Framework {
 		Framework.unlocalizedName = unlocalizedName;
 
 		// Increment revision every fix for the minor version release. Minor version represents the build month. Major incremented every two years OR after major core framework rewrites.
-		Framework.version = new Version("01.06.12");
+		Framework.version = new Version("02.06.12");
 
 		// Sets the frameworks updater.
 		Framework.updater = updater;
