@@ -24,8 +24,10 @@ public class FlounderTasks extends Module {
 
 	@Handler.Function(Handler.FLAG_UPDATE_PRE)
 	public void update() {
-		new ArrayList<>(tasks).forEach(ITask::execute); // TODO: Optimise.
-		tasks.clear();
+		new ArrayList<>(tasks).forEach((task) -> {
+			task.execute();
+			tasks.remove(task);
+		}); // TODO: Optimise.
 	}
 
 	/**
