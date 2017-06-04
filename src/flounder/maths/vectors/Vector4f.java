@@ -6,6 +6,8 @@ import java.nio.*;
  * Holds a 4-tuple vector.
  */
 public class Vector4f {
+	public static final Vector4f ZERO = new Vector4f(0.0f, 0.0f, 0.0f, 0.0f);
+
 	public float x, y, z, w;
 
 	/**

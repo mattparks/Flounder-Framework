@@ -8,6 +8,8 @@ import java.nio.*;
  * Holds a 2-tuple vector.
  */
 public class Vector2f {
+	public static final Vector2f ZERO = new Vector2f(0.0f, 0.0f);
+
 	public float x;
 	public float y;
 

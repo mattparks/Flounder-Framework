@@ -9,6 +9,8 @@ import java.nio.*;
  * Holds a 3-tuple vector.
  */
 public class Vector3f {
+	public static final Vector3f ZERO = new Vector3f(0.0f, 0.0f, 0.0f);
+
 	public float x, y, z;
 
 	public Vector2f toVector2f() {
