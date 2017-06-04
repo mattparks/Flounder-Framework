@@ -40,6 +40,7 @@ public class FlounderProcessors extends Module {
 	public void update() {
 		// Gets new processors, if available.
 		List<Extension> newProcessors = getExtensionMatches(processors, Processor.class, true);
+		cancelChange();
 
 		if (newProcessors != null) {
 			List<Processor> newCasted = new ArrayList<>();

@@ -121,7 +121,7 @@ public class Module<T extends Module> {
 	}
 
 	/**
-	 * Finds a new extension for this module that implements an interface/class.
+	 * Finds a new extension for this module that implements an interface/class. Call {@link #cancelChange()} looking for all type changes.
 	 *
 	 * @param last The last object to compare to.
 	 * @param type The class type of object to find a extension that matches for.
@@ -141,11 +141,12 @@ public class Module<T extends Module> {
 			}
 		}
 
+		this.extensionChange = false;
 		return null;
 	}
 
 	/**
-	 * Finds a list of new extensions for this module that implements an interface/class.
+	 * Finds a list of new extensions for this module that implements an interface/class. Call {@link #cancelChange()} looking for all type changes.
 	 *
 	 * @param last The last list of object to compare to.
 	 * @param type The class type of object to find a extension that matches for.
@@ -171,6 +172,7 @@ public class Module<T extends Module> {
 			return null;
 		}
 
+		this.extensionChange = false;
 		return results;
 	}
 
@@ -183,11 +185,9 @@ public class Module<T extends Module> {
 		return extensionChange;
 	}
 
-	//public void setExtensionChanged(boolean extensionChanged) {
-		// TODO: Update this so onlyRunOnChange works!
-
-	//	this.extensionChange = extensionChanged;
-	//}
+	public void cancelChange() {
+		this.extensionChange = false;
+	}
 
 	public Module getInstance() {
 		Module override = Framework.get().getOverride(this.getClass());
