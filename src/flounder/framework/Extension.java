@@ -21,8 +21,8 @@ public abstract class Extension<T extends Module> {
 		this.dependencies = ArrayUtils.addElement(dependencies, module);
 		this.initialized = false;
 
-		if (Framework.isRunning()) {
-			Framework.registerModule(Framework.loadModule(module)).registerExtension(this);
+		if (Framework.get() != null && Framework.get().isRunning()) {
+			Framework.get().registerModule(Framework.get().loadModule(module)).registerExtension(this);
 		}
 	}
 

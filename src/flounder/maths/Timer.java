@@ -15,8 +15,8 @@ public class Timer {
 	 * @param interval The time between events (seconds).
 	 */
 	public Timer(double interval) {
-		if (Framework.isInitialized()) {
-			this.startTime = Framework.getTimeMs();
+		if (Framework.get().isInitialized()) {
+			this.startTime = Framework.get().getTimeMs();
 		} else {
 			this.startTime = 0.0f;
 		}
@@ -30,14 +30,14 @@ public class Timer {
 	 * @return If the interval was exceeded.
 	 */
 	public boolean isPassedTime() {
-		return Framework.getTimeMs() - startTime > interval;
+		return Framework.get().getTimeMs() - startTime > interval;
 	}
 
 	/**
 	 * Adds the intervals value to the start time.
 	 */
 	public void resetStartTime() {
-		startTime = Framework.getTimeMs();
+		startTime = Framework.get().getTimeMs();
 	}
 
 	/**
@@ -56,6 +56,6 @@ public class Timer {
 	 */
 	public void setInterval(double interval) {
 		this.interval = (long) (interval * 1000.0);
-		this.startTime = Framework.getTimeMs();
+		this.startTime = Framework.get().getTimeMs();
 	}
 }

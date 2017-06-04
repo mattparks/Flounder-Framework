@@ -60,7 +60,7 @@ public class FlounderTasks extends Module {
 
 	@Instance
 	public static FlounderTasks get() {
-		return (FlounderTasks) Framework.getInstance(FlounderTasks.class);
+		return (FlounderTasks) Framework.get().getInstance(FlounderTasks.class);
 	}
 
 	@TabName

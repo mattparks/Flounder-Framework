@@ -72,7 +72,7 @@ public class FlounderStandard extends Module {
 
 	@Module.Instance
 	public static FlounderStandard get() {
-		return (FlounderStandard) Framework.getInstance(FlounderStandard.class);
+		return (FlounderStandard) Framework.get().getInstance(FlounderStandard.class);
 	}
 
 	@Module.TabName

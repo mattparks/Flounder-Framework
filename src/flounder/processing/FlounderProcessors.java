@@ -109,7 +109,7 @@ public class FlounderProcessors extends Module {
 
 	@Module.Instance
 	public static FlounderProcessors get() {
-		return (FlounderProcessors) Framework.getInstance(FlounderProcessors.class);
+		return (FlounderProcessors) Framework.get().getInstance(FlounderProcessors.class);
 	}
 
 	@Module.TabName

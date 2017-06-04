@@ -14,17 +14,19 @@ import java.util.*;
  * Implementing interfaces like {@link Standard} with your extension can allow you do task specific things with your Extensions. After creating your Framework object call {@link #run()} to start.
  */
 public class Framework {
-	private static String unlocalizedName;
+	private static Framework INSTANCE = null;
 
-	private static Version version;
-	private static IUpdater updater;
+	private String unlocalizedName;
 
-	private static List<Module> modules = new ArrayList<>();
-	private static List<Module> overrides = new ArrayList<>();
-	private static boolean initialized;
-	private static boolean running;
-	private static boolean error;
-	private static int fpsLimit;
+	private Version version;
+	private IUpdater updater;
+
+	private List<Module> modules = new ArrayList<>();
+	private List<Module> overrides = new ArrayList<>();
+	private boolean initialized;
+	private boolean running;
+	private boolean error;
+	private int fpsLimit;
 
 	/**
 	 * Carries out the setup for basic framework components and the framework. Call {@link #run()} after creating a instance.
@@ -33,22 +35,23 @@ public class Framework {
 	 * @param updater The definition for how the framework will run.
 	 * @param fpsLimit The limit to FPS, (-1 disables limits).
 	 * @param extensions The extensions to load for the framework.
-	 * @param overrides The module overrides to load for the framework.
 	 */
-	public Framework(String unlocalizedName, IUpdater updater, int fpsLimit, Extension[] extensions, Module[] overrides) {
+	public Framework(String unlocalizedName, IUpdater updater, int fpsLimit, Extension[] extensions) {
+		// Sets the static object to this new one.
+		Framework.INSTANCE = this;
+
 		// Sets the instances name.
-		Framework.unlocalizedName = unlocalizedName;
+		this.unlocalizedName = unlocalizedName;
 
 		// Increment revision every fix for the minor version release. Minor version represents the build month. Major incremented every two years OR after major core framework rewrites.
-		Framework.version = new Version("02.06.12");
+		this.version = new Version("04.06.12");
 
 		// Sets the frameworks updater.
-		Framework.updater = updater;
-		Framework.updater.setFpsLimit(fpsLimit);
+		this.updater = updater;
 
-		// Sets up the module and extension managers.
-		//	Framework.modules = new ArrayList<>();
-		Framework.overrides.addAll(Arrays.asList(overrides));
+		// Sets up the module and overrides lists.
+		this.modules = new ArrayList<>();
+		this.overrides = new ArrayList<>();
 
 		// Registers these modules as global, we do this as everyone loves these guys <3
 		registerModules(loadModule(FlounderLogger.class));
@@ -58,10 +61,10 @@ public class Framework {
 			registerModule(loadModule(extension.getModule())).registerExtension(extension);
 		}
 
-		Framework.initialized = false;
-		Framework.running = true;
-		Framework.error = false;
-		Framework.fpsLimit = fpsLimit;
+		this.initialized = false;
+		this.running = true;
+		this.error = false;
+		this.fpsLimit = fpsLimit;
 	}
 
 	public void run() {
@@ -69,7 +72,7 @@ public class Framework {
 			updater.run();
 		} catch (Exception e) {
 			FlounderLogger.get().exception(e);
-			Framework.requestClose(true);
+			requestClose(true);
 		} finally {
 			if (error) {
 				new LoggerFrame().run();
@@ -80,8 +83,8 @@ public class Framework {
 		}
 	}
 
-	public static void addOverrides(Module... list) {
-		Framework.overrides.addAll(Arrays.asList(list));
+	public void addOverrides(Module... list) {
+		this.overrides.addAll(Arrays.asList(list));
 	}
 
 	/**
@@ -89,7 +92,7 @@ public class Framework {
 	 *
 	 * @param flag The flag to run from.
 	 */
-	public static void runHandlers(int flag) {
+	public void runHandlers(int flag) {
 		for (Module module : modules) {
 			module.getInstance().runHandler(flag);
 		}
@@ -100,7 +103,7 @@ public class Framework {
 	 *
 	 * @return Is the framework is currently running from a jar?
 	 */
-	public static boolean isRunningFromJar() {
+	public boolean isRunningFromJar() {
 		return Framework.class.getResource("/" + Framework.class.getName().replace('.', '/') + ".class").toString().startsWith("jar:");
 	}
 
@@ -109,7 +112,7 @@ public class Framework {
 	 *
 	 * @return The roaming folder file.
 	 */
-	public static MyFile getRoamingFolder() {
+	public MyFile getRoamingFolder() {
 		return getRoamingFolder(unlocalizedName);
 	}
 
@@ -150,7 +153,7 @@ public class Framework {
 	 *
 	 * @return The unlocalized name.
 	 */
-	public static String getUnlocalizedName() {
+	public String getUnlocalizedName() {
 		return unlocalizedName;
 	}
 
@@ -159,8 +162,8 @@ public class Framework {
 	 *
 	 * @return The frameworks current version.
 	 */
-	public static Version getVersion() {
-		return Framework.version;
+	public Version getVersion() {
+		return version;
 	}
 
 	/**
@@ -168,15 +171,15 @@ public class Framework {
 	 *
 	 * @return The updater.
 	 */
-	public static IUpdater getUpdater() {
-		return Framework.updater;
+	public IUpdater getUpdater() {
+		return updater;
 	}
 
-	public static List<Module> getModules() {
+	public List<Module> getModules() {
 		return modules;
 	}
 
-	public static List<Module> getOverrides() {
+	public List<Module> getOverrides() {
 		return overrides;
 	}
 
@@ -187,7 +190,7 @@ public class Framework {
 	 *
 	 * @return The module.
 	 */
-	public static Module getModule(Class object) {
+	public Module getModule(Class object) {
 		if (containsModule(object)) {
 			for (Module module : modules) {
 				if (object.isInstance(module)) {
@@ -206,7 +209,7 @@ public class Framework {
 	 *
 	 * @return The module override.
 	 */
-	public static Module getOverride(Class parent) {
+	public Module getOverride(Class parent) {
 		for (Module module : overrides) {
 			if (!module.getClass().equals(parent) && parent.isInstance(module)) {
 				return module;
@@ -223,9 +226,9 @@ public class Framework {
 	 *
 	 * @return The module instance.
 	 */
-	public static Module getInstance(Class object) {
-		Module override = Framework.getOverride(object);
-		Module actual = Framework.getModule(object);
+	public Module getInstance(Class object) {
+		Module override = getOverride(object);
+		Module actual = getModule(object);
 		return override == null ? actual : override;
 	}
 
@@ -236,7 +239,7 @@ public class Framework {
 	 *
 	 * @return If the framework contains a module.
 	 */
-	protected static boolean containsModule(Class object) {
+	protected boolean containsModule(Class object) {
 		for (Module m : modules) {
 			if (m.getClass().getName().equals(object.getName())) {
 				return true;
@@ -253,7 +256,7 @@ public class Framework {
 	 *
 	 * @return If the framework contains all of the modules.
 	 */
-	protected static boolean containsModules(Class... objects) {
+	protected boolean containsModules(Class... objects) {
 		for (Class object : objects) {
 			if (!containsModule(object)) {
 				return false;
@@ -270,7 +273,7 @@ public class Framework {
 	 *
 	 * @return The module INSTANCE class.
 	 */
-	protected static Module loadModule(Class object) {
+	protected Module loadModule(Class object) {
 		Module m = getModule(object);
 
 		if (m != null) {
@@ -294,7 +297,7 @@ public class Framework {
 	 *
 	 * @return The modules instance classes.
 	 */
-	protected static Module[] loadModules(Class... objects) {
+	protected Module[] loadModules(Class... objects) {
 		Module[] result = new Module[objects.length];
 
 		for (int i = 0; i < objects.length; i++) {
@@ -309,7 +312,7 @@ public class Framework {
 	 *
 	 * @param module The module to init.
 	 */
-	protected static Module registerModule(Module module) {
+	protected Module registerModule(Module module) {
 		if (module == null || containsModule(module.getClass())) {
 			return module;
 		}
@@ -340,7 +343,7 @@ public class Framework {
 	 *
 	 * @param list The list of modules to init.
 	 */
-	protected static void registerModules(Module... list) {
+	protected void registerModules(Module... list) {
 		for (Module module : list) {
 			registerModule(module);
 		}
@@ -349,7 +352,7 @@ public class Framework {
 	/**
 	 * Logs all information from a module.
 	 */
-	public static void logModules() {
+	public void logModules() {
 		// Logs all registered modules.
 		for (Module module : modules) {
 			String requires = "";
@@ -369,8 +372,8 @@ public class Framework {
 	 *
 	 * @return The time offset.
 	 */
-	public static float getTimeOffset() {
-		return Framework.updater.getTimeOffset();
+	public float getTimeOffset() {
+		return updater.getTimeOffset();
 	}
 
 	/**
@@ -378,8 +381,8 @@ public class Framework {
 	 *
 	 * @param timeOffset The new time offset.
 	 */
-	public static void setTimeOffset(float timeOffset) {
-		Framework.updater.setTimeOffset(timeOffset);
+	public void setTimeOffset(float timeOffset) {
+		updater.setTimeOffset(timeOffset);
 	}
 
 	/**
@@ -387,8 +390,8 @@ public class Framework {
 	 *
 	 * @return The delta between updates.
 	 */
-	public static float getDelta() {
-		return Framework.updater.getDelta(); // Math.min(1.0f / 60.0f, Framework.updater.getDelta());
+	public float getDelta() {
+		return updater.getDelta();
 	}
 
 	/**
@@ -396,8 +399,8 @@ public class Framework {
 	 *
 	 * @return The delta between renders.
 	 */
-	public static float getDeltaRender() {
-		return Framework.updater.getDeltaRender();
+	public float getDeltaRender() {
+		return updater.getDeltaRender();
 	}
 
 	/**
@@ -405,8 +408,8 @@ public class Framework {
 	 *
 	 * @return The current framework time in seconds.
 	 */
-	public static float getTimeSec() {
-		return Framework.updater.getTimeSec();
+	public float getTimeSec() {
+		return updater.getTimeSec();
 	}
 
 	/**
@@ -414,8 +417,8 @@ public class Framework {
 	 *
 	 * @return The current framework time in milliseconds.
 	 */
-	public static float getTimeMs() {
-		return Framework.updater.getTimeMs();
+	public float getTimeMs() {
+		return updater.getTimeMs();
 	}
 
 	/**
@@ -423,8 +426,8 @@ public class Framework {
 	 *
 	 * @return Is the framework is currently initialized?
 	 */
-	public static boolean isInitialized() {
-		return Framework.initialized;
+	public boolean isInitialized() {
+		return initialized;
 	}
 
 	/**
@@ -432,8 +435,8 @@ public class Framework {
 	 *
 	 * @param initialized If the framework is initialized.
 	 */
-	public static void setInitialized(boolean initialized) {
-		Framework.initialized = initialized;
+	public void setInitialized(boolean initialized) {
+		this.initialized = initialized;
 	}
 
 	/**
@@ -441,8 +444,8 @@ public class Framework {
 	 *
 	 * @return Is the framework still running?
 	 */
-	public static boolean isRunning() {
-		return Framework.running;
+	public boolean isRunning() {
+		return running;
 	}
 
 	/**
@@ -450,12 +453,12 @@ public class Framework {
 	 *
 	 * @param error If a error screen will be created.
 	 */
-	public static void requestClose(boolean error) {
-		Framework.running = false;
+	public void requestClose(boolean error) {
+		this.running = false;
 
 		// A statement in case it was already true.
 		if (error) {
-			Framework.error = true;
+			this.error = true;
 		}
 	}
 
@@ -464,8 +467,8 @@ public class Framework {
 	 *
 	 * @return The current FPS limit.
 	 */
-	public static int getFpsLimit() {
-		return Framework.fpsLimit;
+	public int getFpsLimit() {
+		return this.fpsLimit;
 	}
 
 	/**
@@ -473,8 +476,12 @@ public class Framework {
 	 *
 	 * @param fpsLimit The FPS limit.
 	 */
-	public static void setFpsLimit(int fpsLimit) {
-		Framework.fpsLimit = fpsLimit;
-		Framework.updater.setFpsLimit(fpsLimit);
+	public void setFpsLimit(int fpsLimit) {
+		this.fpsLimit = fpsLimit;
+		this.updater.setFpsLimit(fpsLimit);
+	}
+
+	public static Framework get() {
+		return INSTANCE;
 	}
 }

@@ -8,7 +8,6 @@ import flounder.processing.*;
  */
 public class ProcessorResource extends Processor {
 	private Queue<RequestResource> requestQueue;
-	private int history;
 
 	private boolean running;
 	private Thread thread;
@@ -23,7 +22,6 @@ public class ProcessorResource extends Processor {
 	@Override
 	public void init() {
 		this.requestQueue = new Queue<>();
-		this.history = 0;
 
 		this.running = true;
 
@@ -48,8 +46,6 @@ public class ProcessorResource extends Processor {
 		if (isPaused) {
 			indicateNewRequests();
 		}
-
-		history++;
 	}
 
 	@Override
@@ -81,7 +77,6 @@ public class ProcessorResource extends Processor {
 		running = false;
 		indicateNewRequests();
 		requestQueue.clear();
-		history = 0;
 	}
 
 	@Override

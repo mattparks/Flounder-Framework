@@ -4,8 +4,6 @@ import flounder.maths.vectors.*;
 
 import java.nio.*;
 
-// TODO: Javadocs!
-
 /**
  * A helper for working with Java types.
  */

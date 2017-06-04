@@ -31,6 +31,11 @@ public abstract class EventChange<T> implements IEvent {
 		onEvent(current);
 	}
 
+	/**
+	 * A implementation of IEvents onEvent but passes the new value.
+	 *
+	 * @param newValue The new value.
+	 */
 	public abstract void onEvent(T newValue);
 
 	/**

@@ -1,4 +1,4 @@
-package flounder.parsing;
+package flounder.parsing.config;
 
 /**
  * Config data that has been loaded from data or a config.

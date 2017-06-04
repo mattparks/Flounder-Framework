@@ -122,7 +122,7 @@ public class Module<T extends Module> {
 	 */
 	protected void registerExtension(Extension extension) {
 		if (!extensions.contains(extension)) {
-			Framework.registerModules(Framework.loadModules(extension.getDependencies()));
+			Framework.get().registerModules(Framework.get().loadModules(extension.getDependencies()));
 			extensions.add(extension);
 			extensionChange = true;
 		}
@@ -149,12 +149,12 @@ public class Module<T extends Module> {
 	 *
 	 * @return The found extension to be active and matched the specs provided.
 	 */
-	public <Y> Extension getExtension(Extension last, Class<Y> type, boolean onlyRunOnChange) {
+	public <Y> Extension getExtensionMatch(Extension last, Class<Y> type, boolean onlyRunOnChange) {
 		if ((onlyRunOnChange && !extensionChange) || extensions.isEmpty()) {
 			return null;
 		}
 
-		// TODO: Switch state for extensionChange.
+		// TODO: Use onlyRunOnChange.
 
 		for (Extension extension : extensions) {
 			if (extension.isActive() && type.isInstance(extension) && !extension.equals(last)) {
@@ -164,6 +164,8 @@ public class Module<T extends Module> {
 
 		return null;
 	}
+
+	// TODO: Create getExtensionMatches
 
 	/**
 	 * Gets if the extensions list has changed.
@@ -179,8 +181,8 @@ public class Module<T extends Module> {
 	}
 
 	public Module getInstance() {
-		Module override = Framework.getOverride(this.getClass());
-		Module actual = Framework.getModule(this.getClass());
+		Module override = Framework.get().getOverride(this.getClass());
+		Module actual = Framework.get().getModule(this.getClass());
 
 		if (actual == null) {
 			actual = this;

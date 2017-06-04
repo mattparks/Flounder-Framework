@@ -17,7 +17,10 @@ public class TestProject extends Framework {
 	}
 
 	public TestProject() {
-		super("test", new UpdaterDefault(null), -1, new Extension[]{new TestInterface()}, new Module[]{});
+		super(
+				"test", new UpdaterDefault(null), -1,
+				new Extension[]{new TestInterface()}
+		);
 	}
 
 	/**
@@ -51,7 +54,7 @@ public class TestProject extends Framework {
 
 				if (i == INTERVAL_CLOSE) {
 					FlounderLogger.get().log("TestInterface requesting close!");
-					Framework.requestClose(false);
+					Framework.get().requestClose(false);
 				} else {
 					FlounderLogger.get().log("TestInterface closing after: " + (INTERVAL_CLOSE - i) + " seconds!");
 				}

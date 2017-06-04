@@ -35,7 +35,7 @@ public class FlounderLogger extends Module {
 		this.linesPrinted = 0;
 
 		// Logs all registered modules.
-		Framework.logModules();
+		Framework.get().logModules();
 	}
 
 	@Handler.Function(Handler.FLAG_UPDATE_ALWAYS)
@@ -188,7 +188,7 @@ public class FlounderLogger extends Module {
 	 * @throws IOException Failed to create / find folder.
 	 */
 	private String getLogsSave() throws IOException {
-		File saveDirectory = new File(Framework.getRoamingFolder().getPath(), "logs");
+		File saveDirectory = new File(Framework.get().getRoamingFolder().getPath(), "logs");
 
 		if (!saveDirectory.exists()) {
 			System.out.println("Creating directory: " + saveDirectory);
@@ -232,7 +232,7 @@ public class FlounderLogger extends Module {
 
 	@Module.Instance
 	public static FlounderLogger get() {
-		return (FlounderLogger) Framework.getInstance(FlounderLogger.class);
+		return (FlounderLogger) Framework.get().getInstance(FlounderLogger.class);
 	}
 
 	@Module.TabName

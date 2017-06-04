@@ -9,7 +9,6 @@ public class ProcessorOpenGL extends Processor {
 	private static final float MAX_TIME_MILLIS = 8.0f;
 
 	private Queue<RequestOpenGL> requestQueue;
-	private int history;
 
 	/**
 	 * Creates a new OpenGL processor.
@@ -21,7 +20,6 @@ public class ProcessorOpenGL extends Processor {
 	@Override
 	public void init() {
 		this.requestQueue = new Queue<>();
-		this.history = 0;
 	}
 
 	@Override
@@ -49,7 +47,6 @@ public class ProcessorOpenGL extends Processor {
 		}
 
 		requestQueue.addRequest((RequestOpenGL) request);
-		history++;
 	}
 
 	@Override
@@ -70,7 +67,6 @@ public class ProcessorOpenGL extends Processor {
 	public void dispose() {
 		completeAllRequests();
 		requestQueue.clear();
-		history = 0;
 	}
 
 	@Override

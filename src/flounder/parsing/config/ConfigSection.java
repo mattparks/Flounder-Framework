@@ -1,4 +1,4 @@
-package flounder.parsing;
+package flounder.parsing.config;
 
 /**
  * A config section that has data written into it.

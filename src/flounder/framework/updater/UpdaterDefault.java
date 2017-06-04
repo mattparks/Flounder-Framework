@@ -19,58 +19,43 @@ public class UpdaterDefault implements IUpdater {
 	private Delta deltaRender;
 	private Timer timerUpdate;
 	private Timer timerRender;
-	private Timer timerProfile;
 
 	public UpdaterDefault(TimingReference timing) {
 		// Sets the timing for the updater to run from.
 		this.timing = timing;
-
-		// Sets basic updater info.
 		this.startTime = System.nanoTime() * 1e-9;
 
-		if (timing != null) {
-			this.startTime = timing.getTime();
-		}
-
-		// Creates variables to be used for timing updates and renders.
-		this.timeOffset = 0.0f;
-		this.deltaUpdate = new Delta();
-		this.deltaRender = new Delta();
-		this.timerUpdate = new Timer(1.0 / 60.0);
-		this.timerRender = new Timer(1.0 / 60.0);
-		this.timerProfile = new Timer(1.0 / 2.0);
 	}
 
 	@Override
 	public void run() {
 		initialize();
 
-		while (Framework.isRunning()) {
-			if (Framework.isInitialized()) {
+		while (Framework.get().isRunning()) {
+			if (Framework.get().isInitialized()) {
 				update();
-				profile();
 			}
 		}
 	}
 
 	private void initialize() {
-		if (Framework.isInitialized()) {
+		if (Framework.get().isInitialized()) {
 			return;
 		}
 
 		// Initializes all modules.
-		Framework.runHandlers(Handler.FLAG_INIT);
+		Framework.get().runHandlers(Handler.FLAG_INIT);
 
 		// Logs initialize times.
 		FlounderLogger.get().init("Framework Initialize & Load Time: " + FlounderLogger.ANSI_RED + (getTimeSec() - startTime) + FlounderLogger.ANSI_RESET + " seconds!");
 
 		// Sets the framework as initialized.
-		Framework.setInitialized(true);
+		Framework.get().setInitialized(true);
 	}
 
 	private void update() {
 		// Updates the module when needed always.
-		Framework.runHandlers(Handler.FLAG_UPDATE_ALWAYS);
+		Framework.get().runHandlers(Handler.FLAG_UPDATE_ALWAYS);
 
 		// Updates when needed.
 		if (timerUpdate.isPassedTime()) {
@@ -81,18 +66,18 @@ public class UpdaterDefault implements IUpdater {
 			deltaUpdate.update();
 
 			// Updates the modules when needed before the entrance.
-			Framework.runHandlers(Handler.FLAG_UPDATE_PRE);
+			Framework.get().runHandlers(Handler.FLAG_UPDATE_PRE);
 
 			// Updates the modules when needed after the entrance.
-			Framework.runHandlers(Handler.FLAG_UPDATE_POST);
+			Framework.get().runHandlers(Handler.FLAG_UPDATE_POST);
 
-			for (Module module : Framework.getModules()) {
+			for (Module module : Framework.get().getModules()) {
 				module.setExtensionChanged(false);
 			}
 		}
 
 		// Renders when needed.
-		if ((timerRender.isPassedTime() || Framework.getFpsLimit() == -1 || Framework.getFpsLimit() > 1000.0f) && Maths.almostEqual(timerUpdate.getInterval(), deltaUpdate.getDelta(), 10.0)) {
+		if ((timerRender.isPassedTime() || Framework.get().getFpsLimit() == -1 || Framework.get().getFpsLimit() > 1000.0f) && Maths.almostEqual(timerUpdate.getInterval(), deltaUpdate.getDelta(), 10.0)) {
 			// Resets the timer.
 			timerRender.resetStartTime();
 
@@ -100,41 +85,40 @@ public class UpdaterDefault implements IUpdater {
 			deltaRender.update();
 
 			// Updates the module when needed after the rendering.
-			Framework.runHandlers(Handler.FLAG_RENDER);
-		}
-	}
-
-	private void profile() {
-		if (!Framework.isInitialized()) {
-			return;
-		}
-
-		// Profile some values to the profiler.
-		if (timerProfile.isPassedTime()) {
-			//	FlounderLogger.get().log(Maths.roundToPlace(1.0f / getDelta(), 2) + "ups, " + Maths.roundToPlace(1.0f / getDeltaRender(), 2) + "fps");
-			timerProfile.resetStartTime();
+			Framework.get().runHandlers(Handler.FLAG_RENDER);
 		}
 	}
 
 	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
-		if (!Framework.isInitialized()) {
+		if (!Framework.get().isInitialized()) {
 			return;
 		}
 
 		FlounderLogger.get().warning("Disposing framework!"); // A new Framework object must be recreated if resetting the framework!
 
-		Collections.reverse(Framework.getModules());
-		Framework.runHandlers(Handler.FLAG_DISPOSE);
+		Collections.reverse(Framework.get().getModules());
+		Framework.get().runHandlers(Handler.FLAG_DISPOSE);
 
-		Framework.getModules().clear();
-		Framework.setInitialized(false);
+		Framework.get().getModules().clear();
+		Framework.get().setInitialized(false);
 	}
 
 	@Override
 	public void setTiming(TimingReference timing) {
 		this.timing = timing;
 		this.startTime = timing.getTime();
+
+		// Sets basic updater info.
+		this.startTime = timing.getTime();
+
+		// Creates variables to be used for timing updates and renders.
+		this.timeOffset = 0.0f;
+		this.deltaUpdate = new Delta();
+		this.deltaRender = new Delta();
+		this.timerUpdate = new Timer(1.0 / 60.0);
+		this.timerRender = new Timer(1.0 / 60.0);
+		setFpsLimit(Framework.get().getFpsLimit());
 	}
 
 	@Override

@@ -27,7 +27,7 @@ public class Delta {
 	 * Updates delta and times.
 	 */
 	public void update() {
-		currentFrameTime = Framework.getTimeMs() / 1000.0;
+		currentFrameTime = Framework.get().getTimeMs() / 1000.0;
 		delta = currentFrameTime - lastFrameTime;
 		lastFrameTime = currentFrameTime;
 		time += delta;

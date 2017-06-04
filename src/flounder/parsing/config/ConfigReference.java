@@ -1,4 +1,4 @@
-package flounder.parsing;
+package flounder.parsing.config;
 
 /**
  * A reference to the value that was loaded from the config.

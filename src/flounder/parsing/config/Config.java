@@ -1,4 +1,4 @@
-package flounder.parsing;
+package flounder.parsing.config;
 
 import flounder.helpers.*;
 import flounder.logger.*;
