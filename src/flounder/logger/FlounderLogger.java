@@ -234,9 +234,4 @@ public class FlounderLogger extends Module {
 	public static FlounderLogger get() {
 		return (FlounderLogger) Framework.get().getInstance(FlounderLogger.class);
 	}
-
-	@Module.TabName
-	public static String getTab() {
-		return "Logger";
-	}
 }

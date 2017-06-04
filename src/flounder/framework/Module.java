@@ -10,7 +10,6 @@ import java.util.*;
  * @param <T> The type of module.
  */
 public class Module<T extends Module> {
-	private String profileTab;
 	private Class<T>[] dependencies;
 	private List<Handler> handlers;
 	private List<Extension> extensions;
@@ -31,29 +30,11 @@ public class Module<T extends Module> {
 
 		for (Method method : this.getClass().getDeclaredMethods()) {
 			Handler.Function function = method.getAnnotation(Handler.Function.class);
-			Module.TabName tabName = method.getAnnotation(Module.TabName.class);
 
 			if (function != null) {
 				this.handlers.add(new Handler(function.value(), method, this));
 			}
-
-			if (tabName != null) {
-				try {
-					this.profileTab = (String) method.invoke(this);
-				} catch (IllegalAccessException | InvocationTargetException e) {
-					// Ignore, not important!
-				}
-			}
 		}
-	}
-
-	/**
-	 * Gets the name of the profile tab for this module.
-	 *
-	 * @return The modules profile tab name.
-	 */
-	public String getProfileTab() {
-		return profileTab;
 	}
 
 	/**
@@ -213,13 +194,5 @@ public class Module<T extends Module> {
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.METHOD)
 	public @interface Instance {
-	}
-
-	/**
-	 * Represents a method that gets the profile tab name to a module.
-	 */
-	@Retention(RetentionPolicy.RUNTIME)
-	@Target(ElementType.METHOD)
-	public @interface TabName {
 	}
 }

@@ -58,9 +58,4 @@ public class FlounderEvents extends Module {
 	public static FlounderEvents get() {
 		return (FlounderEvents) Framework.get().getInstance(FlounderEvents.class);
 	}
-
-	@Module.TabName
-	public static String getTab() {
-		return "Events";
-	}
 }

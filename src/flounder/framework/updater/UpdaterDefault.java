@@ -148,10 +148,12 @@ public class UpdaterDefault implements IUpdater {
 
 	@Override
 	public float getTimeSec() {
-		double time = System.nanoTime() * 1e-9;
+		double time;
 
 		if (timing != null) {
 			time = timing.getTime();
+		} else {
+			time = System.nanoTime() * 1e-9;
 		}
 
 		return (float) (time - startTime) + timeOffset;

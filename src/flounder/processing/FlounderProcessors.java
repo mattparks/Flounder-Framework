@@ -111,9 +111,4 @@ public class FlounderProcessors extends Module {
 	public static FlounderProcessors get() {
 		return (FlounderProcessors) Framework.get().getInstance(FlounderProcessors.class);
 	}
-
-	@Module.TabName
-	public static String getTab() {
-		return "Processors";
-	}
 }
