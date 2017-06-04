@@ -39,7 +39,7 @@ public class FlounderProcessors extends Module {
 	@Handler.Function(Handler.FLAG_UPDATE_PRE)
 	public void update() {
 		// Gets new processors, if available.
-		List<Extension> newProcessors = getExtensions();
+		List<Extension> newProcessors = getExtensionMatches(processors, Processor.class, true);
 
 		if (newProcessors != null) {
 			List<Processor> newCasted = new ArrayList<>();

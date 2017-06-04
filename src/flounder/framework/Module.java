@@ -128,14 +128,12 @@ public class Module<T extends Module> {
 	 * @param onlyRunOnChange When this and {@link #extensionChange} is true, this will update a check, otherwise a object will not be checked for (returning null).
 	 * @param <Y> The type of extension class to be found.
 	 *
-	 * @return The found extension to be active and matched the specs provided.
+	 * @return The found extension to be active and matched the types provided.
 	 */
 	public <Y> Extension getExtensionMatch(Extension last, Class<Y> type, boolean onlyRunOnChange) {
 		if ((onlyRunOnChange && !extensionChange) || extensions.isEmpty()) {
 			return null;
 		}
-
-		// TODO: Use onlyRunOnChange.
 
 		for (Extension extension : extensions) {
 			if (extension.isActive() && type.isInstance(extension) && !extension.equals(last)) {
@@ -146,7 +144,35 @@ public class Module<T extends Module> {
 		return null;
 	}
 
-	// TODO: Create getExtensionMatches
+	/**
+	 * Finds a list of new extensions for this module that implements an interface/class.
+	 *
+	 * @param last The last list of object to compare to.
+	 * @param type The class type of object to find a extension that matches for.
+	 * @param onlyRunOnChange When this and {@link #extensionChange} is true, this will update a check, otherwise a object will not be checked for (returning null).
+	 * @param <Y> The type of extension classes to be found.
+	 *
+	 * @return The found extensions to be active and matched the types provided.
+	 */
+	public <Y> List<Extension> getExtensionMatches(List<Extension> last, Class<Y> type, boolean onlyRunOnChange) {
+		if ((onlyRunOnChange && !extensionChange) || extensions.isEmpty()) {
+			return null;
+		}
+
+		List<Extension> results = new ArrayList<>();
+
+		for (Extension extension : extensions) {
+			if (extension.isActive() && type.isInstance(extension) && !extension.equals(last)) {
+				results.add(extension);
+			}
+		}
+
+		if (results.equals(last)) {
+			return null;
+		}
+
+		return results;
+	}
 
 	/**
 	 * Gets if the extensions list has changed.
@@ -157,9 +183,11 @@ public class Module<T extends Module> {
 		return extensionChange;
 	}
 
-	public void setExtensionChanged(boolean extensionChanged) {
-		//	this.extensionChange = extensionChanged;
-	}
+	//public void setExtensionChanged(boolean extensionChanged) {
+		// TODO: Update this so onlyRunOnChange works!
+
+	//	this.extensionChange = extensionChanged;
+	//}
 
 	public Module getInstance() {
 		Module override = Framework.get().getOverride(this.getClass());

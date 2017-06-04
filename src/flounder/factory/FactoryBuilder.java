@@ -39,7 +39,10 @@ public abstract class FactoryBuilder {
 		FactoryObject object = ref == null ? null : ref.get();
 
 		if (object == null) {
-			FlounderLogger.get().log(name + " is being loaded into the " + factory.getFactoryName() + " factory right now!");
+			if (FlounderLogger.DETAILED) {
+				FlounderLogger.get().log(name + " is being loaded into the " + factory.getFactoryName() + " factory right now!");
+			}
+
 			factory.getLoaded().remove(name);
 			object = factory.newObject();
 			FlounderProcessors.get().sendRequest(new FactoryRequestLoad(name, factory, object, this));

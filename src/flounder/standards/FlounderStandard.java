@@ -24,7 +24,7 @@ public class FlounderStandard extends Module {
 
 	@Handler.Function(Handler.FLAG_UPDATE_PRE)
 	public void update() {
-		List<Extension> newStandards = getExtensions();
+		List<Extension> newStandards = getExtensionMatches(standards, Standard.class, true);
 
 		if (newStandards != null) {
 			List<Standard> newCasted = new ArrayList<>();

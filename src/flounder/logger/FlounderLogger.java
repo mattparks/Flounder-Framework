@@ -9,6 +9,8 @@ import java.util.*;
  * A module used for logging outputs, errors, and exceptions to files and the console.
  */
 public class FlounderLogger extends Module {
+	public static final boolean DETAILED = false;
+
 	public static final String ANSI_RESET = "\u001B[0m";
 	public static final String ANSI_BLACK = "\u001B[30m";
 	public static final String ANSI_RED = "\u001B[31m";
