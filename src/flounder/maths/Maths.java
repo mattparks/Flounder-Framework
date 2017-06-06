@@ -184,6 +184,25 @@ public class Maths {
 	}
 
 	/**
+	 * Gets the maximum absolute value.
+	 *
+	 * @param fs The values to sort though.
+	 *
+	 * @return The maximum absolute value.
+	 */
+	public static float maxAbsValue(float... fs) {
+		float max = Float.NEGATIVE_INFINITY;
+
+		for (float v : fs) {
+			if (Math.abs(v) > max) {
+				max = v;
+			}
+		}
+
+		return max;
+	}
+
+	/**
 	 * Gets the minimum value.
 	 *
 	 * @param fs The values to sort though.
@@ -195,6 +214,25 @@ public class Maths {
 
 		for (float v : fs) {
 			if (v < min) {
+				min = v;
+			}
+		}
+
+		return min;
+	}
+
+	/**
+	 * Gets the minimum absolute value.
+	 *
+	 * @param fs The values to sort though.
+	 *
+	 * @return The minimum absolute value.
+	 */
+	public static float minAbsValue(float... fs) {
+		float min = Float.POSITIVE_INFINITY;
+
+		for (float v : fs) {
+			if (Math.abs(v) < min) {
 				min = v;
 			}
 		}
