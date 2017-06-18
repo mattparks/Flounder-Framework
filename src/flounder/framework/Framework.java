@@ -44,7 +44,7 @@ public class Framework {
 		this.unlocalizedName = unlocalizedName;
 
 		// Increment revision every fix for the minor version release. Minor version represents the build month. Major incremented every two years OR after major core framework rewrites.
-		this.version = new Version("04.06.12");
+		this.version = new Version("17.06.12");
 
 		// Sets the frameworks updater.
 		this.updater = updater;
@@ -191,11 +191,9 @@ public class Framework {
 	 * @return The module.
 	 */
 	public Module getModule(Class object) {
-		if (containsModule(object)) {
-			for (Module module : modules) {
-				if (object.isInstance(module)) {
-					return module;
-				}
+		for (Module module : modules) {
+			if (object.isInstance(module)) {
+				return module;
 			}
 		}
 
