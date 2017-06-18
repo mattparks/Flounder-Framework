@@ -17,7 +17,7 @@ public class LoggerFrame extends JFrame {
 			ex.printStackTrace();
 		}
 
-		super.setDefaultCloseOperation(EXIT_ON_CLOSE);
+		super.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		super.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent windowEvent) {
@@ -45,7 +45,7 @@ public class LoggerFrame extends JFrame {
 
 	public void run() {
 		while (running) {
-
+			// Waiting for window close.
 		}
 	}
 }

@@ -31,13 +31,14 @@ public class MyFile {
 	 * @param paths Paths for this file to represent.
 	 */
 	public MyFile(String... paths) {
-		String path = "";
+		StringBuilder path = new StringBuilder();
 
 		for (String part : paths) {
-			path += FILE_SEPARATOR + part;
+			path.append(FILE_SEPARATOR);
+			path.append(part);
 		}
 
-		this.path = path;
+		this.path = path.toString();
 		String[] dirs = this.path.split(FILE_SEPARATOR);
 		name = dirs[dirs.length - 1];
 	}
@@ -60,13 +61,14 @@ public class MyFile {
 	 * @param subFiles Names of the represented sub file.
 	 */
 	public MyFile(MyFile file, String... subFiles) {
-		String path = file.path;
+		StringBuilder path = new StringBuilder(file.path);
 
 		for (String part : subFiles) {
-			path += FILE_SEPARATOR + part;
+			path.append(FILE_SEPARATOR);
+			path.append(part);
 		}
 
-		this.path = path;
+		this.path = path.toString();
 		String[] dirs = this.path.split(FILE_SEPARATOR);
 		name = dirs[dirs.length - 1];
 	}
@@ -108,9 +110,9 @@ public class MyFile {
 	}
 
 	/**
-	 * Gets the name / subfile of this file.
+	 * Gets the name / sub-file of this file.
 	 *
-	 * @return The name / subfile of this file.
+	 * @return The name / sub-file of this file.
 	 */
 	public String getName() {
 		return name;

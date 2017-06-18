@@ -99,7 +99,7 @@ public class FlounderProcessors extends Module {
 
 	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
-		// Disposes the processorss with the module.
+		// Disposes the processors with the module.
 		if (processors != null && !processors.isEmpty()) {
 			processors.forEach(processor -> {
 				processor.dispose();

@@ -76,7 +76,7 @@ public class ArraySorting {
 	}
 
 	/**
-	 * Divides the unsorted list into sublists, each containing 1 element, then repeatedlys merge sublists to produce new sorted sublists until there is only 1 sublist remaining.
+	 * Divides the unsorted list into sublists, each containing 1 element, then repeatedly merges sublists to produce new sorted sublists until there is only 1 sublist remaining.
 	 *
 	 * @param list The list to be sorted.
 	 * @param <T> The list type to be sorted.

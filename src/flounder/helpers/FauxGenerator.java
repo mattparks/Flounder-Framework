@@ -10,7 +10,7 @@ public class FauxGenerator {
 	public static final char[] VOWELS = new char[]{'a', 'e', 'i', 'o', 'u'};
 
 	/**
-	 * Creates a new sentance generated using the Faux method.
+	 * Creates a new sentence generated using the Faux method.
 	 *
 	 * @param maxWordCount The most words to have in the sentence.
 	 * @param minWordLength The shortest generated word.
@@ -18,27 +18,28 @@ public class FauxGenerator {
 	 *
 	 * @return The generated sentence.
 	 */
-	public static String getFauxSentance(int maxWordCount, int minWordLength, int maxWordLength) {
-		String fauxLine = "";
+	public static String getFauxSentence(int maxWordCount, int minWordLength, int maxWordLength) {
+		StringBuilder fauxLine = new StringBuilder();
 
 		for (int w = 0; w < Maths.RANDOM.nextInt((maxWordCount - 1) + 1) + 1; w++) {
-			String word = "";
+			StringBuilder word = new StringBuilder();
 			boolean consonant = true;
 
 			while (word.length() < Maths.RANDOM.nextInt((maxWordLength - minWordLength) + 1) + minWordLength) {
 				if (consonant) {
-					word += CONSONANTS[Maths.RANDOM.nextInt(CONSONANTS.length)];
+					word.append(CONSONANTS[Maths.RANDOM.nextInt(CONSONANTS.length)]);
 					consonant = false;
 				} else {
-					word += VOWELS[Maths.RANDOM.nextInt(VOWELS.length)];
+					word.append(VOWELS[Maths.RANDOM.nextInt(VOWELS.length)]);
 					consonant = true;
 				}
 			}
 
-			fauxLine += capitalize(word) + " ";
+			fauxLine.append(capitalize(word.toString()));
+			fauxLine.append(" ");
 		}
 
-		return fauxLine.trim();
+		return fauxLine.toString().trim();
 	}
 
 	/**

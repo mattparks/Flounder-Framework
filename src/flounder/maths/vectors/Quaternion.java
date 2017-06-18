@@ -142,7 +142,7 @@ public class Quaternion {
 	}
 
 	/**
-	 * Multiplies quaternion left by the inverse of quaternion right and places the value into this quaternion. The value of both argument quaternions is preservered (this = left * right^-1).
+	 * Multiplies quaternion left by the inverse of quaternion right and places the value into this quaternion. The value of both argument quaternions is persevered (this = left * right^-1).
 	 *
 	 * @param left The left source quaternion.
 	 * @param right The right source quaternion.
@@ -427,8 +427,7 @@ public class Quaternion {
 	 * top-left 3x3 part, but a 4x4 matrix is returned here for convenience
 	 * seeing as it will be multiplied with other 4x4 matrices).
 	 *
-	 * @return The rotation matrix which reresents the exact same rotation as
-	 * this quaternion.
+	 * @return The rotation matrix which represents the exact same rotation as this quaternion.
 	 */
 	public Matrix4f toRotationMatrix() {
 		Matrix4f matrix = new Matrix4f();

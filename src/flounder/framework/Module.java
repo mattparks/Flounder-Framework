@@ -21,6 +21,7 @@ public class Module<T extends Module> {
 	 *
 	 * @param dependencies The list of module classes this module depends on.
 	 */
+	@SafeVarargs
 	public Module(Class<T>... dependencies) {
 		this.dependencies = dependencies;
 		this.handlers = new ArrayList<>();

@@ -143,13 +143,7 @@ public class XmlNode {
 			childNodes = new HashMap<>();
 		}
 
-		List<XmlNode> list = childNodes.get(child.name);
-
-		if (list == null) {
-			list = new ArrayList<>();
-			childNodes.put(child.name, list);
-		}
-
+		List<XmlNode> list = childNodes.computeIfAbsent(child.name, k -> new ArrayList<>());
 		list.add(child);
 	}
 

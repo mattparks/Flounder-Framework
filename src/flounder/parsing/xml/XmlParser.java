@@ -24,7 +24,7 @@ public class XmlParser {
 	 * @return The root node of the XML structure.
 	 */
 	public static XmlNode loadXmlFile(MyFile file) {
-		BufferedReader reader = null;
+		BufferedReader reader;
 
 		try {
 			reader = file.getReader();

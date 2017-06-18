@@ -51,13 +51,13 @@ public class FileWriterHelper {
 	}
 
 	public String getIndentations() {
-		String data = "";
+		StringBuilder data = new StringBuilder();
 
 		for (int i = 0; i < fileNestation; i++) {
-			data += "	";
+			data.append("	");
 		}
 
-		return data;
+		return data.toString();
 	}
 
 	public void writeSegmentData(String data, boolean breakAfter) throws IOException {

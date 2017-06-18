@@ -23,9 +23,9 @@ public class ArrayUtils {
 	}
 
 	/**
-	 * Gets the total amount of secondary values in a hashmap.
+	 * Gets the total amount of secondary values in a map.
 	 *
-	 * @param hashMap The hashmap.
+	 * @param hashMap The map.
 	 * @param <T> Primary value type.
 	 * @param <Y> Secondary List value type.
 	 *

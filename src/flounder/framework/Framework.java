@@ -44,7 +44,7 @@ public class Framework {
 		this.unlocalizedName = unlocalizedName;
 
 		// Increment revision every fix for the minor version release. Minor version represents the build month. Major incremented every two years OR after major core framework rewrites.
-		this.version = new Version("17.06.12");
+		this.version = new Version("18.06.12");
 
 		// Sets the frameworks updater.
 		this.updater = updater;
@@ -309,6 +309,8 @@ public class Framework {
 	 * Registers a module, and initializes if the engine has already started.
 	 *
 	 * @param module The module to init.
+	 *
+	 * @return The initialized module.
 	 */
 	protected Module registerModule(Module module) {
 		if (module == null || containsModule(module.getClass())) {
@@ -353,15 +355,16 @@ public class Framework {
 	public void logModules() {
 		// Logs all registered modules.
 		for (Module module : modules) {
-			String requires = "";
+			StringBuilder requires = new StringBuilder();
 
 			for (int i = 0; i < module.getDependencies().length; i++) {
-				requires += module.getDependencies()[i].getSimpleName() + ((i == module.getDependencies().length - 1) ? "" : ", ");
+				requires.append(module.getDependencies()[i].getSimpleName());
+				requires.append((i == module.getDependencies().length - 1) ? "" : ", ");
 			}
 
 			boolean last = module.equals(modules.get(modules.size() - 1));
 
-			FlounderLogger.get().init("Registering " + module.getClass().getSimpleName() + ": " + FlounderLogger.ANSI_PURPLE + "Requires(" + requires + ")" + FlounderLogger.ANSI_RESET + (last ? "\n" : ""));
+			FlounderLogger.get().init("Registering " + module.getClass().getSimpleName() + ": " + FlounderLogger.ANSI_PURPLE + "Requires(" + requires.toString() + ")" + FlounderLogger.ANSI_RESET + (last ? "\n" : ""));
 		}
 	}
 

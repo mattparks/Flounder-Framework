@@ -45,9 +45,9 @@ public class FlounderLogger extends Module {
 	}
 
 	/**
-	 * Logs registration info strings sent into a .log file, and if {@code LOG_TO_CONSOLE} is enabled it will also be logged to the IDE's console.
+	 * Logs registration info strings sent into a .log file, and if {@code LOG_TO_CONSOLE} is enabled it will also be logged to the IDEs console.
 	 *
-	 * @param value Text or numbers being added to the log file and possibly to the IDES console.
+	 * @param value Text or numbers being added to the log file and possibly to the IDEs console.
 	 * @param <T> The object type to be logged.
 	 */
 	public <T> void init(T value) {
@@ -67,9 +67,9 @@ public class FlounderLogger extends Module {
 	}
 
 	/**
-	 * Logs strings sent into a .log file, and if {@code LOG_TO_CONSOLE} is enabled it will also be logged to the IDE's console.
+	 * Logs strings sent into a .log file, and if {@code LOG_TO_CONSOLE} is enabled it will also be logged to the IDEs console.
 	 *
-	 * @param value Text or numbers being added to the log file and possibly to the IDES console.
+	 * @param value Text or numbers being added to the log file and possibly to the IDEs console.
 	 * @param <T> The object type to be logged.
 	 */
 	public <T> void log(T value) {

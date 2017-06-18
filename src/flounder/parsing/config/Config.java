@@ -82,7 +82,7 @@ public class Config {
 	 * @param section The section the key is found under.
 	 * @param key The name of the key to find the data under.
 	 * @param defaultData The default data that is used if this config is not found.
-	 * @param reference The reference to a code variable used when resaving the data.
+	 * @param reference The reference to a code variable used when re-saving the data.
 	 * @param <T> The type of default data.
 	 *
 	 * @return The data loaded from the config.

@@ -45,13 +45,13 @@ public class CompressionUtils {
 
 		GZIPInputStream gis = new GZIPInputStream(new ByteArrayInputStream(bytes));
 		BufferedReader bf = new BufferedReader(new InputStreamReader(gis, "UTF-8"));
-		String outStr = "";
+		StringBuilder result = new StringBuilder();
 		String line;
 
 		while ((line = bf.readLine()) != null) {
-			outStr += line;
+			result.append(line);
 		}
 
-		return outStr;
+		return result.toString();
 	}
 }

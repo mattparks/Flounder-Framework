@@ -77,6 +77,7 @@ public class ProcessorResource extends Processor {
 		running = false;
 		indicateNewRequests();
 		requestQueue.clear();
+		thread.interrupt();
 	}
 
 	@Override

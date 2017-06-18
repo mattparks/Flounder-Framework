@@ -4,6 +4,8 @@ import flounder.helpers.*;
 
 /**
  * A simple interface that is used to define an extension to the framework. Extensions are used by modules, Example: to use FlounderCamera you must create an extension that implements ICamera.
+ *
+ * @param <T> The type of module.
  */
 public abstract class Extension<T extends Module> {
 	private final Class<T> module;
@@ -16,6 +18,7 @@ public abstract class Extension<T extends Module> {
 	 * @param module The {@link Module} the extension extends.
 	 * @param dependencies Modules the extension depends on.
 	 */
+	@SafeVarargs
 	public Extension(Class<T> module, Class<T>... dependencies) {
 		this.module = module;
 		this.dependencies = ArrayUtils.addElement(dependencies, module);
