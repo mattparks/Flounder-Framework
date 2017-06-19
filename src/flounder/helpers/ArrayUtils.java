@@ -57,6 +57,20 @@ public class ArrayUtils {
 	}
 
 	/**
+	 * Adds a object to an existing int array in Java.
+	 *
+	 * @param array The array to add into.
+	 * @param newObject The object to add.
+	 *
+	 * @return The array with the added value.
+	 */
+	public static int[] addElement(int[] array, int newObject) {
+		array = Arrays.copyOf(array, array.length + 1);
+		array[array.length - 1] = newObject;
+		return array;
+	}
+
+	/**
 	 * Removes a object to an existing array in Java.
 	 *
 	 * @param array The array to remove from.
