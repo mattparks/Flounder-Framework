@@ -18,7 +18,7 @@ public class TestProject extends Framework {
 
 	public TestProject() {
 		super(
-				"test", new UpdaterDefault(null), -1,
+				"test", new UpdaterDefault(), -1,
 				new Extension[]{new TestInterface()}
 		);
 	}

@@ -15,11 +15,11 @@ public class Timer {
 	 * @param interval The time between events (seconds).
 	 */
 	public Timer(double interval) {
-		if (Framework.get().isInitialized()) {
+		//if (Framework.get().isInitialized()) {
 			this.startTime = Framework.get().getTimeMs();
-		} else {
-			this.startTime = 0.0f;
-		}
+		//} else {
+		//	this.startTime = 0.0f;
+		//}
 
 		this.interval = interval * 1000.0;
 	}

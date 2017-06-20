@@ -20,11 +20,12 @@ public class UpdaterDefault implements IUpdater {
 	private Timer timerUpdate;
 	private Timer timerRender;
 
-	public UpdaterDefault(TimingReference timing) {
+	/**
+	 * Creates a new updater, call {@link #setTiming(TimingReference)} after the creation of the Framework and this object.
+	 */
+	public UpdaterDefault() {
 		// Sets the timing for the updater to run from.
-		this.timing = timing;
 		this.startTime = System.nanoTime() * 1e-9;
-
 	}
 
 	@Override
