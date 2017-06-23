@@ -9,6 +9,7 @@ import java.util.*;
  */
 public class FlounderEvents extends Module {
 	private List<IEvent> events;
+	private List<IEvent> clones;
 
 	/**
 	 * Creates a new event manager.
@@ -20,13 +21,21 @@ public class FlounderEvents extends Module {
 	@Handler.Function(Handler.FLAG_INIT)
 	public void init() {
 		this.events = new ArrayList<>();
+		this.clones = new ArrayList<>();
 	}
 
 	@Handler.Function(Handler.FLAG_UPDATE_PRE)
 	public void update() {
-		events.forEach(event -> {
+		clones.clear();
+		clones.addAll(events);
+
+		clones.forEach(event -> {
 			if (event.eventTriggered()) {
 				event.onEvent();
+
+				if (event.removeAfterEvent()) {
+					events.remove(event);
+				}
 			}
 		});
 	}

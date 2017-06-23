@@ -15,4 +15,11 @@ public interface IEvent {
 	 * Run when a event has occurred.
 	 */
 	void onEvent();
+
+	/**
+	 * Gets if the event is removed after it has run once.
+	 *
+	 * @return If the even will run.
+	 */
+	boolean removeAfterEvent();
 }

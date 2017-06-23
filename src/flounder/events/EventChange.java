@@ -31,6 +31,11 @@ public abstract class EventChange<T> implements IEvent {
 		onEvent(current);
 	}
 
+	@Override
+	public boolean removeAfterEvent() {
+		return false;
+	}
+
 	/**
 	 * A implementation of IEvents onEvent but passes the new value.
 	 *
