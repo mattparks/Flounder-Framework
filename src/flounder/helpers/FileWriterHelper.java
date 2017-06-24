@@ -42,7 +42,7 @@ public class FileWriterHelper {
 	public void endSegment(boolean enterTightSpace, boolean brackets) throws IOException {
 		enterBlankLine();
 		fileNestation--;
-		fileWriter.write(getIndentations() + (brackets ? " }" : ""));
+		fileWriter.write(getIndentations() + (brackets ? "}" : ""));
 
 		if (!enterTightSpace) {
 			enterBlankLine();
