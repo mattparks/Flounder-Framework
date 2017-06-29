@@ -18,6 +18,11 @@ public class FlounderTasks extends Module {
 		super();
 	}
 
+	@Instance
+	public static FlounderTasks get() {
+		return (FlounderTasks) Framework.get().getInstance(FlounderTasks.class);
+	}
+
 	@Handler.Function(Handler.FLAG_INIT)
 	public void init() {
 		this.tasks = new ArrayList<>();
@@ -56,10 +61,5 @@ public class FlounderTasks extends Module {
 	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
 		tasks.clear();
-	}
-
-	@Instance
-	public static FlounderTasks get() {
-		return (FlounderTasks) Framework.get().getInstance(FlounderTasks.class);
 	}
 }

@@ -18,6 +18,11 @@ public class FlounderEvents extends Module {
 		super();
 	}
 
+	@Module.Instance
+	public static FlounderEvents get() {
+		return (FlounderEvents) Framework.get().getInstance(FlounderEvents.class);
+	}
+
 	@Handler.Function(Handler.FLAG_INIT)
 	public void init() {
 		this.events = new ArrayList<>();
@@ -61,10 +66,5 @@ public class FlounderEvents extends Module {
 	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
 		events.clear();
-	}
-
-	@Module.Instance
-	public static FlounderEvents get() {
-		return (FlounderEvents) Framework.get().getInstance(FlounderEvents.class);
 	}
 }

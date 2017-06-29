@@ -118,6 +118,11 @@ public class MyFile {
 		return name;
 	}
 
+	@Override
+	public String toString() {
+		return "MyFile{" + "path=" + getPath() + "}";
+	}
+
 	/**
 	 * Gets the path to the represented file(s)
 	 *
@@ -125,10 +130,5 @@ public class MyFile {
 	 */
 	public String getPath() {
 		return path;
-	}
-
-	@Override
-	public String toString() {
-		return "MyFile{" + "path=" + getPath() + "}";
 	}
 }

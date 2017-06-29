@@ -62,6 +62,35 @@ public class Config {
 		}
 	}
 
+	private File insureFile() {
+		File saveDirectory = new File(file.getPath().replaceAll(file.getName(), "").substring(1));
+		File saveFile = new File(file.getPath().substring(1));
+
+		if (!saveDirectory.exists()) {
+			System.out.println("Creating directory: " + saveDirectory);
+
+			try {
+				saveDirectory.mkdir();
+			} catch (SecurityException e) {
+				System.out.println("Filed to create " + file.getPath() + " folder.");
+				e.printStackTrace();
+			}
+		}
+
+		if (!saveFile.exists()) {
+			System.out.println("Creating file: " + saveFile);
+
+			try {
+				saveFile.createNewFile();
+			} catch (IOException e) {
+				System.out.println("Filed to create " + file.getPath() + " file.");
+				e.printStackTrace();
+			}
+		}
+
+		return saveFile;
+	}
+
 	/**
 	 * Gets data from the loaded config, defaults are used to set if not found. These data sets are also used when saving the config.
 	 *
@@ -134,35 +163,6 @@ public class Config {
 			FlounderLogger.get().error("File saver for config " + file.getName() + " did not save successfully!");
 			FlounderLogger.get().exception(e);
 		}
-	}
-
-	private File insureFile() {
-		File saveDirectory = new File(file.getPath().replaceAll(file.getName(), "").substring(1));
-		File saveFile = new File(file.getPath().substring(1));
-
-		if (!saveDirectory.exists()) {
-			System.out.println("Creating directory: " + saveDirectory);
-
-			try {
-				saveDirectory.mkdir();
-			} catch (SecurityException e) {
-				System.out.println("Filed to create " + file.getPath() + " folder.");
-				e.printStackTrace();
-			}
-		}
-
-		if (!saveFile.exists()) {
-			System.out.println("Creating file: " + saveFile);
-
-			try {
-				saveFile.createNewFile();
-			} catch (IOException e) {
-				System.out.println("Filed to create " + file.getPath() + " file.");
-				e.printStackTrace();
-			}
-		}
-
-		return saveFile;
 	}
 
 	/**

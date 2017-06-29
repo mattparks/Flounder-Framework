@@ -35,6 +35,20 @@ public class FileWriterHelper {
 		fileNestation++;
 	}
 
+	public String getIndentations() {
+		StringBuilder data = new StringBuilder();
+
+		for (int i = 0; i < fileNestation; i++) {
+			data.append("	");
+		}
+
+		return data.toString();
+	}
+
+	public void enterBlankLine() throws IOException {
+		fileWriter.write("\n");
+	}
+
 	public void endSegment(boolean enterTightSpace) throws IOException {
 		endSegment(enterTightSpace, true);
 	}
@@ -48,16 +62,6 @@ public class FileWriterHelper {
 			enterBlankLine();
 			enterBlankLine();
 		}
-	}
-
-	public String getIndentations() {
-		StringBuilder data = new StringBuilder();
-
-		for (int i = 0; i < fileNestation; i++) {
-			data.append("	");
-		}
-
-		return data.toString();
 	}
 
 	public void writeSegmentData(String data, boolean breakAfter) throws IOException {
@@ -103,9 +107,5 @@ public class FileWriterHelper {
 	public void writeSingleLine(String data) throws IOException {
 		enterBlankLine();
 		fileWriter.write(data);
-	}
-
-	public void enterBlankLine() throws IOException {
-		fileWriter.write("\n");
 	}
 }

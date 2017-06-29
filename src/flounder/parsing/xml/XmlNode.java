@@ -36,18 +36,12 @@ public class XmlNode {
 	}
 
 	/**
-	 * Gets the value of a certain attribute of the node. Returns {@code null} if the attribute doesn't exist.
+	 * Sets some data for this node.
 	 *
-	 * @param attribute The name of the attribute.
-	 *
-	 * @return The value of the attribute.
+	 * @param data The data for this node (text that is found between the start and end tags of this node).
 	 */
-	public String getAttribute(String attribute) {
-		if (attributes != null) {
-			return attributes.get(attribute);
-		} else {
-			return null;
-		}
+	protected void setData(String data) {
+		this.data = data;
 	}
 
 	/**
@@ -100,6 +94,21 @@ public class XmlNode {
 	}
 
 	/**
+	 * Gets the value of a certain attribute of the node. Returns {@code null} if the attribute doesn't exist.
+	 *
+	 * @param attribute The name of the attribute.
+	 *
+	 * @return The value of the attribute.
+	 */
+	public String getAttribute(String attribute) {
+		if (attributes != null) {
+			return attributes.get(attribute);
+		} else {
+			return null;
+		}
+	}
+
+	/**
 	 * Get the child nodes of this node that have a given name.
 	 *
 	 * @param name The name of the child nodes.
@@ -145,14 +154,5 @@ public class XmlNode {
 
 		List<XmlNode> list = childNodes.computeIfAbsent(child.name, k -> new ArrayList<>());
 		list.add(child);
-	}
-
-	/**
-	 * Sets some data for this node.
-	 *
-	 * @param data The data for this node (text that is found between the start and end tags of this node).
-	 */
-	protected void setData(String data) {
-		this.data = data;
 	}
 }
