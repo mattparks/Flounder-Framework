@@ -21,6 +21,11 @@ public abstract class EventChange<T> implements IEvent {
 	@Override
 	public boolean eventTriggered() {
 		T newValue = reference.get();
+
+		if (newValue == null) {
+			return false;
+		}
+
 		boolean triggered = !newValue.equals(current);
 		current = newValue;
 		return triggered;
