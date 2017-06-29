@@ -20,11 +20,6 @@ public class FlounderProcessors extends Module {
 		super(FlounderLogger.class);
 	}
 
-	@Module.Instance
-	public static FlounderProcessors get() {
-		return (FlounderProcessors) Framework.get().getInstance(FlounderProcessors.class);
-	}
-
 	@Handler.Function(Handler.FLAG_INIT)
 	public void init() {
 		this.processors = new ArrayList<>();
@@ -101,6 +96,7 @@ public class FlounderProcessors extends Module {
 		}
 	}
 
+
 	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
 		// Disposes the processors with the module.
@@ -110,5 +106,10 @@ public class FlounderProcessors extends Module {
 				processor.setInitialized(false);
 			});
 		}
+	}
+
+	@Module.Instance
+	public static FlounderProcessors get() {
+		return (FlounderProcessors) Framework.get().getInstance(FlounderProcessors.class);
 	}
 }

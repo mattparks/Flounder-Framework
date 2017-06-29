@@ -54,12 +54,6 @@ public class ProcessorOpenGL extends Processor {
 		return RequestOpenGL.class;
 	}
 
-	@Override
-	public void dispose() {
-		completeAllRequests();
-		requestQueue.clear();
-	}
-
 	/**
 	 * Completes all requests left in queue.
 	 */
@@ -67,6 +61,12 @@ public class ProcessorOpenGL extends Processor {
 		while (requestQueue.hasRequests()) {
 			requestQueue.acceptNextRequest().executeRequestGL();
 		}
+	}
+
+	@Override
+	public void dispose() {
+		completeAllRequests();
+		requestQueue.clear();
 	}
 
 	@Override

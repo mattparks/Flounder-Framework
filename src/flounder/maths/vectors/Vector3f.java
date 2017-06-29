@@ -13,6 +13,10 @@ public class Vector3f {
 
 	public float x, y, z;
 
+	public Vector2f toVector2f() {
+		return new Vector2f(x, y);
+	}
+
 	/**
 	 * Constructor for Vector3f.
 	 */
@@ -195,6 +199,15 @@ public class Vector3f {
 	 */
 	public float lengthSquared() {
 		return x * x + y * y + z * z;
+	}
+
+	/**
+	 * Gets if all the components to the vector are zero.
+	 *
+	 * @return If the vector is zero.
+	 */
+	public boolean isZero() {
+		return x == 0.0f && y == 0.0f && z == 0.0f;
 	}
 
 	/**
@@ -390,19 +403,6 @@ public class Vector3f {
 		}
 
 		return destination.set((float) Math.pow(point2.x - point1.x, 2), (float) Math.pow(point2.y - point1.y, 2), (float) Math.pow(point2.z - point1.z, 2));
-	}
-
-	public Vector2f toVector2f() {
-		return new Vector2f(x, y);
-	}
-
-	/**
-	 * Gets if all the components to the vector are zero.
-	 *
-	 * @return If the vector is zero.
-	 */
-	public boolean isZero() {
-		return x == 0.0f && y == 0.0f && z == 0.0f;
 	}
 
 	/**

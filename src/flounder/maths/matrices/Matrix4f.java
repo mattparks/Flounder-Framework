@@ -62,6 +62,15 @@ public class Matrix4f {
 	}
 
 	/**
+	 * Constructor for Matrix4f.
+	 *
+	 * @param source Creates this matrix out of a float array.
+	 */
+	public Matrix4f(float[] source) {
+		set(source);
+	}
+
+	/**
 	 * Loads from another Vector2f.
 	 *
 	 * @param source The source vector.
@@ -86,15 +95,6 @@ public class Matrix4f {
 		this.m32 = source.m32;
 		this.m33 = source.m33;
 		return this;
-	}
-
-	/**
-	 * Constructor for Matrix4f.
-	 *
-	 * @param source Creates this matrix out of a float array.
-	 */
-	public Matrix4f(float[] source) {
-		set(source);
 	}
 
 	/**

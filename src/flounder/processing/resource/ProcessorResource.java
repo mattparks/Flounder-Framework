@@ -53,23 +53,6 @@ public class ProcessorResource extends Processor {
 		return RequestResource.class;
 	}
 
-	@Override
-	public void dispose() {
-		running = false;
-		indicateNewRequests();
-		requestQueue.clear();
-		thread.interrupt();
-	}
-
-	@Override
-	public boolean isActive() {
-		return true;
-	}
-
-	private synchronized void indicateNewRequests() {
-		notify();
-	}
-
 	private synchronized void run() {
 		while (running || requestQueue.hasRequests()) {
 			if (requestQueue.hasRequests()) {
@@ -83,5 +66,22 @@ public class ProcessorResource extends Processor {
 				}
 			}
 		}
+	}
+
+	private synchronized void indicateNewRequests() {
+		notify();
+	}
+
+	@Override
+	public void dispose() {
+		running = false;
+		indicateNewRequests();
+		requestQueue.clear();
+		thread.interrupt();
+	}
+
+	@Override
+	public boolean isActive() {
+		return true;
 	}
 }

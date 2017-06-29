@@ -67,10 +67,6 @@ public class Framework {
 		this.fpsLimit = fpsLimit;
 	}
 
-	public static Framework get() {
-		return INSTANCE;
-	}
-
 	public void run() {
 		try {
 			updater.run();
@@ -84,20 +80,6 @@ public class Framework {
 			} else {
 				updater.dispose();
 			}
-		}
-	}
-
-	/**
-	 * Requests the implementation-loop to stop and the implementation to exit.
-	 *
-	 * @param error If a error screen will be created.
-	 */
-	public void requestClose(boolean error) {
-		this.running = false;
-
-		// A statement in case it was already true.
-		if (error) {
-			this.error = true;
 		}
 	}
 
@@ -202,19 +184,6 @@ public class Framework {
 	}
 
 	/**
-	 * Gets a module instance, or the override to the module.
-	 *
-	 * @param object The module class.
-	 *
-	 * @return The module instance.
-	 */
-	public Module getInstance(Class object) {
-		Module override = getOverride(object);
-		Module actual = getModule(object);
-		return override == null ? actual : override;
-	}
-
-	/**
 	 * Gets a loaded and registered module from the framework.
 	 *
 	 * @param object The module class.
@@ -246,6 +215,19 @@ public class Framework {
 		}
 
 		return null;
+	}
+
+	/**
+	 * Gets a module instance, or the override to the module.
+	 *
+	 * @param object The module class.
+	 *
+	 * @return The module instance.
+	 */
+	public Module getInstance(Class object) {
+		Module override = getOverride(object);
+		Module actual = getModule(object);
+		return override == null ? actual : override;
 	}
 
 	/**
@@ -468,6 +450,20 @@ public class Framework {
 	}
 
 	/**
+	 * Requests the implementation-loop to stop and the implementation to exit.
+	 *
+	 * @param error If a error screen will be created.
+	 */
+	public void requestClose(boolean error) {
+		this.running = false;
+
+		// A statement in case it was already true.
+		if (error) {
+			this.error = true;
+		}
+	}
+
+	/**
 	 * Gets the current FPS limit.
 	 *
 	 * @return The current FPS limit.
@@ -484,5 +480,9 @@ public class Framework {
 	public void setFpsLimit(int fpsLimit) {
 		this.fpsLimit = fpsLimit;
 		this.updater.setFpsLimit(fpsLimit);
+	}
+
+	public static Framework get() {
+		return INSTANCE;
 	}
 }

@@ -17,11 +17,6 @@ public class FlounderStandard extends Module {
 		super();
 	}
 
-	@Module.Instance
-	public static FlounderStandard get() {
-		return (FlounderStandard) Framework.get().getInstance(FlounderStandard.class);
-	}
-
 	@Handler.Function(Handler.FLAG_INIT)
 	public void init() {
 		standards = new ArrayList<>();
@@ -74,5 +69,10 @@ public class FlounderStandard extends Module {
 			});
 			standards.clear();
 		}
+	}
+
+	@Module.Instance
+	public static FlounderStandard get() {
+		return (FlounderStandard) Framework.get().getInstance(FlounderStandard.class);
 	}
 }

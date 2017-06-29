@@ -45,6 +45,27 @@ public class Maths {
 	}
 
 	/**
+	 * Generates a random unit vector.
+	 *
+	 * @param destination The destination vector or null if a new vector is to be created.
+	 *
+	 * @return The destination vector.
+	 */
+	public static Vector3f generateRandomUnitVector(Vector3f destination) {
+		if (destination == null) {
+			destination = new Vector3f();
+		}
+
+		Random random = new Random();
+		float theta = (float) (random.nextFloat() * 2.0f * 3.141592653589793);
+		float z = random.nextFloat() * 2.0f - 1.0f;
+		float rootOneMinusZSquared = (float) Math.sqrt(1.0f - z * z);
+		float x = (float) (rootOneMinusZSquared * Math.cos(theta));
+		float y = (float) (rootOneMinusZSquared * Math.sin(theta));
+		return destination.set(x, y, z);
+	}
+
+	/**
 	 * Gets a random point from on a circle.
 	 *
 	 * @param destination The destination vector or null if a new vector is to be created.
@@ -81,27 +102,6 @@ public class Maths {
 		float distance = new Vector2f(randX, randY).length();
 		destination.scale(distance);
 		return destination;
-	}
-
-	/**
-	 * Generates a random unit vector.
-	 *
-	 * @param destination The destination vector or null if a new vector is to be created.
-	 *
-	 * @return The destination vector.
-	 */
-	public static Vector3f generateRandomUnitVector(Vector3f destination) {
-		if (destination == null) {
-			destination = new Vector3f();
-		}
-
-		Random random = new Random();
-		float theta = (float) (random.nextFloat() * 2.0f * 3.141592653589793);
-		float z = random.nextFloat() * 2.0f - 1.0f;
-		float rootOneMinusZSquared = (float) Math.sqrt(1.0f - z * z);
-		float x = (float) (rootOneMinusZSquared * Math.cos(theta));
-		float y = (float) (rootOneMinusZSquared * Math.sin(theta));
-		return destination.set(x, y, z);
 	}
 
 	/**
@@ -506,6 +506,19 @@ public class Maths {
 	 *
 	 * @return {@code value}, clamped between {@code min} and {@code max}.
 	 */
+	public static float clamp(float value, float min, float max) {
+		return (value < min) ? min : (value > max) ? max : value;
+	}
+
+	/**
+	 * Ensures {@code value} is in the range of {@code min} to {@code max}. If {@code value} is greater than {@code max}, this will return {@code max}. If {@code value} is less than {@code min}, this will return {@code min}. Otherwise, {@code value} is returned unchanged.
+	 *
+	 * @param value The value to clamp.
+	 * @param min The smallest value of the result.
+	 * @param max The largest value of the result.
+	 *
+	 * @return {@code value}, clamped between {@code min} and {@code max}.
+	 */
 	public static double clamp(double value, double min, double max) {
 		return (value < min) ? min : (value > max) ? max : value;
 	}
@@ -675,18 +688,5 @@ public class Maths {
 	public static float smoothlyStep(float edge0, float edge1, float x) {
 		float t = clamp((x - edge0) / (edge1 - edge0), 0.0f, 1.0f);
 		return t * t * (3.0f - 2.0f * t);
-	}
-
-	/**
-	 * Ensures {@code value} is in the range of {@code min} to {@code max}. If {@code value} is greater than {@code max}, this will return {@code max}. If {@code value} is less than {@code min}, this will return {@code min}. Otherwise, {@code value} is returned unchanged.
-	 *
-	 * @param value The value to clamp.
-	 * @param min The smallest value of the result.
-	 * @param max The largest value of the result.
-	 *
-	 * @return {@code value}, clamped between {@code min} and {@code max}.
-	 */
-	public static float clamp(float value, float min, float max) {
-		return (value < min) ? min : (value > max) ? max : value;
 	}
 }

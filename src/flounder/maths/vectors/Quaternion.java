@@ -45,6 +45,15 @@ public class Quaternion {
 	}
 
 	/**
+	 * Constructor for Quaternion.
+	 *
+	 * @param source Creates this quaternion out of a matrix one.
+	 */
+	public Quaternion(Matrix4f source) {
+		set(source);
+	}
+
+	/**
 	 * Loads from another Quaternion.
 	 *
 	 * @param source The source quaternion.
@@ -57,15 +66,6 @@ public class Quaternion {
 		this.z = source.z;
 		this.w = source.w;
 		return this;
-	}
-
-	/**
-	 * Constructor for Quaternion.
-	 *
-	 * @param source Creates this quaternion out of a matrix one.
-	 */
-	public Quaternion(Matrix4f source) {
-		set(source);
 	}
 
 	/**
@@ -256,37 +256,6 @@ public class Quaternion {
 		float newZ = (scale0 * start.z) + (scale1 * end.z);
 		float newW = (scale0 * start.w) + (scale1 * end.w);
 		return new Quaternion(newX, newY, newZ, newW);
-	}
-
-	/**
-	 * Normalises this vector.
-	 *
-	 * @return This.
-	 */
-	public Quaternion normalize() {
-		float length = length();
-
-		if (length != 0.0f) {
-			float l = 1.0f / length;
-			return scale(l);
-		} else {
-			throw new IllegalStateException("Zero length vector");
-		}
-	}
-
-	/**
-	 * Scales this quaternion.
-	 *
-	 * @param scale The scale factor.
-	 *
-	 * @return This.
-	 */
-	public Quaternion scale(float scale) {
-		x *= scale;
-		y *= scale;
-		z *= scale;
-		w *= scale;
-		return this;
 	}
 
 	public static double dotProductOfQuaternions(Quaternion qA, Quaternion qB) {
@@ -551,6 +520,37 @@ public class Quaternion {
 		y = -y;
 		z = -z;
 		w = -w;
+		return this;
+	}
+
+	/**
+	 * Normalises this vector.
+	 *
+	 * @return This.
+	 */
+	public Quaternion normalize() {
+		float length = length();
+
+		if (length != 0.0f) {
+			float l = 1.0f / length;
+			return scale(l);
+		} else {
+			throw new IllegalStateException("Zero length vector");
+		}
+	}
+
+	/**
+	 * Scales this quaternion.
+	 *
+	 * @param scale The scale factor.
+	 *
+	 * @return This.
+	 */
+	public Quaternion scale(float scale) {
+		x *= scale;
+		y *= scale;
+		z *= scale;
+		w *= scale;
 		return this;
 	}
 

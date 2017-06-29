@@ -16,7 +16,7 @@ public class Timer {
 	 */
 	public Timer(double interval) {
 		//if (Framework.get().isInitialized()) {
-		this.startTime = Framework.get().getTimeMs();
+			this.startTime = Framework.get().getTimeMs();
 		//} else {
 		//	this.startTime = 0.0f;
 		//}

@@ -98,17 +98,6 @@ public class Module<T extends Module> {
 	}
 
 	/**
-	 * Registers extensions with a module.
-	 *
-	 * @param extensions The extensions to init.
-	 */
-	protected void registerExtensions(Extension... extensions) {
-		for (Extension extension : extensions) {
-			registerExtension(extension);
-		}
-	}
-
-	/**
 	 * Registers an extension with a module.
 	 *
 	 * @param extension The extension to init.
@@ -118,6 +107,17 @@ public class Module<T extends Module> {
 			Framework.get().registerModules(Framework.get().loadModules(extension.getDependencies()));
 			extensions.add(extension);
 			extensionChange = true;
+		}
+	}
+
+	/**
+	 * Registers extensions with a module.
+	 *
+	 * @param extensions The extensions to init.
+	 */
+	protected void registerExtensions(Extension... extensions) {
+		for (Extension extension : extensions) {
+			registerExtension(extension);
 		}
 	}
 

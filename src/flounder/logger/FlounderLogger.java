@@ -31,11 +31,6 @@ public class FlounderLogger extends Module {
 		super();
 	}
 
-	@Module.Instance
-	public static FlounderLogger get() {
-		return (FlounderLogger) Framework.get().getInstance(FlounderLogger.class);
-	}
-
 	@Handler.Function(Handler.FLAG_INIT)
 	public void init() {
 		this.saveData = new ArrayList<>();
@@ -69,34 +64,6 @@ public class FlounderLogger extends Module {
 		}
 
 		linesPrinted += getString(value).split("\n").length;
-	}
-
-	/**
-	 * Gets a string from a generic.
-	 *
-	 * @param value The value to get the string from.
-	 * @param <T> The generic type.
-	 *
-	 * @return The string found.
-	 */
-	private <T> String getString(T value) {
-		if (value == null) {
-			return "NULL";
-		}
-
-		return value.toString();
-	}
-
-	/**
-	 * Gets the string of the current date.
-	 *
-	 * @return Returns the string of the current date as [hour:minute:second | day/month/year].
-	 */
-	private String getDateString() {
-		int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
-		int minute = Calendar.getInstance().get(Calendar.MINUTE);
-		int second = Calendar.getInstance().get(Calendar.SECOND) + 1;
-		return hour + "." + minute + "." + second;
 	}
 
 	/**
@@ -143,56 +110,6 @@ public class FlounderLogger extends Module {
 		linesPrinted += getString(value).split("\n").length;
 	}
 
-	protected List<String> getSaveData() {
-		return saveData;
-	}
-
-	@Handler.Function(Handler.FLAG_DISPOSE)
-	public void dispose() {
-		try (PrintWriter out = new PrintWriter(getLogsSave())) {
-			for (String line : saveData) {
-				out.println(line);
-			}
-		} catch (IOException e) {
-			System.err.println("Could not save logs!");
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * Finds / Generates the logs save folder.
-	 *
-	 * @return The path to the folder.
-	 *
-	 * @throws IOException Failed to create / find folder.
-	 */
-	private String getLogsSave() throws IOException {
-		File saveDirectory = new File(Framework.get().getRoamingFolder().getPath(), "logs");
-
-		if (!saveDirectory.exists()) {
-			System.out.println("Creating directory: " + saveDirectory);
-
-			try {
-				saveDirectory.mkdir();
-			} catch (SecurityException e) {
-				error("Filed to create logging folder: " + saveDirectory.getAbsolutePath());
-				exception(e);
-			}
-		}
-
-		String result = saveDirectory + "/" + Calendar.getInstance().get(Calendar.HOUR) + "." + Calendar.getInstance().get(Calendar.MINUTE) + "." + (Calendar.getInstance().get(Calendar.SECOND) + 1) + "-" + (Calendar.getInstance().get(Calendar.MONTH) + 1) + "." + Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + "." + Calendar.getInstance().get(Calendar.YEAR) + ".log";
-		File resultingFile = new File(result);
-
-		if (!resultingFile.exists()) {
-			resultingFile.createNewFile();
-		}
-
-		FileOutputStream outputFile = new FileOutputStream(resultingFile, false);
-		outputFile.close();
-
-		return result;
-	}
-
 	/**
 	 * Error logs strings sent into javas console, and if {@code LOG_TO_FILE} is enabled it will also be logged to a log file.
 	 *
@@ -235,5 +152,88 @@ public class FlounderLogger extends Module {
 		}
 
 		linesPrinted += getString(exception).split("\n").length;
+	}
+
+	/**
+	 * Gets a string from a generic.
+	 *
+	 * @param value The value to get the string from.
+	 * @param <T> The generic type.
+	 *
+	 * @return The string found.
+	 */
+	private <T> String getString(T value) {
+		if (value == null) {
+			return "NULL";
+		}
+
+		return value.toString();
+	}
+
+	/**
+	 * Gets the string of the current date.
+	 *
+	 * @return Returns the string of the current date as [hour:minute:second | day/month/year].
+	 */
+	private String getDateString() {
+		int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+		int minute = Calendar.getInstance().get(Calendar.MINUTE);
+		int second = Calendar.getInstance().get(Calendar.SECOND) + 1;
+		return hour + "." + minute + "." + second;
+	}
+
+	/**
+	 * Finds / Generates the logs save folder.
+	 *
+	 * @return The path to the folder.
+	 *
+	 * @throws IOException Failed to create / find folder.
+	 */
+	private String getLogsSave() throws IOException {
+		File saveDirectory = new File(Framework.get().getRoamingFolder().getPath(), "logs");
+
+		if (!saveDirectory.exists()) {
+			System.out.println("Creating directory: " + saveDirectory);
+
+			try {
+				saveDirectory.mkdir();
+			} catch (SecurityException e) {
+				error("Filed to create logging folder: " + saveDirectory.getAbsolutePath());
+				exception(e);
+			}
+		}
+
+		String result = saveDirectory + "/" + Calendar.getInstance().get(Calendar.HOUR) + "." + Calendar.getInstance().get(Calendar.MINUTE) + "." + (Calendar.getInstance().get(Calendar.SECOND) + 1) + "-" + (Calendar.getInstance().get(Calendar.MONTH) + 1) + "." + Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + "." + Calendar.getInstance().get(Calendar.YEAR) + ".log";
+		File resultingFile = new File(result);
+
+		if (!resultingFile.exists()) {
+			resultingFile.createNewFile();
+		}
+
+		FileOutputStream outputFile = new FileOutputStream(resultingFile, false);
+		outputFile.close();
+
+		return result;
+	}
+
+	protected List<String> getSaveData() {
+		return saveData;
+	}
+
+	@Handler.Function(Handler.FLAG_DISPOSE)
+	public void dispose() {
+		try (PrintWriter out = new PrintWriter(getLogsSave())) {
+			for (String line : saveData) {
+				out.println(line);
+			}
+		} catch (IOException e) {
+			System.err.println("Could not save logs!");
+			e.printStackTrace();
+		}
+	}
+
+	@Module.Instance
+	public static FlounderLogger get() {
+		return (FlounderLogger) Framework.get().getInstance(FlounderLogger.class);
 	}
 }
